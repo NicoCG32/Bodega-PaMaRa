@@ -80,7 +80,7 @@ export function proximaCuota(d: Deuda): Cuota | null {
 
 export function normCodigo(c: string) {
   const m = c.toUpperCase().replace(/\s/g, "").match(/^([HMT])-?(\d{1,3})$/);
-  return m ? `${m[1]}-${m[2].padStart(2, "0")}` : c.toUpperCase().trim();
+  return m ? `${m[1]}-${(m[2] ?? "").padStart(2, "0")}` : c.toUpperCase().trim();
 }
 
 export const actions = {

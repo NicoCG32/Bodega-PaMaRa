@@ -15,7 +15,7 @@ export type Interpretacion = {
 };
 
 function key() {
-  const k = process.env.LOVABLE_API_KEY;
+  const k = process.env["LOVABLE_API_KEY"];
   if (!k) throw new Error("Falta configurar la IA.");
   return k;
 }

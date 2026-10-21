@@ -83,14 +83,18 @@ export function VoiceCapture() {
       if (codigo) actions.ajustarStock(codigo, -1);
     } else if (res.tipo === "abono") {
       const d = deudas.find((x) => x.cliente.toLowerCase() === cliente.toLowerCase() && saldo(x) > 0);
-      if (!d) return toast.error(`No encontré una deuda de ${cliente}.`);
+      if (!d) {
+        toast.error(`No encontré una deuda de ${cliente}.`);
+        return;
+      }
       actions.abonar(d.id, res.total ?? 0);
     } else if (res.tipo === "encargo") {
       actions.addEncargo({ cliente, codigo, nota: res.nota ?? "" });
     } else if (res.tipo === "stock" && codigo) {
       actions.ajustarStock(codigo, res.cantidad ?? 1);
     } else {
-      return toast("Lo dejé como nota, no hubo nada que guardar.");
+      toast("Lo dejé como nota, no hubo nada que guardar.");
+      return;
     }
     toast.success("¡Guardado! 💛");
     setRes(null);
