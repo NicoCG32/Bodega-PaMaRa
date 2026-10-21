@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Mic, Wallet, Package, ClipboardList } from "lucide-react";
-import type { ReactNode } from "react";
-import { useStore, saldo, proximaCuota, diasHasta } from "@/lib/store";
+import { useEffect, type ReactNode } from "react";
+import { useStore, saldo, proximaCuota, diasHasta, hoy, clp } from "@/lib/store";
 
 const tabs = [
   { to: "/", label: "Anotar", icon: Mic },
@@ -16,6 +16,20 @@ export function AppShell({ children }: { children: ReactNode }) {
     const c = proximaCuota(d);
     return saldo(d) > 0 && c && diasHasta(c.fecha) <= 0;
   }).length;
+
+  // Daily reminder alarm: notify once per day about due/overdue payments.
+  useEffect(() => {
+    if (!urgentes || typeof Notification === "undefined" || Notification.permission !== "granted") return;
+    if (localStorage.getItem("pamara-aviso") === hoy()) return;
+    localStorage.setItem("pamara-aviso", hoy());
+    const lista = deudas.filter((d) => {
+      const c = proximaCuota(d);
+      return saldo(d) > 0 && c && diasHasta(c.fecha) <= 0;
+    });
+    new Notification("PaMaRa AyN · Toca cobrar 🔔", {
+      body: lista.map((d) => `${d.cliente}: ${clp(saldo(d))}`).join("\n"),
+    });
+  }, [urgentes, deudas]);
 
   return (
     <div className="mx-auto flex min-h-screen max-w-md flex-col bg-background">

@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Bell } from "lucide-react";
 import { DeudaCard } from "@/components/DeudaCard";
 import { clp, proximaCuota, saldo, useStore } from "@/lib/store";
@@ -55,9 +55,10 @@ function Cobros() {
 }
 
 function AlarmaBoton() {
-  const [perm, setPerm] = useState(() =>
-    typeof Notification === "undefined" ? "denied" : Notification.permission,
-  );
+  const [perm, setPerm] = useState<string>("granted");
+  useEffect(() => {
+    setPerm(typeof Notification === "undefined" ? "granted" : Notification.permission);
+  }, []);
   if (perm === "granted") return null;
   return (
     <button
