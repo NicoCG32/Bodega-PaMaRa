@@ -53,7 +53,7 @@ export function DeudaCard({ d }: { d: Deuda }) {
           <span className="capitalize">
             {fechaBonita(c.fecha)} · <b>{clp(Math.min(c.monto, s))}</b>
           </span>
-          <span className={`rounded-full px-3 py-1 text-sm font-bold ${cuando.cls}`}>{cuando.txt}</span>
+          <span className={`shrink-0 whitespace-nowrap rounded-full px-3 py-1 text-sm font-bold ${cuando.cls}`}>{cuando.txt}</span>
         </div>
       )}
       {s > 0 && (
