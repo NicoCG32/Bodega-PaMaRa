@@ -20,15 +20,16 @@ export type Encargo = {
 };
 export type Producto = { codigo: string; nombre: string; stock: number };
 
-type State = {
+export type State = {
   deudas: Deuda[];
   encargos: Encargo[];
   productos: Producto[];
   telefonos: Record<string, string>;
+  actualizado: string;
 };
 
 const KEY = "pamara-ayn-v1";
-const empty: State = { deudas: [], encargos: [], productos: [], telefonos: {} };
+const empty: State = { deudas: [], encargos: [], productos: [], telefonos: {}, actualizado: "" };
 let state: State = empty;
 let loaded = false;
 const listeners = new Set<() => void>();
@@ -46,7 +47,27 @@ function load() {
 
 function set(fn: (s: State) => State) {
   load();
-  state = fn(state);
+  state = { ...fn(state), actualizado: new Date().toISOString() };
+  localStorage.setItem(KEY, JSON.stringify(state));
+  listeners.forEach((l) => l());
+}
+
+/** Current state (for cloud backup). */
+export function getState(): State {
+  load();
+  return state;
+}
+
+/** Listen to any change (for cloud backup). */
+export function subscribe(l: () => void) {
+  listeners.add(l);
+  return () => listeners.delete(l);
+}
+
+/** Replace the whole state (cloud restore) and persist it locally. */
+export function restoreState(s: Partial<State>) {
+  load();
+  state = { ...empty, ...s };
   localStorage.setItem(KEY, JSON.stringify(state));
   listeners.forEach((l) => l());
 }
