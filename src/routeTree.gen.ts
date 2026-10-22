@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as CatalogoRouteImport } from './routes/catalogo'
 import { Route as CobrosRouteImport } from './routes/cobros'
 import { Route as EncargosRouteImport } from './routes/encargos'
+import { Route as ApiPublicJobsRecordatoriosRouteImport } from './routes/api/public/jobs/recordatorios'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -34,18 +35,26 @@ const EncargosRoute = EncargosRouteImport.update({
   path: '/encargos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicJobsRecordatoriosRoute =
+  ApiPublicJobsRecordatoriosRouteImport.update({
+    id: '/api/public/jobs/recordatorios',
+    path: '/api/public/jobs/recordatorios',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/catalogo': typeof CatalogoRoute
   '/cobros': typeof CobrosRoute
   '/encargos': typeof EncargosRoute
+  '/api/public/jobs/recordatorios': typeof ApiPublicJobsRecordatoriosRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/catalogo': typeof CatalogoRoute
   '/cobros': typeof CobrosRoute
   '/encargos': typeof EncargosRoute
+  '/api/public/jobs/recordatorios': typeof ApiPublicJobsRecordatoriosRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +62,30 @@ export interface FileRoutesById {
   '/catalogo': typeof CatalogoRoute
   '/cobros': typeof CobrosRoute
   '/encargos': typeof EncargosRoute
+  '/api/public/jobs/recordatorios': typeof ApiPublicJobsRecordatoriosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/catalogo' | '/cobros' | '/encargos'
+  fullPaths:
+    | '/'
+    | '/catalogo'
+    | '/cobros'
+    | '/encargos'
+    | '/api/public/jobs/recordatorios'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/catalogo' | '/cobros' | '/encargos'
-  id: '__root__' | '/' | '/catalogo' | '/cobros' | '/encargos'
+  to:
+    | '/'
+    | '/catalogo'
+    | '/cobros'
+    | '/encargos'
+    | '/api/public/jobs/recordatorios'
+  id:
+    | '__root__'
+    | '/'
+    | '/catalogo'
+    | '/cobros'
+    | '/encargos'
+    | '/api/public/jobs/recordatorios'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,6 +93,7 @@ export interface RootRouteChildren {
   CatalogoRoute: typeof CatalogoRoute
   CobrosRoute: typeof CobrosRoute
   EncargosRoute: typeof EncargosRoute
+  ApiPublicJobsRecordatoriosRoute: typeof ApiPublicJobsRecordatoriosRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -99,6 +126,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EncargosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/jobs/recordatorios': {
+      id: '/api/public/jobs/recordatorios'
+      path: '/api/public/jobs/recordatorios'
+      fullPath: '/api/public/jobs/recordatorios'
+      preLoaderRoute: typeof ApiPublicJobsRecordatoriosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -107,6 +141,7 @@ const rootRouteChildren: RootRouteChildren = {
   CatalogoRoute: CatalogoRoute,
   CobrosRoute: CobrosRoute,
   EncargosRoute: EncargosRoute,
+  ApiPublicJobsRecordatoriosRoute: ApiPublicJobsRecordatoriosRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

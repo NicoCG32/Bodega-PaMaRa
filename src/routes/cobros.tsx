@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { Bell } from "lucide-react";
+import { useState } from "react";
 import { DeudaCard } from "@/components/DeudaCard";
+import { NubeCard } from "@/components/NubeCard";
 import { clp, proximaCuota, saldo, useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/cobros")({
@@ -35,7 +35,7 @@ function Cobros() {
           <span className="text-2xl font-extrabold text-primary">{clp(total)}</span>
         </p>
       </div>
-      <AlarmaBoton />
+      <NubeCard />
       {pend.length === 0 && (
         <p className="rounded-3xl bg-card p-6 text-center text-lg text-muted-foreground">
           Nadie te debe 🎉 Cuando fíes algo, anótalo con el micrófono.
@@ -51,21 +51,5 @@ function Cobros() {
       )}
       {verPagados && pagados.map((d) => <DeudaCard key={d.id} d={d} />)}
     </div>
-  );
-}
-
-function AlarmaBoton() {
-  const [perm, setPerm] = useState<string>("granted");
-  useEffect(() => {
-    setPerm(typeof Notification === "undefined" ? "granted" : Notification.permission);
-  }, []);
-  if (perm === "granted") return null;
-  return (
-    <button
-      onClick={async () => setPerm(await Notification.requestPermission())}
-      className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-accent bg-card py-4 text-lg font-bold"
-    >
-      <Bell /> Activar alarmas de cobro
-    </button>
   );
 }
