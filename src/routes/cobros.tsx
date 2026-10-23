@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { DeudaCard } from "@/components/DeudaCard";
-import { clp, proximaCuota, saldo, useStore } from "@/lib/store";
+import { clp, fechaBonita, proximaCuota, saldo, useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/cobros")({
   head: () => ({
@@ -24,15 +24,27 @@ function Cobros() {
     .sort((a, b) => orden(proximaCuota(a)?.fecha).localeCompare(orden(proximaCuota(b)?.fecha)));
   const pagados = deudas.filter((d) => saldo(d) === 0);
   const total = pend.reduce((a, d) => a + saldo(d), 0);
+  const mes = new Date().toISOString().slice(0, 7);
+  const cobradoMes = deudas.reduce(
+    (a, d) => a + d.abonos.filter((b) => b.fecha.slice(0, 7) === mes).reduce((x, b) => x + b.monto, 0),
+    0,
+  );
+  const fechaSaldada = (d: (typeof deudas)[number]) =>
+    d.abonos.map((b) => b.fecha.slice(0, 10)).sort().at(-1) ?? d.creada.slice(0, 10);
+  const pagadosOrden = [...pagados].sort((a, b) => fechaSaldada(b).localeCompare(fechaSaldada(a)));
 
   return (
     <div className="space-y-4">
-      <div className="flex items-end justify-between">
-        <h2 className="text-3xl font-semibold">Cobros</h2>
-        <p className="text-right">
-          <span className="block text-sm text-muted-foreground">Por cobrar</span>
-          <span className="text-2xl font-extrabold text-primary">{clp(total)}</span>
-        </p>
+      <h2 className="text-3xl font-semibold">Cobros</h2>
+      <div className="grid grid-cols-2 gap-3">
+        <div className="rounded-3xl bg-card p-4 shadow-soft">
+          <p className="text-sm font-bold text-muted-foreground">🟢 Cobrado este mes</p>
+          <p className="text-2xl font-extrabold text-success">{clp(cobradoMes)}</p>
+        </div>
+        <div className="rounded-3xl bg-card p-4 shadow-soft">
+          <p className="text-sm font-bold text-muted-foreground">🟡 Por cobrar</p>
+          <p className="text-2xl font-extrabold text-primary">{clp(total)}</p>
+        </div>
       </div>
       {pend.length === 0 && (
         <p className="rounded-3xl bg-card p-6 text-center text-lg text-muted-foreground">
@@ -43,11 +55,31 @@ function Cobros() {
         <DeudaCard key={d.id} d={d} />
       ))}
       {pagados.length > 0 && (
-        <button onClick={() => setVerPagados((v) => !v)} className="w-full py-3 font-bold text-primary underline">
-          {verPagados ? "Ocultar" : "Ver"} pagados ({pagados.length})
+        <button
+          onClick={() => setVerPagados((v) => !v)}
+          className="h-14 w-full rounded-2xl bg-secondary text-lg font-bold"
+        >
+          {verPagados ? "Ocultar cuentas pagadas" : `✅ Ver cuentas pagadas (${pagados.length})`}
         </button>
       )}
-      {verPagados && pagados.map((d) => <DeudaCard key={d.id} d={d} />)}
+      {verPagados && (
+        <ul className="space-y-2">
+          {pagadosOrden.map((d) => (
+            <li key={d.id} className="flex items-center justify-between rounded-2xl bg-card p-4 shadow-soft">
+              <div>
+                <p className="text-lg font-bold">{d.cliente}</p>
+                <p className="text-muted-foreground">
+                  {d.codigo} · {clp(d.total)}
+                </p>
+              </div>
+              <p className="text-right text-sm">
+                <span className="block font-bold text-success">Pagó todo ✓</span>
+                <span className="text-muted-foreground">{fechaBonita(fechaSaldada(d))}</span>
+              </p>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

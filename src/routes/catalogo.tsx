@@ -34,6 +34,20 @@ function Catalogo() {
   return (
     <div className="space-y-4">
       <h2 className="text-3xl font-semibold">Catálogo</h2>
+      <button
+        onClick={() => {
+          const disp = [...productos]
+            .filter((p) => p.stock > 0 && (!f || p.codigo.startsWith(f + "-")))
+            .sort((a, b) => a.codigo.localeCompare(b.codigo, "es", { numeric: true }));
+          if (disp.length === 0) return alert("No hay perfumes con stock para enviar.");
+          const lineas = disp.map((p) => `• ${p.codigo}${p.nombre ? ` ${p.nombre}` : ""}`).join("\n");
+          const msg = `¡Hola! 🌸 Te saluda PaMaRa AyN. Tengo disponibles para entrega inmediata:\n${lineas}\n\n¿Te interesa alguno? 💛`;
+          window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, "_blank");
+        }}
+        className="h-14 w-full rounded-2xl bg-success text-lg font-bold text-success-foreground"
+      >
+        📲 Enviar disponibles por WhatsApp
+      </button>
       <label className="flex h-14 items-center gap-2 rounded-2xl border-2 border-input bg-card px-4">
         <Search className="text-muted-foreground" />
         <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Buscar código, ej: H-05" className="h-full flex-1 bg-transparent text-lg outline-none" />
