@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Mic, Wallet, Package, ClipboardList } from "lucide-react";
+import { Mic, Wallet, Package, ClipboardList, Settings } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
 import { useStore, saldo, proximaCuota, diasHasta, hoy, clp } from "@/lib/store";
 
@@ -33,9 +33,14 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="mx-auto flex min-h-screen max-w-md flex-col bg-background">
-      <header className="bg-hero px-5 pb-5 pt-6 text-primary-foreground">
-        <p className="text-sm uppercase tracking-[0.25em] text-accent">Perfumes · Ropa · Cosmética</p>
-        <h1 className="text-3xl font-semibold">PaMaRa AyN</h1>
+      <header className="flex items-start justify-between bg-hero px-5 pb-5 pt-6 text-primary-foreground">
+        <div>
+          <p className="text-sm uppercase tracking-[0.25em] text-accent">Perfumes · Ropa · Cosmética</p>
+          <h1 className="text-3xl font-semibold">PaMaRa AyN</h1>
+        </div>
+        <Link to="/ajustes" aria-label="Ajustes" className="flex size-12 items-center justify-center rounded-full bg-primary-foreground/10">
+          <Settings className="size-6" />
+        </Link>
       </header>
       <main className="flex-1 px-4 pb-32 pt-4">{children}</main>
       <nav className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-md border-t border-border bg-card/95 pb-[env(safe-area-inset-bottom)] backdrop-blur">
