@@ -34,7 +34,10 @@ export function DeudaCard({ d }: { d: Deuda }) {
 
   function guardarTel() {
     const t = numero.trim();
-    if (t.replace(/\D/g, "").length < 8) return toast.error("Falta el número completo");
+    if (t.replace(/\D/g, "").length < 8) {
+      toast.error("Falta el número completo");
+      return;
+    }
     actions.setTelefono(d.cliente, t);
     const modo = pedirTel;
     setPedirTel(null);
