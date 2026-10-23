@@ -51,6 +51,7 @@ export function initCloudSync() {
 async function bajarRespaldo() {
   const { data, error } = await supabase.from("backups").select("data, updated_at").maybeSingle();
   if (error) return;
+  if (data?.updated_at) marcarRespaldo(data.updated_at);
   const nube = data?.data as unknown as State | undefined;
   const local = getState();
   const localVacio = !local.deudas.length && !local.encargos.length && !local.productos.length;
@@ -75,9 +76,31 @@ function programarSubida() {
 async function subirRespaldo() {
   if (!userId) return;
   const s = getState();
-  await supabase.from("backups").upsert({
+  const ahora = new Date().toISOString();
+  const { error } = await supabase.from("backups").upsert({
     user_id: userId,
     data: JSON.parse(JSON.stringify(s)),
-    updated_at: new Date().toISOString(),
+    updated_at: ahora,
   });
+  if (!error) marcarRespaldo(ahora);
+}
+
+let ultimo: string | null = null;
+const oyentes = new Set<(v: string | null) => void>();
+function marcarRespaldo(v: string | null) {
+  ultimo = v;
+  oyentes.forEach((l) => l(v));
+}
+
+/** Hora (ISO) de la última copia guardada en la nube. */
+export function useUltimoRespaldo() {
+  const [v, setV] = useState<string | null>(ultimo);
+  useEffect(() => {
+    setV(ultimo);
+    oyentes.add(setV);
+    return () => {
+      oyentes.delete(setV);
+    };
+  }, []);
+  return v;
 }

@@ -3,12 +3,13 @@ import { CloudUpload, BellRing, LogOut } from "lucide-react";
 import { toast } from "sonner";
 import { lovable } from "@/integrations/lovable";
 import { supabase } from "@/integrations/supabase/client";
-import { useSession } from "@/lib/cloudSync";
+import { useSession, useUltimoRespaldo } from "@/lib/cloudSync";
 import { enablePush } from "@/lib/push";
 import { savePushToken } from "@/lib/push.functions";
 
 export function NubeCard() {
   const { email, listo } = useSession();
+  const ultimo = useUltimoRespaldo();
   const [ocupado, setOcupado] = useState(false);
   const [avisos, setAvisos] = useState<"sin-pedir" | "activos">("sin-pedir");
 
@@ -75,6 +76,11 @@ export function NubeCard() {
       </h3>
       <p className="text-muted-foreground">
         Tus datos se guardan solos en la nube con tu cuenta <b>{email}</b>.
+      </p>
+      <p className="rounded-2xl bg-secondary px-4 py-2 text-center font-semibold text-secondary-foreground">
+        {ultimo
+          ? `Última copia: ${new Date(ultimo).toLocaleString("es-CL", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}`
+          : "Preparando la primera copia…"}
       </p>
       {avisos === "activos" ? (
         <p className="rounded-2xl bg-success px-4 py-3 text-center font-bold text-success-foreground">
