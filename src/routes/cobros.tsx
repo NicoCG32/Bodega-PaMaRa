@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { DeudaCard } from "@/components/DeudaCard";
 import { NubeCard } from "@/components/NubeCard";
+import { InstalarCard } from "@/components/InstalarCard";
 import { clp, proximaCuota, saldo, useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/cobros")({
@@ -36,6 +37,7 @@ function Cobros() {
         </p>
       </div>
       <NubeCard />
+      <InstalarCard />
       {pend.length === 0 && (
         <p className="rounded-3xl bg-card p-6 text-center text-lg text-muted-foreground">
           Nadie te debe 🎉 Cuando fíes algo, anótalo con el micrófono.
