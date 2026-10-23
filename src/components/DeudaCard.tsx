@@ -102,11 +102,32 @@ export function DeudaCard({ d }: { d: Deuda }) {
           <button className="h-14 rounded-2xl bg-success px-5 text-lg font-bold text-success-foreground">OK</button>
         </form>
       )}
+      {pedirTel && (
+        <div className="space-y-3 rounded-2xl bg-secondary p-4">
+          <p className="text-lg font-bold">WhatsApp de {d.cliente}</p>
+          <input
+            type="tel"
+            inputMode="tel"
+            autoFocus
+            value={numero}
+            onChange={(e) => setNumero(e.target.value)}
+            className="h-14 w-full rounded-2xl border-2 border-input bg-background px-4 text-xl"
+          />
+          <div className="grid grid-cols-2 gap-3">
+            <button onClick={() => setPedirTel(null)} className="h-14 rounded-2xl bg-muted text-lg font-bold">
+              Cancelar
+            </button>
+            <button onClick={guardarTel} className="h-14 rounded-2xl bg-whatsapp text-lg font-bold text-success-foreground">
+              {pedirTel === "enviar" ? "Enviar" : "Guardar"}
+            </button>
+          </div>
+        </div>
+      )}
       <div className="flex items-center justify-between text-sm text-muted-foreground">
         <button
           onClick={() => {
-            const t = prompt(`WhatsApp de ${d.cliente}`, tel ?? "56 9 ");
-            if (t) actions.setTelefono(d.cliente, t.trim());
+            setNumero(tel ?? "+56 9 ");
+            setPedirTel("guardar");
           }}
           className="flex items-center gap-1 underline"
         >
