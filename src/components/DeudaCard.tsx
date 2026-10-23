@@ -16,18 +16,30 @@ export function DeudaCard({ d }: { d: Deuda }) {
   const tel = telefonos[d.cliente.toLowerCase()];
   const [abono, setAbono] = useState("");
   const [abrir, setAbrir] = useState(false);
+  const [pedirTel, setPedirTel] = useState<null | "enviar" | "guardar">(null);
+  const [numero, setNumero] = useState("");
   const s = saldo(d);
   const c = proximaCuota(d);
   const cuando = c ? cuandoTexto(c.fecha) : null;
 
-  function wsp() {
-    let t = tel;
-    if (!t) {
-      t = prompt(`Número de WhatsApp de ${d.cliente} (ej: 56912345678)`) ?? "";
-      if (!t.trim()) return;
-      actions.setTelefono(d.cliente, t.trim());
-    }
+  function enviar(t: string) {
     window.open(whatsappLink(t, d.cliente, c ? Math.min(c.monto, s) : s, c?.fecha), "_blank");
+  }
+
+  function wsp() {
+    if (tel) return enviar(tel);
+    setNumero("+56 9 ");
+    setPedirTel("enviar");
+  }
+
+  function guardarTel() {
+    const t = numero.trim();
+    if (t.replace(/\D/g, "").length < 8) return toast.error("Falta el número completo");
+    actions.setTelefono(d.cliente, t);
+    const modo = pedirTel;
+    setPedirTel(null);
+    if (modo === "enviar") enviar(t);
+    else toast.success("Número guardado");
   }
 
   return (
