@@ -18,7 +18,27 @@ export type Encargo = {
   entregado: boolean;
   creada: string;
 };
-export type Producto = { codigo: string; nombre: string; stock: number };
+export type Producto = {
+  /** Unique key: H-NN/M-NN/T-NN for perfumes, O-xxxx for other products. */
+  codigo: string;
+  nombre: string;
+  stock: number;
+  tipo?: "perfume" | "otro";
+  inspiracion?: string;
+  version?: string;
+  categoria?: string;
+  precio?: number;
+  fechaIngreso?: string;
+  ultimaVenta?: string;
+};
+
+export const esOtro = (p: Producto) => p.tipo === "otro" || p.codigo.startsWith("O-");
+/** Days since the product last moved (last sale or arrival to stock). */
+export function diasQuieto(p: Producto) {
+  const ref = p.ultimaVenta && p.fechaIngreso ? (p.ultimaVenta > p.fechaIngreso ? p.ultimaVenta : p.fechaIngreso) : p.ultimaVenta || p.fechaIngreso;
+  return ref ? -diasHasta(ref) : 0;
+}
+export const DIAS_REMATE = 30;
 
 export type State = {
   deudas: Deuda[];
@@ -155,8 +175,15 @@ export const actions = {
     set((s) => {
       const exists = s.productos.some((x) => x.codigo === codigo);
       const productos = exists
-        ? s.productos.map((x) => (x.codigo === codigo ? { ...x, stock: Math.max(0, x.stock + delta) } : x))
-        : [...s.productos, { codigo, nombre: "", stock: Math.max(0, delta) }];
+        ? s.productos.map((x) => {
+            if (x.codigo !== codigo) return x;
+            const stock = Math.max(0, x.stock + delta);
+            const n = { ...x, stock };
+            if (delta > 0 && (x.stock === 0 || !x.fechaIngreso)) n.fechaIngreso = hoy();
+            if (delta < 0 && x.stock > 0) n.ultimaVenta = hoy();
+            return n;
+          })
+        : [...s.productos, { codigo, nombre: "", stock: Math.max(0, delta), tipo: "perfume" as const, fechaIngreso: delta > 0 ? hoy() : undefined }];
       return { ...s, productos };
     });
   },
