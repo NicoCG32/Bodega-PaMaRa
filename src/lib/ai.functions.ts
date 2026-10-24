@@ -22,7 +22,7 @@ function key() {
 
 
 export type Motor = "gemini" | "lovable";
-const GEMINI_MODEL = "gemini-2.5-flash";
+const GEMINI_MODEL = "gemini-flash-latest";
 
 function geminiKey() {
   return process.env["GEMINI_API_KEY"] || null;
@@ -37,6 +37,8 @@ async function gemini(parts: unknown[], system: string | null, json: boolean): P
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      // Fall back to Lovable AI quickly if Gemini hangs.
+      signal: AbortSignal.timeout(20_000),
       body: JSON.stringify({
         ...(system ? { systemInstruction: { parts: [{ text: system }] } } : {}),
         contents: [{ role: "user", parts }],
