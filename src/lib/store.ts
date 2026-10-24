@@ -23,13 +23,13 @@ export type Producto = {
   codigo: string;
   nombre: string;
   stock: number;
-  tipo?: "perfume" | "otro";
-  inspiracion?: string;
-  version?: string;
-  categoria?: string;
-  precio?: number;
-  fechaIngreso?: string;
-  ultimaVenta?: string;
+  tipo?: "perfume" | "otro" | undefined;
+  inspiracion?: string | undefined;
+  version?: string | undefined;
+  categoria?: string | undefined;
+  precio?: number | undefined;
+  fechaIngreso?: string | undefined;
+  ultimaVenta?: string | undefined;
 };
 
 export const esOtro = (p: Producto) => p.tipo === "otro" || p.codigo.startsWith("O-");
