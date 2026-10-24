@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Mic, Wallet, Package, ClipboardList, Settings } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
+import logo from "@/assets/logo.png";
 import { useStore, saldo, proximaCuota, diasHasta, hoy, clp } from "@/lib/store";
 
 const tabs = [
@@ -33,10 +34,10 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="mx-auto flex min-h-screen max-w-md flex-col bg-background">
-      <header className="flex items-start justify-between bg-hero px-5 pb-5 pt-6 text-primary-foreground">
-        <div>
-          <p className="text-sm uppercase tracking-[0.25em] text-accent">Perfumes · Ropa · Cosmética</p>
-          <h1 className="text-3xl font-semibold">PaMaRa AyN</h1>
+      <header className="flex items-center justify-between bg-hero px-5 pb-4 pt-5 text-primary-foreground">
+        <div className="flex items-center gap-3">
+          <img src={logo} alt="PaMaRa AyN" className="h-16 w-auto" />
+          <p className="text-xs uppercase tracking-[0.3em] text-accent">Perfumes<br />Ropa · Cosmética</p>
         </div>
         <Link to="/ajustes" aria-label="Ajustes" className="flex size-12 items-center justify-center rounded-full bg-primary-foreground/10">
           <Settings className="size-6" />
