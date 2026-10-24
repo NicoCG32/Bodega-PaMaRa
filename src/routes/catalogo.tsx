@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Minus, Pencil, Plus, Trash2 } from "lucide-react";
+import { BodegaCapture } from "@/components/BodegaCapture";
 import { actions, clp, DIAS_REMATE, diasQuieto, esOtro, normCodigo, uid, useStore, type Producto } from "@/lib/store";
 
 export const Route = createFileRoute("/catalogo")({
@@ -73,6 +74,8 @@ function Catalogo() {
           ))}
         </div>
       )}
+
+      {vista === "bodega" && <BodegaCapture />}
 
       {vista === "bodega" && tipo === "perfume" && (
         <button
