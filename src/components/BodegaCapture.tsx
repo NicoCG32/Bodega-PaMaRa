@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Camera, Loader2, Mic, Minus, Plus, Square, X } from "lucide-react";
 import { toast } from "sonner";
+import { avisarMotor } from "@/lib/motor";
 import { interpretarBodega, transcribir, type ItemBodega } from "@/lib/ai.functions";
 import { actions, esOtro, hoy, normCodigo, uid, useStore } from "@/lib/store";
 
@@ -59,10 +60,12 @@ export function BodegaCapture() {
     });
   }
 
-  async function procesar(p: Promise<{ items: ItemBodega[] }>) {
+  async function procesar(p: Promise<{ items: ItemBodega[]; motor?: "gemini" | "lovable" }>) {
     setPendientes((n) => n + 1);
     try {
-      agregar((await p).items);
+      const r = await p;
+      avisarMotor(r.motor);
+      agregar(r.items);
     } catch (e) {
       toast.error((e as Error).message);
     } finally {
@@ -83,7 +86,8 @@ export function BodegaCapture() {
       if (blob.size < 2000) return;
       void procesar(
         (async () => {
-          const { texto } = await tx({ data: { audio: await aBase64(blob), mime: blob.type } });
+          const { texto, motor } = await tx({ data: { audio: await aBase64(blob), mime: blob.type } });
+          avisarMotor(motor);
           if (!texto.trim()) return { items: [] };
           return ai({ data: { texto, otros } });
         })(),
