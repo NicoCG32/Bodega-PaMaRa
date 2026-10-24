@@ -118,3 +118,71 @@ Nombres de clientes con mayúscula inicial. resumen: una frase corta y cálida e
     if (!text) throw new Error("La IA no devolvió respuesta. Intenta escribirlo de otra forma.");
     return JSON.parse(text) as Interpretacion;
   });
+
+export type ItemBodega = { codigo: string | null; nombre: string | null; tipo: "perfume" | "otro"; cantidad: number };
+
+const schemaBodega = {
+  type: "object",
+  additionalProperties: false,
+  required: ["items"],
+  properties: {
+    items: {
+      type: "array",
+      items: {
+        type: "object",
+        additionalProperties: false,
+        required: ["codigo", "nombre", "tipo", "cantidad"],
+        properties: {
+          codigo: nullable("string"),
+          nombre: nullable("string"),
+          tipo: { type: "string", enum: ["perfume", "otro"] },
+          cantidad: { type: "number" },
+        },
+      },
+    },
+  },
+};
+
+/** Inventory count from a dictation chunk or a shelf photo. Items keep the order they were said/seen. */
+export const interpretarBodega = createServerFn({ method: "POST" })
+  .inputValidator((d: { texto?: string; imagen?: string; otros: string[] }) => {
+    if (!d?.texto && !d?.imagen) throw new Error("Nada que revisar");
+    if ((d.texto?.length ?? 0) > 4000 || (d.imagen?.length ?? 0) > 12_000_000) throw new Error("Muy largo");
+    return { ...d, otros: (d.otros ?? []).slice(0, 200) };
+  })
+  .handler(async ({ data }): Promise<{ items: ItemBodega[] }> => {
+    const system = `Ayudas a contar la bodega de PaMaRa AyN (perfumes réplica, ropa, cosmética).
+Perfumes: códigos Hombre "H-NN", Mujer "M-NN", Juveniles "T-NN" ("hache diecisiete" = H-17). Normaliza a letra-guion-dos dígitos, tipo "perfume", nombre null.
+Otros productos (aceites, cremas, prendas) no tienen código: codigo null, tipo "otro", nombre corto con mayúscula inicial. Si se parece a uno conocido, usa exactamente ese nombre. Conocidos: ${data.otros.join(", ") || "ninguno"}.
+La dueña suele nombrar frasco por frasco ("H-17, H-15, H-17"): cada mención suma 1. Si dice cantidad explícita ("dos H-04", "tres aceites") usa esa cantidad.
+Devuelve un ítem por cada mención en el orden en que aparecen (no agrupes, la app agrupa). Ignora muletillas y palabras sueltas sin producto.
+En una foto: lee los códigos visibles en las etiquetas y devuelve un ítem por frasco/producto visible.`;
+    const content = data.imagen
+      ? [
+          { type: "input_text", text: "Cuenta los productos de esta repisa." },
+          { type: "input_image", image_url: data.imagen },
+        ]
+      : data.texto!;
+    const res = await fetch(`${GATEWAY}/responses`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${key()}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "openai/gpt-6-astra",
+        reasoning: { effort: "low" },
+        input: [
+          { role: "system", content: system },
+          { role: "user", content },
+        ],
+        text: { format: { type: "json_schema", name: "bodega", strict: true, schema: schemaBodega } },
+      }),
+    });
+    if (!res.ok) await fail(res);
+    const j = (await res.json()) as {
+      output_text?: string;
+      output?: { type: string; content?: { type: string; text?: string }[] }[];
+    };
+    const text =
+      j.output_text ?? j.output?.flatMap((o) => o.content ?? []).find((c) => c.type === "output_text")?.text ?? "";
+    if (!text) return { items: [] };
+    return JSON.parse(text) as { items: ItemBodega[] };
+  });
