@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Mic, Square, Loader2, Keyboard, Check, X } from "lucide-react";
 import { toast } from "sonner";
+import { avisarMotor } from "@/lib/motor";
 import { transcribir, interpretar, type Interpretacion } from "@/lib/ai.functions";
 import { actions, clp, fechaBonita, hoy, normCodigo, uid, useStore, saldo } from "@/lib/store";
 
@@ -28,7 +29,9 @@ export function VoiceCapture() {
     setEstado("pensando");
     try {
       setTexto(t);
-      setRes(await ai({ data: { texto: t, hoy: hoy() } }));
+      const r = await ai({ data: { texto: t, hoy: hoy() } });
+      avisarMotor(r.motor);
+      setRes(r);
     } catch (e) {
       toast.error((e as Error).message);
     } finally {
@@ -50,7 +53,8 @@ export function VoiceCapture() {
           const buf = new Uint8Array(await blob.arrayBuffer());
           let bin = "";
           for (let i = 0; i < buf.length; i += 0x8000) bin += String.fromCharCode(...buf.subarray(i, i + 0x8000));
-          const { texto: t } = await tx({ data: { audio: btoa(bin), mime: blob.type } });
+          const { texto: t, motor } = await tx({ data: { audio: btoa(bin), mime: blob.type } });
+          avisarMotor(motor);
           if (!t) throw new Error("No te escuché bien. Intenta de nuevo, más cerca del teléfono.");
           await procesar(t);
         } catch (e) {

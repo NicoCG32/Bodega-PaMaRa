@@ -20,6 +20,47 @@ function key() {
   return k;
 }
 
+
+export type Motor = "gemini" | "lovable";
+const GEMINI_MODEL = "gemini-flash-latest";
+
+function geminiKey() {
+  return process.env["GEMINI_API_KEY"] || null;
+}
+
+/** Calls Gemini directly with the owner's own key. Returns text or throws. */
+async function gemini(parts: unknown[], system: string | null, json: boolean): Promise<string> {
+  const k = geminiKey();
+  if (!k) throw new Error("sin clave Gemini");
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(k)}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      // Fall back to Lovable AI quickly if Gemini hangs.
+      signal: AbortSignal.timeout(20_000),
+      body: JSON.stringify({
+        ...(system ? { systemInstruction: { parts: [{ text: system }] } } : {}),
+        contents: [{ role: "user", parts }],
+        generationConfig: json ? { responseMimeType: "application/json", temperature: 0.1 } : { temperature: 0 },
+      }),
+    },
+  );
+  if (!res.ok) {
+    console.error("Gemini error", res.status, (await res.text()).slice(0, 500));
+    throw new Error(`Gemini ${res.status}`);
+  }
+  const j = (await res.json()) as { candidates?: { content?: { parts?: { text?: string }[] } }[] };
+  const text = j.candidates?.[0]?.content?.parts?.map((p) => p.text ?? "").join("") ?? "";
+  if (!text.trim()) throw new Error("Gemini sin respuesta");
+  return text;
+}
+
+function dataUrlParts(url: string) {
+  const m = /^data:([^;]+);base64,(.+)$/.exec(url);
+  return m ? { mimeType: m[1], data: m[2] } : null;
+}
+
 async function fail(res: Response): Promise<never> {
   const body = await res.text();
   console.error("AI gateway error", res.status, body);
@@ -33,7 +74,20 @@ export const transcribir = createServerFn({ method: "POST" })
     if (!d?.audio || d.audio.length > 15_000_000) throw new Error("Audio inválido o muy largo");
     return d;
   })
-  .handler(async ({ data }) => {
+  .handler(async ({ data }): Promise<{ texto: string; motor: Motor }> => {
+    try {
+      const t = await gemini(
+        [
+          { inlineData: { mimeType: data.mime.split(";")[0], data: data.audio } },
+          { text: "Transcribe exactamente este audio en español de Chile. Devuelve solo el texto dicho, sin comentarios. Si no se entiende nada, devuelve vacío." },
+        ],
+        null,
+        false,
+      );
+      return { texto: t.trim(), motor: "gemini" };
+    } catch (e) {
+      console.warn("Gemini transcripción falló, usando Lovable AI", e);
+    }
     const bytes = Uint8Array.from(atob(data.audio), (c) => c.charCodeAt(0));
     const ext = data.mime.includes("mp4") ? "mp4" : data.mime.includes("ogg") ? "ogg" : "webm";
     const fd = new FormData();
@@ -47,7 +101,7 @@ export const transcribir = createServerFn({ method: "POST" })
     });
     if (!res.ok) await fail(res);
     const j = (await res.json()) as { text?: string };
-    return { texto: (j.text ?? "").trim() };
+    return { texto: (j.text ?? "").trim(), motor: "lovable" };
   });
 
 const nullable = (t: string) => ({ type: [t, "null"] });
@@ -81,7 +135,7 @@ export const interpretar = createServerFn({ method: "POST" })
     if (!d?.texto || d.texto.length > 2000) throw new Error("Texto inválido");
     return d;
   })
-  .handler(async ({ data }): Promise<Interpretacion> => {
+  .handler(async ({ data }): Promise<Interpretacion & { motor: Motor }> => {
     const system = `Eres la asistente de PaMaRa AyN, un pequeño negocio chileno de perfumes réplica, ropa, cosmética y encargos.
 Hoy es ${data.hoy} (formato AAAA-MM-DD). Clasifica lo que dicta la dueña.
 Códigos de perfume: Hombre "H-NN", Mujer "M-NN", Juveniles "T-NN" (ej. "hache cinco" = H-05, "eme doce" = M-12). Normaliza siempre a letra-guion-dos dígitos.
@@ -93,6 +147,17 @@ tipo:
 - "stock": llegó o se vendió mercadería. cantidad positiva si llegó, negativa si salió.
 - "otro": cualquier otra cosa.
 Nombres de clientes con mayúscula inicial. resumen: una frase corta y cálida en español explicando lo entendido.`;
+    try {
+      const t = await gemini(
+        [{ text: data.texto }],
+        `${system}\nResponde SOLO JSON con exactamente estas claves: tipo, cliente, codigo, total, abono_inicial, cuotas (lista de {monto, fecha}), cantidad, nota, resumen. Usa null cuando no aplique.`,
+        true,
+      );
+      const r = JSON.parse(t) as Interpretacion;
+      return { ...r, cuotas: Array.isArray(r.cuotas) ? r.cuotas : [], motor: "gemini" };
+    } catch (e) {
+      console.warn("Gemini interpretar falló, usando Lovable AI", e);
+    }
     const res = await fetch(`${GATEWAY}/responses`, {
       method: "POST",
       headers: { Authorization: `Bearer ${key()}`, "Content-Type": "application/json" },
@@ -116,7 +181,7 @@ Nombres de clientes con mayúscula inicial. resumen: una frase corta y cálida e
       j.output?.flatMap((o) => o.content ?? []).find((c) => c.type === "output_text")?.text ??
       "";
     if (!text) throw new Error("La IA no devolvió respuesta. Intenta escribirlo de otra forma.");
-    return JSON.parse(text) as Interpretacion;
+    return { ...(JSON.parse(text) as Interpretacion), motor: "lovable" };
   });
 
 export type ItemBodega = { codigo: string | null; nombre: string | null; tipo: "perfume" | "otro"; cantidad: number };
@@ -150,13 +215,28 @@ export const interpretarBodega = createServerFn({ method: "POST" })
     if ((d.texto?.length ?? 0) > 4000 || (d.imagen?.length ?? 0) > 12_000_000) throw new Error("Muy largo");
     return { ...d, otros: (d.otros ?? []).slice(0, 200) };
   })
-  .handler(async ({ data }): Promise<{ items: ItemBodega[] }> => {
+  .handler(async ({ data }): Promise<{ items: ItemBodega[]; motor: Motor }> => {
     const system = `Ayudas a contar la bodega de PaMaRa AyN (perfumes réplica, ropa, cosmética).
 Perfumes: códigos Hombre "H-NN", Mujer "M-NN", Juveniles "T-NN" ("hache diecisiete" = H-17). Normaliza a letra-guion-dos dígitos, tipo "perfume", nombre null.
 Otros productos (aceites, cremas, prendas) no tienen código: codigo null, tipo "otro", nombre corto con mayúscula inicial. Si se parece a uno conocido, usa exactamente ese nombre. Conocidos: ${data.otros.join(", ") || "ninguno"}.
 La dueña suele nombrar frasco por frasco ("H-17, H-15, H-17"): cada mención suma 1. Si dice cantidad explícita ("dos H-04", "tres aceites") usa esa cantidad.
 Devuelve un ítem por cada mención en el orden en que aparecen (no agrupes, la app agrupa). Ignora muletillas y palabras sueltas sin producto.
 En una foto: lee los códigos visibles en las etiquetas y devuelve un ítem por frasco/producto visible.`;
+    try {
+      const img = data.imagen ? dataUrlParts(data.imagen) : null;
+      const parts = img
+        ? [{ inlineData: img }, { text: "Cuenta los productos de esta repisa." }]
+        : [{ text: data.texto ?? "" }];
+      const t = await gemini(
+        parts,
+        `${system}\nResponde SOLO JSON: {"items":[{"codigo":string|null,"nombre":string|null,"tipo":"perfume"|"otro","cantidad":number}]}`,
+        true,
+      );
+      const r = JSON.parse(t) as { items?: ItemBodega[] };
+      return { items: Array.isArray(r.items) ? r.items : [], motor: "gemini" };
+    } catch (e) {
+      console.warn("Gemini bodega falló, usando Lovable AI", e);
+    }
     const content = data.imagen
       ? [
           { type: "input_text", text: "Cuenta los productos de esta repisa." },
@@ -183,6 +263,6 @@ En una foto: lee los códigos visibles en las etiquetas y devuelve un ítem por 
     };
     const text =
       j.output_text ?? j.output?.flatMap((o) => o.content ?? []).find((c) => c.type === "output_text")?.text ?? "";
-    if (!text) return { items: [] };
-    return JSON.parse(text) as { items: ItemBodega[] };
+    if (!text) return { items: [], motor: "lovable" };
+    return { ...(JSON.parse(text) as { items: ItemBodega[] }), motor: "lovable" };
   });
