@@ -4,7 +4,44 @@ import { Minus, Pencil, Plus, Trash2 } from "lucide-react";
 import { BodegaCapture } from "@/components/BodegaCapture";
 import { CrearTrend, PanelAnuncio, PublicarStock } from "@/components/Promocion";
 import { anuncioIndividual } from "@/lib/anuncios";
-import { actions, clp, DIAS_REMATE, diasQuieto, esOtro, normCodigo, uid, useStore, type Producto } from "@/lib/store";
+import { actions, clp, DIAS_REMATE, diasQuieto, esOtro, normCodigo, reposicion, resumenBodega, uid, useStore, type Producto } from "@/lib/store";
+
+function Resumen() {
+  const { productos } = useStore();
+  const r = resumenBodega(productos);
+  const caja = "rounded-3xl bg-card p-3 text-center shadow-soft";
+  return (
+    <div className="space-y-1">
+      <div className="grid grid-cols-3 gap-2">
+        <div className={caja}><p className="text-2xl font-extrabold">{r.unidades}</p><p className="text-sm text-muted-foreground">unidades</p></div>
+        <div className={caja}><p className="text-xl font-extrabold">{clp(r.valor)}</p><p className="text-sm text-muted-foreground">valor bodega</p></div>
+        <div className={`${caja} ${r.remate ? "bg-accent text-accent-foreground" : ""}`}><p className="text-2xl font-extrabold">{r.remate}</p><p className="text-sm">para rematar</p></div>
+      </div>
+      {r.sinPrecio > 0 && <p className="text-center text-sm text-muted-foreground">{r.sinPrecio} producto(s) sin precio no suman al valor</p>}
+    </div>
+  );
+}
+
+function Reposicion() {
+  const { productos, encargos } = useStore();
+  const lista = reposicion(productos, encargos);
+  if (lista.length === 0) return null;
+  return (
+    <div className="rounded-3xl border-2 border-destructive bg-card p-4 shadow-soft">
+      <p className="text-lg font-extrabold">⚠️ Por reponer</p>
+      <ul className="mt-2 space-y-2">
+        {lista.map(({ p, pedidos, rapido }) => (
+          <li key={p.codigo} className="flex items-center justify-between gap-2">
+            <span className="min-w-0 truncate font-bold">{titulo(p)} <span className="font-normal text-muted-foreground">{detalle(p)}</span></span>
+            <span className="shrink-0 rounded-full bg-secondary px-3 py-0.5 text-sm font-bold">
+              {pedidos > 0 ? `${pedidos} encargo${pedidos > 1 ? "s" : ""}` : rapido ? "Se vende rápido" : ""}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 export const Route = createFileRoute("/catalogo")({
   head: () => ({
@@ -77,6 +114,8 @@ function Catalogo() {
         </div>
       )}
 
+      {vista === "bodega" && <Resumen />}
+      {vista === "bodega" && <Reposicion />}
       {vista === "bodega" && <BodegaCapture />}
       {vista === "bodega" && <PublicarStock />}
       {vista === "bodega" && <CrearTrend />}
