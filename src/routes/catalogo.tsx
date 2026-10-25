@@ -195,6 +195,13 @@ function Tarjeta({ p }: { p: Producto }) {
         <button onClick={() => setEditar(true)} className="flex items-center gap-1 text-sm font-bold text-primary">
           <Pencil className="size-4" /> Editar datos
         </button>
+        <button
+          onClick={() => actions.toggleBoutique(p.codigo)}
+          aria-pressed={p.enBoutique !== false}
+          className={`rounded-full px-3 py-2 text-sm font-bold ${p.enBoutique !== false ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"}`}
+        >
+          {p.enBoutique !== false ? "👁 En Boutique" : "🔒 Solo privado"}
+        </button>
         {p.stock > 0 && !anuncio && (
           <button onClick={() => setAnuncio(true)} className="rounded-full bg-accent px-4 py-2 text-sm font-bold text-accent-foreground">
             📣 Crear anuncio FB
