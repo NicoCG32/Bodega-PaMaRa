@@ -30,6 +30,8 @@ export type Producto = {
   precio?: number | undefined;
   fechaIngreso?: string | undefined;
   ultimaVenta?: string | undefined;
+  /** Shown in the future public Boutique. Default true. */
+  enBoutique?: boolean | undefined;
 };
 
 export const esOtro = (p: Producto) => p.tipo === "otro" || p.codigo.startsWith("O-");
@@ -39,6 +41,33 @@ export function diasQuieto(p: Producto) {
   return ref ? -diasHasta(ref) : 0;
 }
 export const DIAS_REMATE = 30;
+/** An out-of-stock product sold within this many days counts as "se vende rápido". */
+export const DIAS_DEMANDA = 30;
+
+export const enRemate = (p: Producto) => p.stock > 0 && diasQuieto(p) >= DIAS_REMATE;
+
+export function resumenBodega(productos: Producto[]) {
+  const enStock = productos.filter((p) => p.stock > 0);
+  return {
+    unidades: enStock.reduce((a, p) => a + p.stock, 0),
+    valor: enStock.reduce((a, p) => a + p.stock * (p.precio ?? 0), 0),
+    sinPrecio: enStock.filter((p) => !p.precio).length,
+    remate: enStock.filter(enRemate).length,
+  };
+}
+
+/** Out-of-stock products with pending orders or a recent sale. */
+export function reposicion(productos: Producto[], encargos: Encargo[]) {
+  return productos
+    .filter((p) => p.stock === 0)
+    .map((p) => {
+      const pedidos = encargos.filter((e) => !e.entregado && normCodigo(e.codigo) === p.codigo).length;
+      const vendidoHace = p.ultimaVenta ? -diasHasta(p.ultimaVenta) : Infinity;
+      return { p, pedidos, rapido: vendidoHace <= DIAS_DEMANDA };
+    })
+    .filter((x) => x.pedidos > 0 || x.rapido)
+    .sort((a, b) => b.pedidos - a.pedidos);
+}
 
 export type State = {
   deudas: Deuda[];
@@ -189,6 +218,9 @@ export const actions = {
   },
   borrarProducto(codigo: string) {
     set((s) => ({ ...s, productos: s.productos.filter((p) => p.codigo !== codigo) }));
+  },
+  toggleBoutique(codigo: string) {
+    set((s) => ({ ...s, productos: s.productos.map((p) => (p.codigo === codigo ? { ...p, enBoutique: p.enBoutique === false } : p)) }));
   },
   setTelefono(cliente: string, tel: string) {
     set((s) => ({ ...s, telefonos: { ...s.telefonos, [cliente.toLowerCase()]: tel } }));
