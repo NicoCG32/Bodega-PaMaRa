@@ -1,0 +1,84 @@
+plugins {
+    id 'com.android.application'
+}
+
+def releaseConfig = new Properties()
+rootProject.file('release.properties').withInputStream { releaseConfig.load(it) }
+// CI supplies a unique, increasing version without committing generated changes.
+releaseConfig.versionCode = providers.environmentVariable('ANDROID_VERSION_CODE').getOrElse(releaseConfig.versionCode)
+releaseConfig.versionName = providers.environmentVariable('ANDROID_VERSION_NAME').getOrElse(releaseConfig.versionName)
+if (!(releaseConfig.versionCode ==~ /[1-9][0-9]*/) || releaseConfig.versionCode.toLong() > 2100000000L) {
+    throw new GradleException('ANDROID_VERSION_CODE must be a positive Android version code.')
+}
+if (!(releaseConfig.versionName ==~ /[0-9]+\.[0-9]+\.[0-9]+-beta\.[0-9]+/)) {
+    throw new GradleException('Only explicit beta versions are enabled for automatic distribution.')
+}
+def signing = ['ANDROID_KEYSTORE_PATH', 'ANDROID_KEYSTORE_PASSWORD',
+               'ANDROID_KEY_ALIAS', 'ANDROID_KEY_PASSWORD'].collectEntries {
+    [(it): providers.environmentVariable(it).orNull]
+}
+def hasSigning = signing.values().every { it != null && !it.isBlank() }
+
+android {
+    namespace releaseConfig.applicationId
+    compileSdk releaseConfig.compileSdk.toInteger()
+    buildToolsVersion releaseConfig.buildToolsVersion
+
+    defaultConfig {
+        applicationId releaseConfig.applicationId
+        minSdk releaseConfig.minSdk.toInteger()
+        targetSdk releaseConfig.targetSdk.toInteger()
+        versionCode releaseConfig.versionCode.toInteger()
+        versionName releaseConfig.versionName
+        manifestPlaceholders = [webHost: releaseConfig.host, launchUrl: "https://${releaseConfig.host}/"]
+        resValue 'string', 'asset_statements',
+                "[{\"relation\":[\"delegate_permission/common.handle_all_urls\"],\"target\":{\"namespace\":\"web\",\"site\":\"https://${releaseConfig.host}\"}}]"
+    }
+
+    signingConfigs {
+        release {
+            if (hasSigning) {
+                storeFile file(signing.ANDROID_KEYSTORE_PATH)
+                storePassword signing.ANDROID_KEYSTORE_PASSWORD
+                keyAlias signing.ANDROID_KEY_ALIAS
+                keyPassword signing.ANDROID_KEY_PASSWORD
+            }
+        }
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-debug'
+        }
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+// Never silently produce an unsigned or debug-signed release.
+tasks.register('requireReleaseSigning') {
+    doLast {
+        if (!hasSigning) {
+            throw new GradleException('Release requires ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS and ANDROID_KEY_PASSWORD.')
+        }
+    }
+}
+tasks.configureEach {
+    if (name == 'preReleaseBuild') dependsOn 'requireReleaseSigning'
+}
+
+dependencyLocking {
+    lockAllConfigurations()
+}
+
+dependencies {
+    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.7.4'
+}

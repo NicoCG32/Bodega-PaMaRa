@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.lovable.pamara_bodega",
+      "sha256_cert_fingerprints": [
+        "A0:20:CA:6F:45:A2:72:3B:FA:C1:05:F5:45:50:AA:01:C7:67:2F:30:5E:B9:37:D9:66:9F:E9:5D:0F:C4:B4:A4"
+      ]
+    }
+  }
+]

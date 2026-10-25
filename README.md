@@ -15,6 +15,12 @@ This project was built with [Lovable](https://lovable.dev).
 
 **Live app**: https://pamara-bodega.lovable.app
 
+## Android (candidata beta)
+
+El proyecto Android en `android/` genera una APK firmada que abre la web mediante Trusted Web Activity. Requiere internet, el backend publicado y un navegador compatible actualizado. La versión inicial es `0.1.0-beta.1`; compilarla no acredita todavía todos los recorridos en teléfono ni notificaciones.
+
+Consulta la [guía de instalación, firma y GitHub Releases](docs/09-instalacion-y-despliegue.md) y los [criterios de aceptación Android](docs/android-acceptance.md). Cada push a `main` compila, verifica y publica automáticamente una nueva release beta con APK, SHA-256 y procedencia. Las versiones automáticas empiezan en `0.1.0-beta.1001`; la clave de firma se conserva entre actualizaciones.
+
 ## Build with Lovable
 
 Continue developing this project in the [Lovable editor](https://lovable.dev/projects/f28b7e81-15d3-4524-b82a-69955673e05e).
