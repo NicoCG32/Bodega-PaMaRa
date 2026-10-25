@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Minus, Pencil, Plus, Trash2 } from "lucide-react";
 import { BodegaCapture } from "@/components/BodegaCapture";
+import { CrearTrend, PanelAnuncio, PublicarStock } from "@/components/Promocion";
+import { anuncioIndividual } from "@/lib/anuncios";
 import { actions, clp, DIAS_REMATE, diasQuieto, esOtro, normCodigo, uid, useStore, type Producto } from "@/lib/store";
 
 export const Route = createFileRoute("/catalogo")({
@@ -76,6 +78,8 @@ function Catalogo() {
       )}
 
       {vista === "bodega" && <BodegaCapture />}
+      {vista === "bodega" && <PublicarStock />}
+      {vista === "bodega" && <CrearTrend />}
 
       {vista === "bodega" && tipo === "perfume" && (
         <button
@@ -115,6 +119,7 @@ function Catalogo() {
 
 function Tarjeta({ p }: { p: Producto }) {
   const [editar, setEditar] = useState(false);
+  const [anuncio, setAnuncio] = useState(false);
   const dias = diasQuieto(p);
   const remate = p.stock > 0 && dias >= DIAS_REMATE;
   if (editar) return <li><Editor tipo={esOtro(p) ? "otro" : "perfume"} p={p} onClose={() => setEditar(false)} /></li>;
@@ -147,9 +152,17 @@ function Tarjeta({ p }: { p: Producto }) {
               : `En bodega hace ${dias === 0 ? "menos de un día" : `${dias} días`}`}
         </p>
       )}
-      <button onClick={() => setEditar(true)} className="mt-2 flex items-center gap-1 text-sm font-bold text-primary">
-        <Pencil className="size-4" /> Editar datos
-      </button>
+      <div className="mt-2 flex items-center justify-between">
+        <button onClick={() => setEditar(true)} className="flex items-center gap-1 text-sm font-bold text-primary">
+          <Pencil className="size-4" /> Editar datos
+        </button>
+        {p.stock > 0 && !anuncio && (
+          <button onClick={() => setAnuncio(true)} className="rounded-full bg-accent px-4 py-2 text-sm font-bold text-accent-foreground">
+            📣 Crear anuncio FB
+          </button>
+        )}
+      </div>
+      {anuncio && <div className="mt-3"><PanelAnuncio texto={anuncioIndividual(p)} onClose={() => setAnuncio(false)} /></div>}
     </li>
   );
 }
