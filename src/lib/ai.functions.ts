@@ -266,3 +266,46 @@ En una foto: lee los códigos visibles en las etiquetas y devuelve un ítem por 
     if (!text) return { items: [], motor: "lovable" };
     return { ...(JSON.parse(text) as { items: ItemBodega[] }), motor: "lovable" };
   });
+
+/** Turns a spoken meme/trend idea into a ready-to-paste ChatGPT prompt (image + caption). */
+export const crearPromptTrend = createServerFn({ method: "POST" })
+  .inputValidator((d: { idea: string; productos: string }) => {
+    if (!d?.idea || d.idea.length > 2000) throw new Error("Cuéntame la idea primero");
+    return { idea: d.idea, productos: (d.productos ?? "").slice(0, 1500) };
+  })
+  .handler(async ({ data }): Promise<{ prompt: string; motor: Motor }> => {
+    const system = `Eres experta en marketing para redes sociales de PaMaRa AyN, una tienda chilena de perfumes (inspiraciones de alta fijación), ropa y cosmética.
+La dueña te cuenta una idea de meme o trend en lenguaje natural. Escribe UN prompt en español, listo para pegar en ChatGPT, que le pida:
+1) Generar una imagen (describe escena, personajes, estilo visual, colores, encuadre cuadrado 1:1, texto corto dentro de la imagen si corresponde).
+2) Un texto gracioso y breve para publicar en Facebook/Instagram con emojis y llamado a escribir por WhatsApp.
+Nunca uses las palabras "réplica", "imitación" ni "copia"; usa "inspiración". Menciona la marca PaMaRa AyN. Si nombra un código (H-05, M-12, T-03) úsalo.
+Productos disponibles como referencia: ${data.productos || "no indicado"}.
+Devuelve SOLO el texto del prompt, sin explicaciones ni comillas.`;
+    try {
+      const t = await gemini([{ text: data.idea }], system, false);
+      return { prompt: t.trim(), motor: "gemini" };
+    } catch (e) {
+      console.warn("Gemini trend falló, usando Lovable AI", e);
+    }
+    const res = await fetch(`${GATEWAY}/responses`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${key()}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "openai/gpt-6-astra",
+        reasoning: { effort: "low" },
+        input: [
+          { role: "system", content: system },
+          { role: "user", content: data.idea },
+        ],
+      }),
+    });
+    if (!res.ok) await fail(res);
+    const j = (await res.json()) as {
+      output_text?: string;
+      output?: { type: string; content?: { type: string; text?: string }[] }[];
+    };
+    const text =
+      j.output_text ?? j.output?.flatMap((o) => o.content ?? []).find((c) => c.type === "output_text")?.text ?? "";
+    if (!text.trim()) throw new Error("La IA no devolvió respuesta. Intenta contarlo de otra forma.");
+    return { prompt: text.trim(), motor: "lovable" };
+  });
