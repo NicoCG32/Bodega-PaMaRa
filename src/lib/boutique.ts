@@ -1,7 +1,7 @@
 import { clp, esOtro, type Producto } from "./store";
 
 /** Número de WhatsApp de la tienda (formato 569XXXXXXXX). Vacío = la clienta elige el chat. */
-export const TIENDA_WHATSAPP = "";
+export const TIENDA_WHATSAPP = "56935774427";
 export const COMUNAS = ["La Serena", "Coquimbo", "Calama", "Otra"] as const;
 export const ULTIMAS = 2;
 
