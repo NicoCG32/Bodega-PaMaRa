@@ -5,7 +5,7 @@ import logo from "@/assets/logo.png";
 import { useStore, saldo, proximaCuota, diasHasta, hoy, clp } from "@/lib/store";
 
 const tabs = [
-  { to: "/", label: "Anotar", icon: Mic },
+  { to: "/vault", label: "Anotar", icon: Mic },
   { to: "/cobros", label: "Cobros", icon: Wallet },
   { to: "/encargos", label: "Encargos", icon: ClipboardList },
   { to: "/catalogo", label: "Catálogo", icon: Package },
