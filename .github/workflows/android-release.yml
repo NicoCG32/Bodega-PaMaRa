@@ -87,5 +87,5 @@ jobs:
               --title "PaMaRa Bodega $ANDROID_VERSION_NAME" --notes-file "$OUT/RELEASE_NOTES.md"
           fi
           # Only a draft can reach this point. Publish after all assets upload successfully.
-          gh release upload "$RELEASE_TAG" "$OUT"/*.apk "$OUT/SHA256SUMS.txt" "$OUT/release-manifest.json" --clobber
+          gh release upload "$RELEASE_TAG" "$OUT"/*.apk "$OUT/SHA256SUMS.txt" "$OUT/release-manifest.json" "$OUT/RELEASE_NOTES.md" --clobber
           gh release edit "$RELEASE_TAG" --draft=false --prerelease --latest=false
