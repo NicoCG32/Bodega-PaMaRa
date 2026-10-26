@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
   type ErrorComponentProps,
@@ -142,10 +143,17 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <AppShell>
+      <ShellSegunRuta>
         <Outlet />
-      </AppShell>
+      </ShellSegunRuta>
       <Toaster position="top-center" richColors />
     </QueryClientProvider>
   );
+}
+
+/** La Boutique pública ("/") va sin la barra del Vault. */
+function ShellSegunRuta({ children }: { children: ReactNode }) {
+  const path = useRouterState({ select: (s) => s.location.pathname });
+  if (path === "/") return <>{children}</>;
+  return <AppShell>{children}</AppShell>;
 }
