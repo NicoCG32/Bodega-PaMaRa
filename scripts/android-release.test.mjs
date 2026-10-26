@@ -9,6 +9,8 @@ function fixture() {
     metadata: { applicationId: 'test.app', elements: [{ versionName: '0.1.0-beta.1', versionCode: 1, filters: [] }] },
     badging: "package: name='test.app' versionCode='1' versionName='0.1.0-beta.1'\nminSdkVersion:'26'\ntargetSdkVersion:'36'",
     signature: `Signer #1 certificate SHA-256 digest: ${digest}`,
+    compiledManifest: ['LauncherActivity', 'ManageDataLauncherActivity', 'FocusActivity'].map((name) =>
+      `    E: activity (line=1)\n      A: http://schemas.android.com/apk/res/android:name(0x01010003)="com.google.androidbrowserhelper.trusted.${name}"`).join('\n'),
     assetlinks: [{ relation: ['delegate_permission/common.handle_all_urls'], target: { namespace: 'android_app', package_name: 'test.app', sha256_cert_fingerprints: [digest.toUpperCase().match(/.{2}/g).join(':')] } }],
   };
 }
@@ -56,4 +58,10 @@ test('refuses invalid version codes and accidental stable autopublication', () =
     assert.throws(() => releaseConfig(text, { ANDROID_VERSION_CODE: code }), /versionCode/);
   }
   assert.throws(() => releaseConfig(text, { ANDROID_VERSION_NAME: '1.0.0' }), /only distributes beta/);
+});
+test('rejects the startup-crash regression: referenced but undeclared ManageData activity', () => {
+  const data = fixture();
+  data.compiledManifest = data.compiledManifest.replace('trusted.ManageDataLauncherActivity', 'trusted.OtherActivity')
+    + '\n    E: meta-data (line=2)\n      A: http://schemas.android.com/apk/res/android:name(0x01010003)="com.google.androidbrowserhelper.trusted.ManageDataLauncherActivity"';
+  assert.throws(() => verifyArtifact(data), /missing required TWA activity: ManageDataLauncherActivity/);
 });

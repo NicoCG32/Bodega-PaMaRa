@@ -27,7 +27,22 @@ export function releaseConfig(text, env = process.env) {
   return config;
 }
 
-export function verifyArtifact({ config, metadata, badging, signature, assetlinks }) {
+export function manifestActivities(xmlTree) {
+  const names = new Set();
+  let activityIndent = null;
+  for (const line of xmlTree.split(/\r?\n/)) {
+    const element = line.match(/^(\s*)E: (\S+)/);
+    if (element) {
+      if (activityIndent !== null && element[1].length <= activityIndent) activityIndent = null;
+      if (element[2] === 'activity') activityIndent = element[1].length;
+    }
+    const attr = line.match(/^(\s*)A: [^\s]*:name\([^)]*\)="([^"]+)"/);
+    if (attr && activityIndent !== null && attr[1].length === activityIndent + 2) names.add(attr[2]);
+  }
+  return names;
+}
+
+export function verifyArtifact({ config, metadata, badging, signature, assetlinks, compiledManifest }) {
   assert.equal(metadata.applicationId, config.applicationId, 'Unexpected application ID');
   assert.equal(metadata.elements.length, 1, 'Expected one universal APK');
   const element = metadata.elements[0];
@@ -39,6 +54,10 @@ export function verifyArtifact({ config, metadata, badging, signature, assetlink
   assert(badging.includes(`package: name='${config.applicationId}' versionCode='${config.versionCode}' versionName='${config.versionName}'`), 'APK identity differs from configuration');
   assert(badging.includes(`minSdkVersion:'${config.minSdk}'`), 'Unexpected minimum Android version');
   assert(badging.includes(`targetSdkVersion:'${config.targetSdk}'`), 'Unexpected Android target');
+  const activities = manifestActivities(compiledManifest);
+  for (const name of ['LauncherActivity', 'ManageDataLauncherActivity', 'FocusActivity']) {
+    assert(activities.has(`com.google.androidbrowserhelper.trusted.${name}`), `APK is missing required TWA activity: ${name}`);
+  }
   const match = signature.match(/Signer #1 certificate SHA-256 digest: ([a-fA-F0-9]{64})/);
   assert(match, 'No verified APK signing certificate');
   assert(!/CN=Android Debug/i.test(signature), 'Refusing a debug signing certificate');
@@ -66,16 +85,17 @@ async function main() {
   assert(existsSync(apk), 'Build the signed APK first: cd android && ./gradlew assembleRelease');
   const signature = run(java, ['-jar', path.join(buildTools, 'lib/apksigner.jar'), 'verify', '--verbose', '--print-certs', apk]);
   const badging = run(path.join(buildTools, process.platform === 'win32' ? 'aapt2.exe' : 'aapt2'), ['dump', 'badging', apk]);
+  const compiledManifest = run(path.join(buildTools, process.platform === 'win32' ? 'aapt2.exe' : 'aapt2'), ['dump', 'xmltree', apk, '--file', 'AndroidManifest.xml']);
   const metadata = JSON.parse(read('android/app/build/outputs/apk/release/output-metadata.json'));
   const assetlinks = JSON.parse(read('public/.well-known/assetlinks.json'));
-  const fingerprint = verifyArtifact({ config, metadata, badging, signature, assetlinks });
+  const fingerprint = verifyArtifact({ config, metadata, badging, signature, assetlinks, compiledManifest });
   let domainVerification = 'not-checked';
   if (args.has('--check-web') || args.has('--inspect-web')) {
     try {
       const response = await fetch(`https://${config.host}/.well-known/assetlinks.json`, { redirect: 'error', signal: AbortSignal.timeout(20000) });
       assert.equal(response.status, 200, `Hosted assetlinks.json returned HTTP ${response.status}`);
       assert(response.headers.get('content-type')?.includes('application/json'), 'assetlinks.json must be served as application/json');
-      verifyArtifact({ config, metadata, badging, signature, assetlinks: await response.json() });
+      verifyArtifact({ config, metadata, badging, signature, assetlinks: await response.json(), compiledManifest });
       domainVerification = 'https-file-matches-certificate';
     } catch (error) {
       if (args.has('--check-web')) throw error;
