@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { aPublico, badge, enColeccion, mensajePedido } from "@/lib/boutique";
+import { aPublico, badge, enColeccion, linkPedido, mensajePedido } from "@/lib/boutique";
 import type { Producto } from "@/lib/store";
 
 const ps: Producto[] = [
@@ -29,5 +29,10 @@ describe("Boutique", () => {
     const msg = mensajePedido([{ item: pub[0]!, cantidad: 2 }, { item: pub[1]!, cantidad: 1 }], "Calama");
     expect(msg).toContain("Total: $45.000");
     expect(msg).toContain("Comuna de entrega: Calama");
+  });
+  it("el pedido abre el WhatsApp de la tienda", () => {
+    const url = linkPedido([{ item: aPublico(ps)[0]!, cantidad: 1 }], "Coquimbo");
+    expect(url.startsWith("https://wa.me/56935774427?text=")).toBe(true);
+    expect(decodeURIComponent(url)).toContain("Comuna de entrega: Coquimbo");
   });
 });
