@@ -14,6 +14,7 @@ import { Route as AjustesRouteImport } from './routes/ajustes'
 import { Route as CatalogoRouteImport } from './routes/catalogo'
 import { Route as CobrosRouteImport } from './routes/cobros'
 import { Route as EncargosRouteImport } from './routes/encargos'
+import { Route as VaultRouteImport } from './routes/vault'
 import { Route as ApiPublicJobsRecordatoriosRouteImport } from './routes/api/public/jobs/recordatorios'
 
 const IndexRoute = IndexRouteImport.update({
@@ -41,6 +42,11 @@ const EncargosRoute = EncargosRouteImport.update({
   path: '/encargos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VaultRoute = VaultRouteImport.update({
+  id: '/vault',
+  path: '/vault',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicJobsRecordatoriosRoute =
   ApiPublicJobsRecordatoriosRouteImport.update({
     id: '/api/public/jobs/recordatorios',
@@ -54,6 +60,7 @@ export interface FileRoutesByFullPath {
   '/catalogo': typeof CatalogoRoute
   '/cobros': typeof CobrosRoute
   '/encargos': typeof EncargosRoute
+  '/vault': typeof VaultRoute
   '/api/public/jobs/recordatorios': typeof ApiPublicJobsRecordatoriosRoute
 }
 export interface FileRoutesByTo {
@@ -62,6 +69,7 @@ export interface FileRoutesByTo {
   '/catalogo': typeof CatalogoRoute
   '/cobros': typeof CobrosRoute
   '/encargos': typeof EncargosRoute
+  '/vault': typeof VaultRoute
   '/api/public/jobs/recordatorios': typeof ApiPublicJobsRecordatoriosRoute
 }
 export interface FileRoutesById {
@@ -71,6 +79,7 @@ export interface FileRoutesById {
   '/catalogo': typeof CatalogoRoute
   '/cobros': typeof CobrosRoute
   '/encargos': typeof EncargosRoute
+  '/vault': typeof VaultRoute
   '/api/public/jobs/recordatorios': typeof ApiPublicJobsRecordatoriosRoute
 }
 export interface FileRouteTypes {
@@ -81,6 +90,7 @@ export interface FileRouteTypes {
     | '/catalogo'
     | '/cobros'
     | '/encargos'
+    | '/vault'
     | '/api/public/jobs/recordatorios'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -89,6 +99,7 @@ export interface FileRouteTypes {
     | '/catalogo'
     | '/cobros'
     | '/encargos'
+    | '/vault'
     | '/api/public/jobs/recordatorios'
   id:
     | '__root__'
@@ -97,6 +108,7 @@ export interface FileRouteTypes {
     | '/catalogo'
     | '/cobros'
     | '/encargos'
+    | '/vault'
     | '/api/public/jobs/recordatorios'
   fileRoutesById: FileRoutesById
 }
@@ -106,6 +118,7 @@ export interface RootRouteChildren {
   CatalogoRoute: typeof CatalogoRoute
   CobrosRoute: typeof CobrosRoute
   EncargosRoute: typeof EncargosRoute
+  VaultRoute: typeof VaultRoute
   ApiPublicJobsRecordatoriosRoute: typeof ApiPublicJobsRecordatoriosRoute
 }
 
@@ -146,6 +159,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EncargosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/vault': {
+      id: '/vault'
+      path: '/vault'
+      fullPath: '/vault'
+      preLoaderRoute: typeof VaultRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/jobs/recordatorios': {
       id: '/api/public/jobs/recordatorios'
       path: '/api/public/jobs/recordatorios'
@@ -162,6 +182,7 @@ const rootRouteChildren: RootRouteChildren = {
   CatalogoRoute: CatalogoRoute,
   CobrosRoute: CobrosRoute,
   EncargosRoute: EncargosRoute,
+  VaultRoute: VaultRoute,
   ApiPublicJobsRecordatoriosRoute: ApiPublicJobsRecordatoriosRoute,
 }
 export const routeTree = rootRouteImport
