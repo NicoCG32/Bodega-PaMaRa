@@ -16,7 +16,20 @@ import {
 } from "@/lib/boutique";
 import { clp } from "@/lib/store";
 
-const catalogoQuery = queryOptions({ queryKey: ["boutique"], queryFn: () => catalogoPublico() });
+// Never break the storefront on a network hiccup: show empty and retry soon.
+const catalogoQuery = queryOptions({
+  queryKey: ["boutique"],
+  queryFn: async (): Promise<ItemPublico[]> => {
+    try {
+      return await catalogoPublico();
+    } catch (e) {
+      console.warn("Catálogo no disponible", e);
+      return [];
+    }
+  },
+  staleTime: 30_000,
+  refetchInterval: (q) => (q.state.data?.length ? false : 15_000),
+});
 
 export const Route = createFileRoute("/")({
   head: () => ({
