@@ -60,7 +60,7 @@ export function BodegaCapture() {
     });
   }
 
-  async function procesar(p: Promise<{ items: ItemBodega[]; motor?: "gemini" | "lovable" }>) {
+  async function procesar(p: Promise<{ items: ItemBodega[]; motor?: "gemini" | "groq" | "lovable" }>) {
     setPendientes((n) => n + 1);
     try {
       const r = await p;

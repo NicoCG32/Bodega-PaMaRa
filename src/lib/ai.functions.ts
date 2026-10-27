@@ -81,7 +81,7 @@ export const transcribir = createServerFn({ method: "POST" })
     if (groqKey) {
       try {
         const g = new FormData();
-        g.append("file", new Blob([bytes], { type: data.mime.split(";")[0] }), `audio.${ext}`);
+        g.append("file", new Blob([bytes], { type: data.mime.split(";")[0] ?? data.mime }), `audio.${ext}`);
         g.append("model", "whisper-large-v3");
         g.append("language", "es");
         g.append("response_format", "json");
