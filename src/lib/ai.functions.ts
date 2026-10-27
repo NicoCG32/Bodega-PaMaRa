@@ -21,7 +21,7 @@ function key() {
 }
 
 
-export type Motor = "gemini" | "lovable";
+export type Motor = "gemini" | "groq" | "lovable";
 const GEMINI_MODEL = "gemini-flash-latest";
 
 function geminiKey() {
@@ -75,21 +75,29 @@ export const transcribir = createServerFn({ method: "POST" })
     return d;
   })
   .handler(async ({ data }): Promise<{ texto: string; motor: Motor }> => {
-    try {
-      const t = await gemini(
-        [
-          { inlineData: { mimeType: data.mime.split(";")[0], data: data.audio } },
-          { text: "Transcribe exactamente este audio en español de Chile. Devuelve solo el texto dicho, sin comentarios. Si no se entiende nada, devuelve vacío." },
-        ],
-        null,
-        false,
-      );
-      return { texto: t.trim(), motor: "gemini" };
-    } catch (e) {
-      console.warn("Gemini transcripción falló, usando Lovable AI", e);
-    }
     const bytes = Uint8Array.from(atob(data.audio), (c) => c.charCodeAt(0));
     const ext = data.mime.includes("mp4") ? "mp4" : data.mime.includes("ogg") ? "ogg" : "webm";
+    const groqKey = process.env["GROQ_API_KEY"];
+    if (groqKey) {
+      try {
+        const g = new FormData();
+        g.append("file", new Blob([bytes], { type: data.mime.split(";")[0] }), `audio.${ext}`);
+        g.append("model", "whisper-large-v3");
+        g.append("language", "es");
+        g.append("response_format", "json");
+        const r = await fetch("https://api.groq.com/openai/v1/audio/transcriptions", {
+          method: "POST",
+          headers: { Authorization: `Bearer ${groqKey}` },
+          body: g,
+          signal: AbortSignal.timeout(20_000),
+        });
+        if (!r.ok) throw new Error(`Groq ${r.status}: ${(await r.text()).slice(0, 300)}`);
+        const gj = (await r.json()) as { text?: string };
+        return { texto: (gj.text ?? "").trim(), motor: "groq" };
+      } catch (e) {
+        console.warn("Groq transcripción falló, usando Lovable AI", e);
+      }
+    }
     const fd = new FormData();
     fd.append("file", new Blob([bytes], { type: data.mime }), `audio.${ext}`);
     fd.append("model", "openai/gpt-transcribe");
