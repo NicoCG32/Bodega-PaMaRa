@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import { PERFUMES } from "./perfumes";
 
 export type Cuota = { id: string; monto: number; fecha: string; pagada: boolean };
 export type Deuda = {
@@ -77,6 +78,18 @@ export type State = {
   actualizado: string;
 };
 
+/** Adds every official fragrance (stock 0) and fills missing names; never changes stock or user edits. */
+export function conCatalogo(productos: Producto[]): Producto[] {
+  const porCodigo = new Map(productos.map((p) => [p.codigo, p]));
+  const out = productos.map((p) => {
+    const ref = PERFUMES.find(([c]) => c === p.codigo);
+    return ref && !p.inspiracion && !p.nombre ? { ...p, inspiracion: ref[1], nombre: `${ref[1]} · ${ref[2]}` } : p;
+  });
+  for (const [codigo, frag, marca] of PERFUMES)
+    if (!porCodigo.has(codigo)) out.push({ codigo, nombre: `${frag} · ${marca}`, inspiracion: frag, stock: 0, tipo: "perfume" });
+  return out;
+}
+
 const KEY = "pamara-ayn-v1";
 const empty: State = { deudas: [], encargos: [], productos: [], telefonos: {}, actualizado: "" };
 let state: State = empty;
@@ -89,6 +102,7 @@ function load() {
   try {
     const raw = localStorage.getItem(KEY);
     if (raw) state = { ...empty, ...JSON.parse(raw) };
+    state = { ...state, productos: conCatalogo(state.productos) };
   } catch {
     /* ignore */
   }
@@ -117,6 +131,7 @@ export function subscribe(l: () => void) {
 export function restoreState(s: Partial<State>) {
   load();
   state = { ...empty, ...s };
+  state = { ...state, productos: conCatalogo(state.productos) };
   localStorage.setItem(KEY, JSON.stringify(state));
   listeners.forEach((l) => l());
 }
@@ -149,8 +164,9 @@ export function proximaCuota(d: Deuda): Cuota | null {
 }
 
 export function normCodigo(c: string) {
-  const m = c.toUpperCase().replace(/\s/g, "").match(/^([HMT])-?(\d{1,3})$/);
-  return m ? `${m[1]}-${(m[2] ?? "").padStart(2, "0")}` : c.toUpperCase().trim();
+  const m = c.toUpperCase().replace(/\s/g, "").match(/^([HMTFJ])-?(\d{1,3})$/);
+  const letra = m ? ({ F: "M", J: "T" } as Record<string, string>)[m[1] ?? ""] ?? m[1] : "";
+  return m ? `${letra}-${(m[2] ?? "").padStart(2, "0")}` : c.toUpperCase().trim();
 }
 
 export const actions = {
