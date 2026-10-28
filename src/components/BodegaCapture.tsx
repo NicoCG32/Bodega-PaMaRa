@@ -39,6 +39,7 @@ export function BodegaCapture() {
   const activo = useRef(false);
   const stream = useRef<MediaStream | null>(null);
   const contador = useRef(0);
+  const nativo = useRef<Escucha | null>(null);
   const fotoRef = useRef<HTMLInputElement>(null);
 
   const otros = productos.filter(esOtro).map((p) => p.nombre).filter(Boolean);
@@ -81,15 +82,21 @@ export function BodegaCapture() {
     const chunks: Blob[] = [];
     mr.ondataavailable = (e) => e.data.size && chunks.push(e.data);
     mr.onstop = () => {
-      if (activo.current) grabarTramo();
+      const seguir = activo.current;
+      if (seguir) grabarTramo();
       else s.getTracks().forEach((t) => t.stop());
+      const n = nativo.current;
+      const respaldo: Promise<string> = !n ? Promise.resolve("") : seguir ? Promise.resolve(n.cortar()) : n.parar();
+      if (!seguir) nativo.current = null;
       const blob = new Blob(chunks, { type: mr.mimeType || "audio/webm" });
       if (blob.size < 2000) return;
       void procesar(
         (async () => {
-          const { texto, motor } = await tx({ data: { audio: await aBase64(blob), mime: blob.type } });
-          avisarMotor(motor);
-          if (!texto.trim()) return { items: [] };
+          const texto = await transcribirConRespaldo(
+            async () => tx({ data: { audio: await aBase64(blob), mime: blob.type } }),
+            () => respaldo,
+          );
+          if (!texto) return { items: [] };
           return ai({ data: { texto, otros } });
         })(),
       );
@@ -101,6 +108,7 @@ export function BodegaCapture() {
   async function empezar() {
     try {
       stream.current = await navigator.mediaDevices.getUserMedia({ audio: true });
+      nativo.current = escucharNativo();
       activo.current = true;
       setGrabando(true);
       setFinal(false);
