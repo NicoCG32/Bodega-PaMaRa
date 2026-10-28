@@ -4,6 +4,7 @@ import { Loader2, Mic, Square } from "lucide-react";
 import { toast } from "sonner";
 import { crearPromptTrend, transcribir } from "@/lib/ai.functions";
 import { avisarMotor } from "@/lib/motor";
+import { escucharNativo, transcribirConRespaldo } from "@/lib/vozNativa";
 import { anuncioMultiple, chatgptUrl, FB_CREAR, filtrarStock, type FiltroStock } from "@/lib/anuncios";
 import { useStore } from "@/lib/store";
 
@@ -104,18 +105,19 @@ export function CrearTrend() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const mr = new MediaRecorder(stream);
+      const nativo = escucharNativo();
       chunks.current = [];
       mr.ondataavailable = (e) => e.data.size && chunks.current.push(e.data);
       mr.onstop = async () => {
         stream.getTracks().forEach((t) => t.stop());
+        const respaldo = nativo.parar();
         const blob = new Blob(chunks.current, { type: mr.mimeType || "audio/webm" });
         setEstado("pensando");
         try {
           const buf = new Uint8Array(await blob.arrayBuffer());
           let bin = "";
           for (let i = 0; i < buf.length; i += 0x8000) bin += String.fromCharCode(...buf.subarray(i, i + 0x8000));
-          const { texto, motor } = await tx({ data: { audio: btoa(bin), mime: blob.type } });
-          avisarMotor(motor);
+          const texto = await transcribirConRespaldo(() => tx({ data: { audio: btoa(bin), mime: blob.type } }), () => respaldo);
           if (!texto) throw new Error("No te escuché bien. Intenta de nuevo.");
           setIdea(texto);
           await generar(texto);

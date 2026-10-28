@@ -75,10 +75,14 @@ export const transcribir = createServerFn({ method: "POST" })
     return d;
   })
   .handler(async ({ data }): Promise<{ texto: string; motor: Motor }> => {
+    // Groq only — never Lovable AI. Client falls back to the phone's native dictation.
     const bytes = Uint8Array.from(atob(data.audio), (c) => c.charCodeAt(0));
     const ext = data.mime.includes("mp4") ? "mp4" : data.mime.includes("ogg") ? "ogg" : "webm";
     const groqKey = process.env["GROQ_API_KEY"];
-    if (groqKey) {
+    if (!groqKey) throw new Error("Falta la clave de Groq");
+    let ultimo = "";
+    for (let intento = 0; intento < 3; intento++) {
+      if (intento > 0) await new Promise((r) => setTimeout(r, 1500 * intento));
       try {
         const g = new FormData();
         g.append("file", new Blob([bytes], { type: data.mime.split(";")[0] ?? data.mime }), `audio.${ext}`);
@@ -89,27 +93,19 @@ export const transcribir = createServerFn({ method: "POST" })
           method: "POST",
           headers: { Authorization: `Bearer ${groqKey}` },
           body: g,
-          signal: AbortSignal.timeout(20_000),
+          signal: AbortSignal.timeout(60_000),
         });
-        if (!r.ok) throw new Error(`Groq ${r.status}: ${(await r.text()).slice(0, 300)}`);
-        const gj = (await r.json()) as { text?: string };
-        return { texto: (gj.text ?? "").trim(), motor: "groq" };
+        if (r.ok) {
+          const gj = (await r.json()) as { text?: string };
+          return { texto: (gj.text ?? "").trim(), motor: "groq" };
+        }
+        ultimo = `Groq ${r.status}: ${(await r.text()).slice(0, 200)}`;
+        if (r.status !== 429 && r.status < 500) break;
       } catch (e) {
-        console.warn("Groq transcripción falló, usando Lovable AI", e);
+        ultimo = (e as Error).message;
       }
     }
-    const fd = new FormData();
-    fd.append("file", new Blob([bytes], { type: data.mime }), `audio.${ext}`);
-    fd.append("model", "openai/gpt-transcribe");
-    fd.append("language", "es");
-    const res = await fetch(`${GATEWAY}/audio/transcriptions`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${key()}` },
-      body: fd,
-    });
-    if (!res.ok) await fail(res);
-    const j = (await res.json()) as { text?: string };
-    return { texto: (j.text ?? "").trim(), motor: "lovable" };
+    throw new Error(ultimo || "Groq no respondió");
   });
 
 const nullable = (t: string) => ({ type: [t, "null"] });
