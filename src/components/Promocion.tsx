@@ -4,6 +4,7 @@ import { Loader2, Mic, Square } from "lucide-react";
 import { toast } from "sonner";
 import { crearPromptTrend, transcribir } from "@/lib/ai.functions";
 import { avisarMotor } from "@/lib/motor";
+import { escucharNativo, transcribirConRespaldo } from "@/lib/vozNativa";
 import { anuncioMultiple, chatgptUrl, FB_CREAR, filtrarStock, type FiltroStock } from "@/lib/anuncios";
 import { useStore } from "@/lib/store";
 
