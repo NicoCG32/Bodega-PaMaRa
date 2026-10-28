@@ -4,6 +4,7 @@ import { Camera, Loader2, Mic, Minus, Plus, Square, X } from "lucide-react";
 import { toast } from "sonner";
 import { avisarMotor } from "@/lib/motor";
 import { interpretarBodega, transcribir, type ItemBodega } from "@/lib/ai.functions";
+import { escucharNativo, transcribirConRespaldo, type Escucha } from "@/lib/vozNativa";
 import { actions, esOtro, hoy, normCodigo, uid, useStore } from "@/lib/store";
 
 type Fila = { clave: string; codigo: string | null; nombre: string; tipo: "perfume" | "otro"; cantidad: number; toque: number };
