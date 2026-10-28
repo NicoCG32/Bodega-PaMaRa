@@ -40,6 +40,7 @@ export function escucharNativo(): Escucha {
       interino = "";
       for (let i = e.resultIndex; i < e.results.length; i++) {
         const r = e.results[i];
+        if (!r) continue;
         if (r.isFinal) texto += " " + r[0].transcript;
         else interino += " " + r[0].transcript;
       }
