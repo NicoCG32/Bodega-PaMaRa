@@ -59,7 +59,7 @@ export function escucharNativo(): Escucha {
 
   const cortar = () => {
     const t = (texto + interino).slice(corte).trim();
-    corte = texto.length;
+    corte = (texto + interino).length;
     return t;
   };
   return {
@@ -74,13 +74,27 @@ export function escucharNativo(): Escucha {
   };
 }
 
-/** Groq first; on any failure use the phone's own transcription. Never Lovable AI. */
-export async function transcribirConRespaldo(groq: () => Promise<{ texto: string }>, nativo: () => string | Promise<string>) {
-  try {
-    const { texto } = await groq();
-    if (texto.trim()) return texto.trim();
-  } catch (e) {
-    console.warn("Groq falló, uso el dictado del teléfono", e);
+export type Transcripciones = { texto: string; groq: string; nativo: string };
+export const ESPERA_CON_NATIVO_MS = 1200;
+export const ESPERA_SIN_NATIVO_MS = 60_000;
+
+/** Both sources start together. Once native is ready, do not wait for slow Whisper retries. */
+export async function transcribirConRespaldo(groq: () => Promise<{ texto: string }>, nativo: () => string | Promise<string>): Promise<Transcripciones> {
+  let textoGroq = "";
+  let terminado = false;
+  let aviso: (() => void) | undefined;
+  const notificar = new Promise<void>((ok) => { aviso = ok; });
+  void Promise.resolve().then(groq).then((r) => { textoGroq = r.texto.trim(); }).catch(() => {}).finally(() => {
+    terminado = true;
+    aviso?.();
+  });
+  const textoNativo = await Promise.resolve().then(nativo).catch(() => "");
+  if (!terminado) {
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    await Promise.race([notificar, new Promise<void>((ok) => {
+      timer = setTimeout(ok, textoNativo.trim() ? ESPERA_CON_NATIVO_MS : ESPERA_SIN_NATIVO_MS);
+    })]);
+    if (timer !== undefined) clearTimeout(timer);
   }
-  return (await nativo()).trim();
+  return { texto: textoGroq || textoNativo.trim(), groq: textoGroq, nativo: textoNativo.trim() };
 }

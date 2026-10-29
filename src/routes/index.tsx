@@ -38,6 +38,8 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Perfumes de inspiración, cosmética y accesorios con entrega en La Serena, Coquimbo y Calama. Pide por WhatsApp." },
       { property: "og:title", content: "PaMaRa Boutique" },
       { property: "og:description", content: "Arma tu pedido y envíalo por WhatsApp en un toque." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(catalogoQuery),
