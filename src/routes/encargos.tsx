@@ -10,6 +10,8 @@ export const Route = createFileRoute("/encargos")({
       { name: "description", content: "Lista de encargos pendientes y entregados de PaMaRa AyN." },
       { property: "og:title", content: "Encargos · PaMaRa AyN" },
       { property: "og:description", content: "Lista de encargos pendientes y entregados." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Encargos,

@@ -10,6 +10,8 @@ export const Route = createFileRoute("/cobros")({
       { name: "description", content: "Quién debe, cuánto y cuándo paga. Recordatorios por WhatsApp con un toque." },
       { property: "og:title", content: "Cobros y Deudores · PaMaRa AyN" },
       { property: "og:description", content: "Quién debe, cuánto y cuándo paga." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Cobros,

@@ -23,7 +23,10 @@ async function fotoReducida(file: File): Promise<string> {
   const c = document.createElement("canvas");
   c.width = Math.round(img.width * escala);
   c.height = Math.round(img.height * escala);
-  c.getContext("2d")!.drawImage(img, 0, 0, c.width, c.height);
+  const ctx = c.getContext("2d");
+  if (!ctx) throw new Error("No pude preparar la foto. Intenta otra vez.");
+  ctx.drawImage(img, 0, 0, c.width, c.height);
+  img.close();
   return c.toDataURL("image/jpeg", 0.85);
 }
 
@@ -41,6 +44,9 @@ export function BodegaCapture() {
   const contador = useRef(0);
   const nativo = useRef<Escucha | null>(null);
   const fotoRef = useRef<HTMLInputElement>(null);
+  const sesion = useRef(0);
+  const recorder = useRef<MediaRecorder | null>(null);
+  const [revisiones, setRevisiones] = useState<{ texto: string; nativo: string; groq: string }[]>([]);
 
   const otros = productos.filter(esOtro).map((p) => p.nombre).filter(Boolean);
 
@@ -62,16 +68,17 @@ export function BodegaCapture() {
     });
   }
 
-  async function procesar(p: Promise<{ items: ItemBodega[]; motor?: "gemini" | "groq" | "lovable" }>) {
+  async function procesar(p: Promise<{ items: ItemBodega[]; motor?: "groq" }>, id = sesion.current) {
     setPendientes((n) => n + 1);
     try {
       const r = await p;
+      if (id !== sesion.current) return;
       avisarMotor(r.motor);
       agregar(r.items);
     } catch (e) {
-      toast.error((e as Error).message);
+      if (id === sesion.current) toast.error((e as Error).message);
     } finally {
-      setPendientes((n) => n - 1);
+      if (id === sesion.current) setPendientes((n) => n - 1);
     }
   }
 
@@ -79,26 +86,34 @@ export function BodegaCapture() {
     const s = stream.current;
     if (!s || !activo.current) return;
     const mr = new MediaRecorder(s);
+    recorder.current = mr;
+    const id = sesion.current;
     const chunks: Blob[] = [];
     mr.ondataavailable = (e) => e.data.size && chunks.push(e.data);
     mr.onstop = () => {
-      const seguir = activo.current;
+      const seguir = activo.current && id === sesion.current;
       if (seguir) grabarTramo();
       else s.getTracks().forEach((t) => t.stop());
       const n = nativo.current;
       const respaldo: Promise<string> = !n ? Promise.resolve("") : seguir ? Promise.resolve(n.cortar()) : n.parar();
-      if (!seguir) nativo.current = null;
+      if (!seguir && id === sesion.current) nativo.current = null;
       const blob = new Blob(chunks, { type: mr.mimeType || "audio/webm" });
-      if (blob.size < 2000) return;
+      if (id !== sesion.current) return;
       void procesar(
         (async () => {
           const texto = await transcribirConRespaldo(
             async () => tx({ data: { audio: await aBase64(blob), mime: blob.type } }),
             () => respaldo,
           );
-          if (!texto) return { items: [] };
-          return ai({ data: { texto, otros } });
+          if (!texto.texto || id !== sesion.current) return { items: [] };
+          try {
+            return await ai({ data: { ...texto, otros } });
+          } catch (e) {
+            if (id === sesion.current) setRevisiones((r) => [...r, texto]);
+            throw e;
+          }
         })(),
+        id,
       );
     };
     mr.start();
@@ -121,6 +136,7 @@ export function BodegaCapture() {
   function parar() {
     activo.current = false;
     setGrabando(false);
+    if (recorder.current?.state === "recording") recorder.current.stop();
   }
 
   async function foto(file: File | undefined) {
@@ -153,7 +169,10 @@ export function BodegaCapture() {
   }
 
   function cerrar() {
+    sesion.current++;
     parar();
+    setPendientes(0);
+    setRevisiones([]);
     setFilas([]);
     setFinal(false);
     setAbierto(false);
@@ -221,7 +240,18 @@ export function BodegaCapture() {
         ))}
       </ul>
 
-      {filas.length > 0 && !grabando && pendientes === 0 && (
+      {revisiones.map((r, i) => (
+        <div key={i} className="space-y-2">
+          <textarea aria-label="Dictado pendiente de revisar" value={r.texto} onChange={(e) => setRevisiones((lista) => lista.map((x, j) => j === i ? { texto: e.target.value, groq: "", nativo: "" } : x))} className="w-full rounded-xl border border-input bg-background p-3" />
+          <button disabled={pendientes > 0} onClick={() => void procesar((async () => {
+            const resultado = await ai({ data: { ...r, otros } });
+            setRevisiones((lista) => lista.filter((x) => x !== r));
+            return resultado;
+          })())} className="h-12 w-full rounded-xl bg-secondary font-bold">Revisar dictado guardado</button>
+        </div>
+      ))}
+
+      {filas.length > 0 && !grabando && pendientes === 0 && revisiones.length === 0 && (
         final ? (
           <div className="space-y-2">
             <p className="text-center font-bold">{total} productos en total</p>

@@ -3,7 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { Mic, Square, Loader2, Keyboard, Check, X } from "lucide-react";
 import { toast } from "sonner";
 import { avisarMotor } from "@/lib/motor";
-import { escucharNativo, transcribirConRespaldo } from "@/lib/vozNativa";
+import { escucharNativo, transcribirConRespaldo, type Transcripciones } from "@/lib/vozNativa";
 import { transcribir, interpretar, type Interpretacion } from "@/lib/ai.functions";
 import { actions, clp, fechaBonita, hoy, normCodigo, uid, useStore, saldo } from "@/lib/store";
 
@@ -23,16 +23,18 @@ export function VoiceCapture() {
   const [texto, setTexto] = useState("");
   const [escribir, setEscribir] = useState(false);
   const [res, setRes] = useState<Interpretacion | null>(null);
+  const [fuentes, setFuentes] = useState<Transcripciones | null>(null);
   const rec = useRef<MediaRecorder | null>(null);
   const chunks = useRef<Blob[]>([]);
 
-  async function procesar(t: string) {
+  async function procesar(t: string, versiones?: Transcripciones) {
     setEstado("pensando");
     try {
       setTexto(t);
-      const r = await ai({ data: { texto: t, hoy: hoy() } });
+      const r = await ai({ data: { texto: t, hoy: hoy(), ...versiones } });
       avisarMotor(r.motor);
       setRes(r);
+      setTexto(r.texto_validado);
     } catch (e) {
       toast.error((e as Error).message);
     } finally {
@@ -57,8 +59,10 @@ export function VoiceCapture() {
           let bin = "";
           for (let i = 0; i < buf.length; i += 0x8000) bin += String.fromCharCode(...buf.subarray(i, i + 0x8000));
           const t = await transcribirConRespaldo(() => tx({ data: { audio: btoa(bin), mime: blob.type } }), () => respaldo);
-          if (!t) throw new Error("No te escuché bien. Intenta de nuevo, más cerca del teléfono.");
-          await procesar(t);
+          if (!t.texto) throw new Error("No te escuché bien. Intenta de nuevo, más cerca del teléfono.");
+          setFuentes(t);
+          setEscribir(true);
+          await procesar(t.texto, t);
         } catch (e) {
           toast.error((e as Error).message);
           setEstado("idle");
@@ -105,6 +109,7 @@ export function VoiceCapture() {
     toast.success("¡Guardado! 💛");
     setRes(null);
     setTexto("");
+    setFuentes(null);
   }
 
   return (
@@ -143,12 +148,12 @@ export function VoiceCapture() {
               className="w-full space-y-3"
               onSubmit={(e) => {
                 e.preventDefault();
-                if (texto.trim()) procesar(texto.trim());
+                if (texto.trim()) void procesar(texto.trim(), fuentes ?? undefined);
               }}
             >
               <textarea
                 value={texto}
-                onChange={(e) => setTexto(e.target.value)}
+                onChange={(e) => { setTexto(e.target.value); setFuentes(null); }}
                 rows={3}
                 placeholder="Escribe aquí lo que pasó…"
                 className="w-full rounded-2xl border-2 border-input bg-background p-4 text-lg"

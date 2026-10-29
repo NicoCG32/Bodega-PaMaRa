@@ -4,7 +4,7 @@ import { Loader2, Mic, Square } from "lucide-react";
 import { toast } from "sonner";
 import { crearPromptTrend, transcribir } from "@/lib/ai.functions";
 import { avisarMotor } from "@/lib/motor";
-import { escucharNativo, transcribirConRespaldo } from "@/lib/vozNativa";
+import { escucharNativo, transcribirConRespaldo, type Transcripciones } from "@/lib/vozNativa";
 import { anuncioMultiple, chatgptUrl, FB_CREAR, filtrarStock, type FiltroStock } from "@/lib/anuncios";
 import { useStore } from "@/lib/store";
 
@@ -87,10 +87,10 @@ export function CrearTrend() {
     .map((p) => [p.codigo.startsWith("O-") ? "" : p.codigo, p.inspiracion, p.version, p.codigo.startsWith("O-") ? p.nombre : ""].filter(Boolean).join(" "))
     .join("; ");
 
-  async function generar(t: string) {
+  async function generar(t: string, versiones?: Transcripciones) {
     setEstado("pensando");
     try {
-      const r = await ai({ data: { idea: t, productos: ref } });
+      const r = await ai({ data: { idea: t, productos: ref, nativo: versiones?.nativo, groq: versiones?.groq } });
       avisarMotor(r.motor);
       setPrompt(r.prompt);
     } catch (e) {
@@ -118,9 +118,9 @@ export function CrearTrend() {
           let bin = "";
           for (let i = 0; i < buf.length; i += 0x8000) bin += String.fromCharCode(...buf.subarray(i, i + 0x8000));
           const texto = await transcribirConRespaldo(() => tx({ data: { audio: btoa(bin), mime: blob.type } }), () => respaldo);
-          if (!texto) throw new Error("No te escuché bien. Intenta de nuevo.");
-          setIdea(texto);
-          await generar(texto);
+          if (!texto.texto) throw new Error("No te escuché bien. Intenta de nuevo.");
+          setIdea(texto.texto);
+          await generar(texto.texto, texto);
         } catch (e) {
           toast.error((e as Error).message);
           setEstado("idle");
