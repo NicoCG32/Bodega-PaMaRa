@@ -1,6 +1,9 @@
 <div align="center">
 
-<img src="src/assets/logo.png" alt="Identidad visual de PaMaRa Bodega" width="150" />
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="branding/03_Banners/PaMaRa_AyN_banner_oscuro.png" />
+  <img src="branding/03_Banners/PaMaRa_AyN_banner_claro.png" alt="Identidad visual de PaMaRa Bodega" width="100%" />
+</picture>
 
 # PaMaRa Bodega
 
@@ -56,6 +59,8 @@ Las claves de proveedores se mantienen en el servidor. [Criterios de aceptación
 | General    | [Problema, cliente y solución](docs/00-problematica-cliente-y-valor.md) · [Motivación](docs/16-motivacion-y-contexto.md)                                                         |
 | Técnica    | [Arquitectura y diagramas](docs/01-arquitectura-general.md) · [Dominio y datos](docs/04-base-de-datos.md)                                                                        |
 | Desarrollo | [Etapas y metodología](docs/17-desarrollo-y-metodologia.md) · [Proyección](docs/15-escalabilidad-y-nuevos-mercados.md) · [Costos CLP/USD](docs/18-analisis-economico-clp-usd.md) |
+
+[Identidad visual](branding/README.md): logos, banners y variantes de aplicación.
 
 ## Licencia y créditos
 

@@ -25,3 +25,13 @@ Son criterios de revisión, no certificaciones de accesibilidad ya obtenidas. La
 
 [README.md](../README.md) · [src/lib/store.ts](../src/lib/store.ts) · [src/lib/cloudSync.ts](../src/lib/cloudSync.ts) · [src/lib/ai.functions.ts](../src/lib/ai.functions.ts) · [src/lib/vozNativa.ts](../src/lib/vozNativa.ts) · [docs/09-instalacion-y-despliegue.md](09-instalacion-y-despliegue.md).
 <!-- DOCUMENTACION:nivel-2026-10-29:END -->
+
+<!-- IDENTIDAD:2026-10-30 -->
+
+## Recursos de identidad y distribución
+
+[Catálogo de originales y variantes](../branding/README.md) · [Manifest de identidad](../branding/manifest.json).
+
+La web usa el logotipo completo PaMaRa AyN optimizado en WebP. Favicon, Apple Touch y PWA utilizan el monograma; el launcher Android incorpora el icono preparado. La TWA sigue dependiendo del sitio publicado.
+
+Los banners de presentación se seleccionan por tema en el README. Las aplicaciones incorporan sólo los recursos necesarios, con dimensiones/proporción estables; las variantes y originales permanecen en branding. La identidad visual no amplía funcionalidades ni cambia las condiciones de uso.

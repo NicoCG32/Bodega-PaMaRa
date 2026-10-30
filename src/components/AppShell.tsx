@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Mic, Wallet, Package, ClipboardList, Settings } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
-import logo from "@/assets/logo.png";
+import logo from "@/assets/pamara-logo.webp";
 import { useStore, saldo, proximaCuota, diasHasta, hoy, clp } from "@/lib/store";
 
 const tabs = [
@@ -20,7 +20,8 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   // Daily reminder alarm: notify once per day about due/overdue payments.
   useEffect(() => {
-    if (!urgentes || typeof Notification === "undefined" || Notification.permission !== "granted") return;
+    if (!urgentes || typeof Notification === "undefined" || Notification.permission !== "granted")
+      return;
     if (localStorage.getItem("pamara-aviso") === hoy()) return;
     localStorage.setItem("pamara-aviso", hoy());
     const lista = deudas.filter((d) => {
@@ -37,9 +38,17 @@ export function AppShell({ children }: { children: ReactNode }) {
       <header className="flex items-center justify-between bg-hero px-5 pb-4 pt-5 text-primary-foreground">
         <div className="flex items-center gap-3">
           <img src={logo} alt="PaMaRa AyN" className="h-16 w-auto" />
-          <p className="text-xs uppercase tracking-[0.3em] text-accent">Perfumes<br />Ropa · Cosmética</p>
+          <p className="text-xs uppercase tracking-[0.3em] text-accent">
+            Perfumes
+            <br />
+            Ropa · Cosmética
+          </p>
         </div>
-        <Link to="/ajustes" aria-label="Ajustes" className="flex size-12 items-center justify-center rounded-full bg-primary-foreground/10">
+        <Link
+          to="/ajustes"
+          aria-label="Ajustes"
+          className="flex size-12 items-center justify-center rounded-full bg-primary-foreground/10"
+        >
           <Settings className="size-6" />
         </Link>
       </header>
