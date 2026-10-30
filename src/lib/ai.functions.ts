@@ -145,7 +145,8 @@ En una foto: lee los códigos visibles en las etiquetas y devuelve un ítem por 
     const content = data.imagen
       ? [{ type: "text", text: "Cuenta únicamente los productos visibles; no adivines etiquetas ilegibles." }, { type: "image_url", image_url: { url: data.imagen } }]
       : versiones({ ...data, texto: data.texto ?? "" });
-    const text = await groqChat(process.env["GROQ_API_KEY"], `${system}\n${coherencia}\nResponde SOLO JSON: {"items":[{"codigo":string|null,"nombre":string|null,"tipo":"perfume"|"otro","cantidad":number}]}`, content, true, Boolean(data.imagen));
+    const instrucciones = data.imagen ? "Cuenta cada objeto visible exactamente una vez. No vuelvas a listar los mismos objetos. No hay transcripciones que combinar. Las etiquetas ilegibles se omiten." : coherencia;
+    const text = await groqChat(process.env["GROQ_API_KEY"], `${system}\n${instrucciones}\nResponde SOLO JSON: {"items":[{"codigo":string|null,"nombre":string|null,"tipo":"perfume"|"otro","cantidad":number}]}`, content, true, Boolean(data.imagen));
     const r = bodegaValidada.safeParse(JSON.parse(text));
     if (!r.success) throw new Error("No pude confirmar los productos. Intenta otra vez antes de guardar.");
     return { items: r.data.items, motor: "groq" };

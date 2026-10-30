@@ -141,6 +141,7 @@ export function BodegaCapture() {
 
   async function foto(file: File | undefined) {
     if (!file) return;
+    setAbierto(true);
     setFinal(false);
     try {
       const imagen = await fotoReducida(file);
@@ -184,7 +185,7 @@ export function BodegaCapture() {
         <button onClick={() => { setAbierto(true); void empezar(); }} className="flex h-20 flex-col items-center justify-center gap-1 rounded-2xl bg-primary text-lg font-bold text-primary-foreground shadow-soft">
           <Mic /> Dictar bodega
         </button>
-        <button onClick={() => { setAbierto(true); fotoRef.current?.click(); }} className="flex h-20 flex-col items-center justify-center gap-1 rounded-2xl bg-accent text-lg font-bold text-accent-foreground shadow-soft">
+        <button onClick={() => fotoRef.current?.click()} className="flex h-20 flex-col items-center justify-center gap-1 rounded-2xl bg-accent text-lg font-bold text-accent-foreground shadow-soft">
           <Camera /> Foto a la repisa
         </button>
         <input ref={fotoRef} type="file" accept="image/*" capture="environment" hidden onChange={(e) => { void foto(e.target.files?.[0]); e.target.value = ""; }} />
