@@ -24,7 +24,7 @@ async function groqChat(apiKey: string | undefined, system: string, content: unk
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
       signal: AbortSignal.timeout(30_000),
       body: JSON.stringify({
-        model: vision ? "qwen/qwen3.8-27b" : "llama-3.3-70b-versatile",
+        model: vision ? "qwen/qwen3.8-27b" : "openai/gpt-oss-120b",
         temperature: 0,
         max_completion_tokens: 2500,
         ...(json ? { response_format: { type: "json_object" } } : {}),
