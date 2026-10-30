@@ -6,6 +6,7 @@ import { avisarMotor } from "@/lib/motor";
 import { interpretarBodega, transcribir, type ItemBodega } from "@/lib/ai.functions";
 import { escucharNativo, transcribirConRespaldo, type Escucha } from "@/lib/vozNativa";
 import { actions, esOtro, hoy, normCodigo, uid, useStore } from "@/lib/store";
+import { Button } from "@/components/ui/button";
 
 type Fila = { clave: string; codigo: string | null; nombre: string; tipo: "perfume" | "otro"; cantidad: number; toque: number };
 const CHUNK_MS = 6000;
@@ -244,11 +245,11 @@ export function BodegaCapture() {
       {revisiones.map((r, i) => (
         <div key={i} className="space-y-2">
           <textarea aria-label="Dictado pendiente de revisar" value={r.texto} onChange={(e) => setRevisiones((lista) => lista.map((x, j) => j === i ? { texto: e.target.value, groq: "", nativo: "" } : x))} className="w-full rounded-xl border border-input bg-background p-3" />
-          <button disabled={pendientes > 0} onClick={() => void procesar((async () => {
+          <Button variant="secondary" disabled={pendientes > 0} onClick={() => void procesar((async () => {
             const resultado = await ai({ data: { ...r, otros } });
             setRevisiones((lista) => lista.filter((x) => x !== r));
             return resultado;
-          })())} className="h-12 w-full rounded-xl bg-secondary font-bold">Revisar dictado guardado</button>
+          })())} className="h-12 w-full rounded-xl font-bold">Revisar dictado guardado</Button>
         </div>
       ))}
 
