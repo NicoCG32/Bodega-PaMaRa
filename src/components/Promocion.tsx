@@ -90,7 +90,7 @@ export function CrearTrend() {
   async function generar(t: string, versiones?: Transcripciones) {
     setEstado("pensando");
     try {
-      const r = await ai({ data: { idea: t, productos: ref, nativo: versiones?.nativo, groq: versiones?.groq } });
+      const r = await ai({ data: { idea: t, productos: ref, ...(versiones ? { nativo: versiones.nativo, groq: versiones.groq } : {}) } });
       avisarMotor(r.motor);
       setPrompt(r.prompt);
     } catch (e) {
