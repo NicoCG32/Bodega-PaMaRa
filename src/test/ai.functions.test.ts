@@ -24,6 +24,8 @@ describe("IA sin Lovable", () => {
     expect(f.mock.calls[0]?.[0]).toBe("https://api.groq.com/openai/v1/chat/completions");
     const body = JSON.parse(f.mock.calls[0]?.[1].body);
     expect(JSON.parse(body.messages[1].content).telefono).toBe("Carmen hache cinco dieciocho mil");
+    expect(body.model).toBe("openai/gpt-oss-120b");
+    expect(body.response_format.json_schema.strict).toBe(true);
   });
   it("un fallo de Groq nunca llama otro proveedor", async () => {
     const f = responder({});
