@@ -16,7 +16,7 @@ export type Interpretacion = {
 
 export type Motor = "groq";
 
-async function groqChat(apiKey: string | undefined, system: string, content: unknown, json = true, vision = false): Promise<string> {
+async function groqChat(apiKey: string | undefined, system: string, content: unknown, json = true, vision = false, schema?: unknown): Promise<string> {
   if (!apiKey) throw new Error("Falta configurar la clave de Groq.");
   try {
     const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -27,7 +27,7 @@ async function groqChat(apiKey: string | undefined, system: string, content: unk
         model: vision ? "qwen/qwen3.8-27b" : "openai/gpt-oss-120b",
         temperature: 0,
         max_completion_tokens: 2500,
-        ...(json ? { response_format: { type: "json_object" } } : {}),
+        ...(json ? { response_format: schema ? { type: "json_schema", json_schema: { name: "registro", strict: true, schema } } : { type: "json_object" } } : {}),
         messages: [{ role: "system", content: system }, { role: "user", content }],
       }),
     });
@@ -57,6 +57,17 @@ const registroValidado = z.object({
   cantidad: z.number().finite().int().nullable(), nota: z.string().nullable(), resumen: z.string().min(1),
   texto_validado: z.string().min(1),
 });
+const nullable = (type: string) => ({ type: [type, "null"] });
+const registroSchema = {
+  type: "object", additionalProperties: false,
+  required: ["tipo", "cliente", "codigo", "total", "abono_inicial", "cuotas", "cantidad", "nota", "resumen", "texto_validado"],
+  properties: {
+    tipo: { type: "string", enum: ["fiado", "abono", "encargo", "stock", "otro"] },
+    cliente: nullable("string"), codigo: nullable("string"), total: nullable("number"), abono_inicial: nullable("number"),
+    cuotas: { type: "array", items: { type: "object", additionalProperties: false, required: ["monto", "fecha"], properties: { monto: { type: "number" }, fecha: { type: "string" } } } },
+    cantidad: nullable("integer"), nota: nullable("string"), resumen: { type: "string" }, texto_validado: { type: "string" },
+  },
+};
 const bodegaValidada = z.object({
   items: z.array(z.object({ codigo: z.string().nullable(), nombre: z.string().nullable(), tipo: z.enum(["perfume", "otro"]), cantidad: z.number().int().positive() })),
 });
@@ -107,7 +118,7 @@ tipo:
 - "stock": llegó o se vendió mercadería. cantidad positiva si llegó, negativa si salió.
 - "otro": cualquier otra cosa.
 Nombres de clientes con mayúscula inicial. resumen: una frase corta y cálida en español explicando lo entendido.`;
-    const text = await groqChat(process.env["GROQ_API_KEY"], `${system}\n${coherencia}\nResponde SOLO JSON con tipo, cliente, codigo, total, abono_inicial, cuotas (lista de {monto, fecha}), cantidad, nota, resumen, texto_validado. Usa null cuando no aplique.`, versiones(data));
+    const text = await groqChat(process.env["GROQ_API_KEY"], `${system}\n${coherencia}\nResponde SOLO JSON con tipo, cliente, codigo, total, abono_inicial, cuotas (lista de {monto, fecha}, vacía si no aplica), cantidad, nota, resumen, texto_validado. Usa null cuando no aplique, excepto cuotas.`, versiones(data), true, false, registroSchema);
     const r = registroValidado.safeParse(JSON.parse(text));
     if (!r.success) throw new Error("No pude confirmar los datos. Conservé lo escuchado; revísalo e intenta otra vez.");
     return { ...r.data, motor: "groq" };
