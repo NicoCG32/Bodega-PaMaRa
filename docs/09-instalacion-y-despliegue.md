@@ -19,18 +19,18 @@ GitHub Releases aloja el instalador; el servidor continúa alojado por separado.
 
 La configuración canónica está en [`android/release.properties`](../android/release.properties).
 
-| Propiedad | Valor inicial |
-| --- | --- |
-| Nombre | PaMaRa Bodega |
-| Application ID | `app.lovable.pamara_bodega` |
-| versionName / versionCode local | `0.1.0-beta.1` / `1` |
-| Versión automática | `0.1.0-beta.<1000 + run_number>` / `1000 + run_number` |
-| Android mínimo | 8.0, API 26 |
-| Android objetivo / compilación | API 36 |
-| Build Tools | 36.0.0 |
-| Java / Gradle / Android Gradle Plugin | JDK 21 / 8.13 / 8.10.1 |
-| Android Browser Helper | 2.7.4 |
-| ABI | APK universal sin bibliotecas nativas |
+| Propiedad                             | Valor inicial                                          |
+| ------------------------------------- | ------------------------------------------------------ |
+| Nombre                                | PaMaRa Bodega                                          |
+| Application ID                        | `app.lovable.pamara_bodega`                            |
+| versionName / versionCode local       | `0.1.0-beta.1` / `1`                                   |
+| Versión automática                    | `0.1.0-beta.<1000 + run_number>` / `1000 + run_number` |
+| Android mínimo                        | 8.0, API 26                                            |
+| Android objetivo / compilación        | API 36                                                 |
+| Build Tools                           | 36.0.0                                                 |
+| Java / Gradle / Android Gradle Plugin | JDK 21 / 8.13 / 8.10.1                                 |
+| Android Browser Helper                | 2.7.4                                                  |
+| ABI                                   | APK universal sin bibliotecas nativas                  |
 
 Se necesita un navegador Android actualizado que admita TWA/Custom Tabs. La disponibilidad de la versión actual del navegador también depende de Android; el mínimo del APK no garantiza todas las APIs web en navegadores antiguos. Debe comprobarse cada dispositivo admitido.
 
@@ -59,12 +59,12 @@ cd android
 
 En Windows usar `.\gradlew.bat` en PowerShell. Para release, suministrar mediante el entorno de un gestor de secretos:
 
-| Variable | Contenido privado |
-| --- | --- |
-| `ANDROID_KEYSTORE_PATH` | Ruta absoluta al keystore PKCS12 |
-| `ANDROID_KEYSTORE_PASSWORD` | Contraseña del keystore |
-| `ANDROID_KEY_ALIAS` | Alias de la clave |
-| `ANDROID_KEY_PASSWORD` | Contraseña de la clave |
+| Variable                    | Contenido privado                |
+| --------------------------- | -------------------------------- |
+| `ANDROID_KEYSTORE_PATH`     | Ruta absoluta al keystore PKCS12 |
+| `ANDROID_KEYSTORE_PASSWORD` | Contraseña del keystore          |
+| `ANDROID_KEY_ALIAS`         | Alias de la clave                |
+| `ANDROID_KEY_PASSWORD`      | Contraseña de la clave           |
 
 ```sh
 cd android
@@ -113,3 +113,70 @@ La publicación en GitHub no despliega el servidor Lovable ni congela su conteni
 - IA, Google y respaldo necesitan red y configuración del servidor.
 - El roadmap mantiene pendiente la conexión Firebase web push. Empaquetar la web no resuelve esa configuración ni prueba notificaciones con app cerrada.
 - Instalación, actualización, OAuth/retorno, voz, respaldo y permisos deben validarse en dispositivo; el build y lint no los sustituyen.
+
+<!-- DOCUMENTACION:nivel-2026-10-29:BEGIN -->
+
+**Nivel:** técnica.
+
+## Puesta en marcha y distribución por plataforma
+
+Revisión documental: 2026-10-29. Base `482ddd6b2f71` en `main`; árbol inicialmente limpio. La inspección de fuentes no sustituye pruebas de ejecución.
+
+**Estado y alcance:** Aplicación web y cliente Android beta documentados. El código actual añade catálogo/boutique y captura paralela; notificaciones, actualización y operación real requieren evidencia específica.
+
+**Destinos:** APK en GitHub Releases + Webpage.
+
+Entorno declarado: engines `{}`; packageManager `consultar lockfile/guía específica`. No actualizar dependencias por redactar documentación.
+
+| Script existente | Definición en package.json |
+| ---------------- | -------------------------- |
+| dev              | `vite dev`                 |
+| build            | `vite build`               |
+| preview          | `vite preview`             |
+| lint             | `eslint .`                 |
+| test             | `vitest run`               |
+
+### Secuencia de puesta en marcha
+
+1. Preparar el runtime/editor y la configuración que indiquen las fuentes enlazadas; usar valores de prueba y restaurar el lockfile apropiado.
+2. Ejecutar la modalidad local y sus comprobaciones existentes desde la carpeta indicada por esa guía. No confundir preview web con el runtime nativo o montaje físico.
+3. Construir/instalar el artefacto de ese target y comprobar recorrido principal, error relevante y reapertura/actualización antes de declararlo entregado.
+
+Los comandos se enumeran desde archivos presentes; esta actualización documental no los ejecuta de nuevo ni certifica sus resultados. Estado de pruebas y CI se informa por revisión/fecha, separado de capacidades propuestas.
+
+### Datos, servicios y distribución
+
+localStorage contiene el State; Supabase guarda un snapshot JSON por cuenta según cloudSync. El snapshot de nube más reciente puede reemplazar caché local según reglas existentes. No describir deudas/productos como tablas relacionales remotas si no lo son; permisos de la fila backup no sustituyen validación del contenido y conflictos.
+
+Para APK: application ID estable, versión/código creciente, firma privada preservada, permisos y prueba en dispositivo; adjuntar APK y SHA-256 a la release. Para escritorio: distinguir portable/instalador y dependencias. Para web: base/rutas, servidor/servicios y cambio de origen. Para firmware: dispositivo, cableado, compilación y prueba física separados. Aplicar sólo los targets aprobados.
+
+GitHub Releases no aloja el backend ni convierte un ZIP de fuentes en instalador. No hacer push como parte de una revisión documental: en proyectos con publicación automática desde main, ese push puede generar una nueva APK o despliegue.
+
+### Recuperación
+
+Conservar el artefacto anterior y su procedencia. Retroceder código no revierte automáticamente datos o migraciones. Revisar compatibilidad de guardado/snapshot y restauración antes de instalar una versión antigua. La aceptación debe identificar archivo/URL, commit, target, fecha y limitaciones.
+
+## Fuentes de implementación y contratos
+
+[README.md](../README.md) · [src/lib/store.ts](../src/lib/store.ts) · [src/lib/cloudSync.ts](../src/lib/cloudSync.ts) · [src/lib/ai.functions.ts](../src/lib/ai.functions.ts) · [src/lib/vozNativa.ts](../src/lib/vozNativa.ts).
+<!-- DOCUMENTACION:nivel-2026-10-29:END -->
+
+<!-- DOCUMENTACION:evidencia-ci-2026-10-29:BEGIN -->
+
+## Estado remoto consultado el 29 de octubre de 2026
+
+Consulta para el commit `482ddd6b2f712daa669a0d05794505df08ded708`. Se leyó GitHub Actions; no se ejecutó de nuevo la aplicación ni se repitieron sus pruebas.
+
+| Workflow            | Estado    | Resultado | Evidencia                                                                             |
+| ------------------- | --------- | --------- | ------------------------------------------------------------------------------------- |
+| Android APK release | completed | success   | [Run 40982385852](https://github.com/NicoCG32/pamara-bodega/actions/runs/40982385852) |
+
+Releases consultadas (no una comprobación nueva de instalación):
+
+| Tag                                                                                                              | Canal      | Adjuntos identificados                                                                     |
+| ---------------------------------------------------------------------------------------------------------------- | ---------- | ------------------------------------------------------------------------------------------ |
+| [android-v0.1.0-beta.1003](https://github.com/NicoCG32/pamara-bodega/releases/tag/untagged-bd48f2716ded7b89beea) | Prerelease | pamara-bodega-0.1.0-beta.1003.apk, release-manifest.json, RELEASE_NOTES.md, SHA256SUMS.txt |
+| [android-v0.1.0-beta.1002](https://github.com/NicoCG32/pamara-bodega/releases/tag/untagged-23572d53d894f6db83ab) | Prerelease | pamara-bodega-0.1.0-beta.1002.apk, release-manifest.json, SHA256SUMS.txt                   |
+| [android-v0.1.0-beta.1012](https://github.com/NicoCG32/pamara-bodega/releases/tag/android-v0.1.0-beta.1012)      | Prerelease | pamara-bodega-0.1.0-beta.1012.apk, release-manifest.json, RELEASE_NOTES.md, SHA256SUMS.txt |
+
+<!-- DOCUMENTACION:evidencia-ci-2026-10-29:END -->
