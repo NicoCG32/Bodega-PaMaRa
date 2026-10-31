@@ -81,10 +81,10 @@ export function CambiarClaveCard() {
   const [nueva, setNueva] = useState("");
   const [rep, setRep] = useState("");
   const campo = "h-14 w-full rounded-2xl border border-input bg-background px-4 text-center text-2xl tracking-[0.5em]";
-  const guardar = () => {
-    if (actual !== leerPin()) return toast.error("La clave actual no es correcta");
-    if (!pinValido(nueva)) return toast.error("La nueva clave debe tener 4 números");
-    if (nueva !== rep) return toast.error("Las claves nuevas no coinciden");
+  const guardar = (): void => {
+    if (actual !== leerPin()) { toast.error("La clave actual no es correcta"); return; }
+    if (!pinValido(nueva)) { toast.error("La nueva clave debe tener 4 números"); return; }
+    if (nueva !== rep) { toast.error("Las claves nuevas no coinciden"); return; }
     localStorage.setItem(PIN_KEY, nueva);
     setActual(""); setNueva(""); setRep("");
     toast.success("Clave de Administrador cambiada");
