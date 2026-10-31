@@ -1,603 +1,123 @@
 /** Catálogo oficial de fragancias (código, inspiración, marca). F→M (Mujer), J→T (Juvenil). */
 export const PERFUMES: [string, string, string][] = [
-[
-"H-01",
-"Drakkar Noir",
-"Guy Laroche"
-],
-[
-"H-02",
-"Azzaro",
-"Azzaro"
-],
-[
-"H-03",
-"Quorum",
-"Puig"
-],
-[
-"H-04",
-"Paco Rabanne",
-"Paco Rabanne"
-],
-[
-"H-05",
-"Invictus Platinum",
-"Paco Rabanne"
-],
-[
-"H-06",
-"Polo Blue Men",
-"Ralph Lauren"
-],
-[
-"H-07",
-"212 Heroes Men",
-"Carolina Herrera"
-],
-[
-"H-08",
-"Armani Code Sport",
-"Giorgio Armani"
-],
-[
-"H-09",
-"Tommy",
-"Tommy Hilfiger"
-],
-[
-"H-10",
-"Carolina Herrera",
-"Carolina Herrera"
-],
-[
-"H-11",
-"Agua Brava",
-"Puig"
-],
-[
-"H-12",
-"Ted Lapidus Pour Homme",
-"Ted Lapidus"
-],
-[
-"H-13",
-"Polo Sport",
-"Ralph Lauren"
-],
-[
-"H-14",
-"212 For Men",
-"Carolina Herrera"
-],
-[
-"H-15",
-"Sauvage Elixir",
-"Christian Dior"
-],
-[
-"H-16",
-"Stronger With You",
-"Armani"
-],
-[
-"H-17",
-"Burberry Hero",
-"Burberry"
-],
-[
-"H-18",
-"Sauvage",
-"Christian Dior"
-],
-[
-"H-19",
-"Fahrenheit",
-"Christian Dior"
-],
-[
-"H-20",
-"Acqua di Giò Profondo",
-"Giorgio Armani"
-],
-[
-"H-21",
-"Elements",
-"Hugo Boss"
-],
-[
-"H-22",
-"Acqua di Giò",
-"Giorgio Armani"
-],
-[
-"H-23",
-"Halloween Man",
-"Jesús del Pozo"
-],
-[
-"H-24",
-"Boss",
-"Hugo Boss"
-],
-[
-"H-25",
-"212 VIP Men",
-"Carolina Herrera"
-],
-[
-"H-26",
-"CK One",
-"Calvin Klein"
-],
-[
-"H-27",
-"XS Black Men",
-"Paco Rabanne"
-],
-[
-"H-28",
-"Eros",
-"Versace"
-],
-[
-"H-29",
-"One Million Intense",
-"Paco Rabanne"
-],
-[
-"H-30",
-"Light Blue Men",
-"Dolce & Gabbana"
-],
-[
-"H-31",
-"Polo Black",
-"Ralph Lauren"
-],
-[
-"H-32",
-"Y EDT",
-"Yves Saint Laurent"
-],
-[
-"H-33",
-"Le Beau",
-"Jean Paul Gaultier"
-],
-[
-"H-34",
-"One Million",
-"Paco Rabanne"
-],
-[
-"H-35",
-"MYSLF",
-"Yves Saint Laurent"
-],
-[
-"H-36",
-"Invictus",
-"Paco Rabanne"
-],
-[
-"H-37",
-"Acqua di Giò Absolu",
-"Giorgio Armani"
-],
-[
-"H-38",
-"Polo Red",
-"Ralph Lauren"
-],
-[
-"H-39",
-"Gucci Guilty",
-"Gucci"
-],
-[
-"H-40",
-"212 VIP Black",
-"Carolina Herrera"
-],
-[
-"H-41",
-"Bleu",
-"Chanel"
-],
-[
-"H-42",
-"Stronger With You Intensely",
-"Armani"
-],
-[
-"H-43",
-"Bad Boy",
-"Carolina Herrera"
-],
-[
-"H-44",
-"Phantom",
-"Paco Rabanne"
-],
-[
-"H-45",
-"212 VIP Black Elixir",
-"Carolina Herrera"
-],
-[
-"M-01",
-"Paloma Picasso",
-"Paloma Picasso"
-],
-[
-"M-02",
-"Poison",
-"Christian Dior"
-],
-[
-"M-03",
-"Oscar de la Renta",
-"Oscar de la Renta"
-],
-[
-"M-04",
-"Angel",
-"Thierry Mugler"
-],
-[
-"M-05",
-"Chanel No. 5",
-"Chanel"
-],
-[
-"M-06",
-"212 VIP Rosé",
-"Carolina Herrera"
-],
-[
-"M-07",
-"Ralph",
-"Ralph Lauren"
-],
-[
-"M-08",
-"Paradoxe",
-"Prada"
-],
-[
-"M-09",
-"Trésor",
-"Lancôme"
-],
-[
-"M-10",
-"Coco Mademoiselle",
-"Chanel"
-],
-[
-"M-11",
-"Coco Chanel",
-"Chanel"
-],
-[
-"M-12",
-"Black Opium",
-"Yves Saint Laurent"
-],
-[
-"M-13",
-"212 Heroes for Her",
-"Carolina Herrera"
-],
-[
-"M-14",
-"CH",
-"Carolina Herrera"
-],
-[
-"M-15",
-"Lolita Lempicka",
-"Lolita Lempicka"
-],
-[
-"M-16",
-"Anaïs Anaïs",
-"Cacharel"
-],
-[
-"M-17",
-"Ô de Lancôme",
-"Lancôme"
-],
-[
-"M-18",
-"Carolina Herrera",
-"Carolina Herrera"
-],
-[
-"M-19",
-"La Bomba",
-"Carolina Herrera"
-],
-[
-"M-20",
-"Eternity",
-"Calvin Klein"
-],
-[
-"M-21",
-"Organza",
-"Givenchy"
-],
-[
-"M-22",
-"Woman",
-"Ralph Lauren"
-],
-[
-"M-23",
-"My Way",
-"Giorgio Armani"
-],
-[
-"M-24",
-"Bloom",
-"Gucci"
-],
-[
-"M-25",
-"Burberry Her",
-"Burberry"
-],
-[
-"M-26",
-"Paris",
-"Yves Saint Laurent"
-],
-[
-"M-27",
-"Be Delicious",
-"Donna Karan"
-],
-[
-"M-28",
-"CK One",
-"Calvin Klein"
-],
-[
-"M-29",
-"212 Carolina Herrera",
-"Carolina Herrera"
-],
-[
-"M-30",
-"Devotion",
-"Dolce & Gabbana"
-],
-[
-"M-31",
-"Eden",
-"Cacharel"
-],
-[
-"M-32",
-"Escape",
-"Calvin Klein"
-],
-[
-"M-33",
-"La Vida Es Bella Intense",
-"Lancôme"
-],
-[
-"M-34",
-"Lady Million Empire",
-"Paco Rabanne"
-],
-[
-"M-35",
-"Flower by Kenzo",
-"Kenzo"
-],
-[
-"M-36",
-"Tommy Girl",
-"Tommy Hilfiger"
-],
-[
-"M-37",
-"XS Black Woman",
-"Paco Rabanne"
-],
-[
-"M-38",
-"J'Adore",
-"Christian Dior"
-],
-[
-"M-39",
-"Boss Woman",
-"Hugo Boss"
-],
-[
-"M-40",
-"Amor Amor",
-"Cacharel"
-],
-[
-"M-41",
-"Can Can",
-"Paris Hilton"
-],
-[
-"M-42",
-"Scandal",
-"Jean Paul Gaultier"
-],
-[
-"M-43",
-"Good Girl",
-"Carolina Herrera"
-],
-[
-"M-44",
-"Olympea",
-"Paco Rabanne"
-],
-[
-"M-45",
-"Halloween",
-"Jesús del Pozo"
-],
-[
-"M-46",
-"212 Sexy",
-"Carolina Herrera"
-],
-[
-"M-47",
-"La Vida Es Bella Rosé",
-"Lancôme"
-],
-[
-"M-48",
-"Duende",
-"Jesús del Pozo"
-],
-[
-"M-49",
-"Nina",
-"Nina Ricci"
-],
-[
-"M-50",
-"Light Blue",
-"Dolce & Gabbana"
-],
-[
-"M-51",
-"Sí",
-"Armani"
-],
-[
-"M-52",
-"Ultraviolet",
-"Paco Rabanne"
-],
-[
-"M-53",
-"Euphoria",
-"Calvin Klein"
-],
-[
-"M-54",
-"Lady Million",
-"Paco Rabanne"
-],
-[
-"M-55",
-"212 VIP",
-"Carolina Herrera"
-],
-[
-"M-56",
-"Miss Dior Rose",
-"Christian Dior"
-],
-[
-"M-57",
-"La Vida Es Bella",
-"Lancôme"
-],
-[
-"M-58",
-"Libre",
-"Yves Saint Laurent"
-],
-[
-"M-59",
-"Idole",
-"Lancôme"
-],
-[
-"M-60",
-"Acqua di Gioia",
-"Armani"
-],
-[
-"M-61",
-"La Vida Es Bella L'Elixir",
-"Lancôme"
-],
-[
-"M-62",
-"Dolce",
-"Dolce & Gabbana"
-],
-[
-"M-63",
-"Live Irresistible",
-"Givenchy"
-],
-[
-"M-64",
-"La Nuit Trésor",
-"Lancôme"
-],
-[
-"M-65",
-"Fame",
-"Paco Rabanne"
-],
-[
-"M-66",
-"Very Good Girl",
-"Carolina Herrera"
-],
-[
-"T-01",
-"Fantasy",
-"Britney Spears"
-],
-[
-"T-02",
-"Selena",
-"Selena Gomez"
-],
-[
-"T-03",
-"Bombshell",
-"Victoria's Secret"
-],
-[
-"T-04",
-"Thank U, Next",
-"Ariana Grande"
-],
-[
-"T-05",
-"Meow",
-"Katy Perry"
-],
-[
-"T-06",
-"Sweet Like Candy",
-"Ariana Grande"
-],
-[
-"T-07",
-"Legacy",
-"Cristiano Ronaldo"
-],
-[
-"T-08",
-"Spirit of the Brave",
-"Neymar / Diesel"
-],
-[
-"T-09",
-"Invictus Aqua",
-"Paco Rabanne"
-]
+  ["H-01", "Drakkar Noir", "Guy Laroche"],
+  ["H-02", "Azzaro", "Azzaro"],
+  ["H-03", "Quorum", "Puig"],
+  ["H-04", "Paco Rabanne", "Paco Rabanne"],
+  ["H-05", "Invictus Platinum", "Paco Rabanne"],
+  ["H-06", "Polo Blue Men", "Ralph Lauren"],
+  ["H-07", "212 Heroes Men", "Carolina Herrera"],
+  ["H-08", "Armani Code Sport", "Giorgio Armani"],
+  ["H-09", "Tommy", "Tommy Hilfiger"],
+  ["H-10", "Carolina Herrera", "Carolina Herrera"],
+  ["H-11", "Agua Brava", "Puig"],
+  ["H-12", "Ted Lapidus Pour Homme", "Ted Lapidus"],
+  ["H-13", "Polo Sport", "Ralph Lauren"],
+  ["H-14", "212 For Men", "Carolina Herrera"],
+  ["H-15", "Sauvage Elixir", "Christian Dior"],
+  ["H-16", "Stronger With You", "Armani"],
+  ["H-17", "Burberry Hero", "Burberry"],
+  ["H-18", "Sauvage", "Christian Dior"],
+  ["H-19", "Fahrenheit", "Christian Dior"],
+  ["H-20", "Acqua di Giò Profondo", "Giorgio Armani"],
+  ["H-21", "Elements", "Hugo Boss"],
+  ["H-22", "Acqua di Giò", "Giorgio Armani"],
+  ["H-23", "Halloween Man", "Jesús del Pozo"],
+  ["H-24", "Boss", "Hugo Boss"],
+  ["H-25", "212 VIP Men", "Carolina Herrera"],
+  ["H-26", "CK One", "Calvin Klein"],
+  ["H-27", "XS Black Men", "Paco Rabanne"],
+  ["H-28", "Eros", "Versace"],
+  ["H-29", "One Million Intense", "Paco Rabanne"],
+  ["H-30", "Light Blue Men", "Dolce & Gabbana"],
+  ["H-31", "Polo Black", "Ralph Lauren"],
+  ["H-32", "Y EDT", "Yves Saint Laurent"],
+  ["H-33", "Le Beau", "Jean Paul Gaultier"],
+  ["H-34", "One Million", "Paco Rabanne"],
+  ["H-35", "MYSLF", "Yves Saint Laurent"],
+  ["H-36", "Invictus", "Paco Rabanne"],
+  ["H-37", "Acqua di Giò Absolu", "Giorgio Armani"],
+  ["H-38", "Polo Red", "Ralph Lauren"],
+  ["H-39", "Gucci Guilty", "Gucci"],
+  ["H-40", "212 VIP Black", "Carolina Herrera"],
+  ["H-41", "Bleu", "Chanel"],
+  ["H-42", "Stronger With You Intensely", "Armani"],
+  ["H-43", "Bad Boy", "Carolina Herrera"],
+  ["H-44", "Phantom", "Paco Rabanne"],
+  ["H-45", "212 VIP Black Elixir", "Carolina Herrera"],
+  ["M-01", "Paloma Picasso", "Paloma Picasso"],
+  ["M-02", "Poison", "Christian Dior"],
+  ["M-03", "Oscar de la Renta", "Oscar de la Renta"],
+  ["M-04", "Angel", "Thierry Mugler"],
+  ["M-05", "Chanel No. 5", "Chanel"],
+  ["M-06", "212 VIP Rosé", "Carolina Herrera"],
+  ["M-07", "Ralph", "Ralph Lauren"],
+  ["M-08", "Paradoxe", "Prada"],
+  ["M-09", "Trésor", "Lancôme"],
+  ["M-10", "Coco Mademoiselle", "Chanel"],
+  ["M-11", "Coco Chanel", "Chanel"],
+  ["M-12", "Black Opium", "Yves Saint Laurent"],
+  ["M-13", "212 Heroes for Her", "Carolina Herrera"],
+  ["M-14", "CH", "Carolina Herrera"],
+  ["M-15", "Lolita Lempicka", "Lolita Lempicka"],
+  ["M-16", "Anaïs Anaïs", "Cacharel"],
+  ["M-17", "Ô de Lancôme", "Lancôme"],
+  ["M-18", "Carolina Herrera", "Carolina Herrera"],
+  ["M-19", "La Bomba", "Carolina Herrera"],
+  ["M-20", "Eternity", "Calvin Klein"],
+  ["M-21", "Organza", "Givenchy"],
+  ["M-22", "Woman", "Ralph Lauren"],
+  ["M-23", "My Way", "Giorgio Armani"],
+  ["M-24", "Bloom", "Gucci"],
+  ["M-25", "Burberry Her", "Burberry"],
+  ["M-26", "Paris", "Yves Saint Laurent"],
+  ["M-27", "Be Delicious", "Donna Karan"],
+  ["M-28", "CK One", "Calvin Klein"],
+  ["M-29", "212 Carolina Herrera", "Carolina Herrera"],
+  ["M-30", "Devotion", "Dolce & Gabbana"],
+  ["M-31", "Eden", "Cacharel"],
+  ["M-32", "Escape", "Calvin Klein"],
+  ["M-33", "La Vida Es Bella Intense", "Lancôme"],
+  ["M-34", "Lady Million Empire", "Paco Rabanne"],
+  ["M-35", "Flower by Kenzo", "Kenzo"],
+  ["M-36", "Tommy Girl", "Tommy Hilfiger"],
+  ["M-37", "XS Black Woman", "Paco Rabanne"],
+  ["M-38", "J'Adore", "Christian Dior"],
+  ["M-39", "Boss Woman", "Hugo Boss"],
+  ["M-40", "Amor Amor", "Cacharel"],
+  ["M-41", "Can Can", "Paris Hilton"],
+  ["M-42", "Scandal", "Jean Paul Gaultier"],
+  ["M-43", "Good Girl", "Carolina Herrera"],
+  ["M-44", "Olympea", "Paco Rabanne"],
+  ["M-45", "Halloween", "Jesús del Pozo"],
+  ["M-46", "212 Sexy", "Carolina Herrera"],
+  ["M-47", "La Vida Es Bella Rosé", "Lancôme"],
+  ["M-48", "Duende", "Jesús del Pozo"],
+  ["M-49", "Nina", "Nina Ricci"],
+  ["M-50", "Light Blue", "Dolce & Gabbana"],
+  ["M-51", "Sí", "Armani"],
+  ["M-52", "Ultraviolet", "Paco Rabanne"],
+  ["M-53", "Euphoria", "Calvin Klein"],
+  ["M-54", "Lady Million", "Paco Rabanne"],
+  ["M-55", "212 VIP", "Carolina Herrera"],
+  ["M-56", "Miss Dior Rose", "Christian Dior"],
+  ["M-57", "La Vida Es Bella", "Lancôme"],
+  ["M-58", "Libre", "Yves Saint Laurent"],
+  ["M-59", "Idole", "Lancôme"],
+  ["M-60", "Acqua di Gioia", "Armani"],
+  ["M-61", "La Vida Es Bella L'Elixir", "Lancôme"],
+  ["M-62", "Dolce", "Dolce & Gabbana"],
+  ["M-63", "Live Irresistible", "Givenchy"],
+  ["M-64", "La Nuit Trésor", "Lancôme"],
+  ["M-65", "Fame", "Paco Rabanne"],
+  ["M-66", "Very Good Girl", "Carolina Herrera"],
+  ["T-01", "Fantasy", "Britney Spears"],
+  ["T-02", "Selena", "Selena Gomez"],
+  ["T-03", "Bombshell", "Victoria's Secret"],
+  ["T-04", "Thank U, Next", "Ariana Grande"],
+  ["T-05", "Meow", "Katy Perry"],
+  ["T-06", "Sweet Like Candy", "Ariana Grande"],
+  ["T-07", "Legacy", "Cristiano Ronaldo"],
+  ["T-08", "Spirit of the Brave", "Neymar / Diesel"],
+  ["T-09", "Invictus Aqua", "Paco Rabanne"],
 ];

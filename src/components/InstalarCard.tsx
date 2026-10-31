@@ -32,7 +32,11 @@ export function InstalarCard() {
 
   return (
     <section className="relative space-y-3 rounded-3xl bg-card p-5 shadow-soft">
-      <button onClick={ocultar} aria-label="Ocultar" className="absolute right-4 top-4 text-muted-foreground">
+      <button
+        onClick={ocultar}
+        aria-label="Ocultar"
+        className="absolute right-4 top-4 text-muted-foreground"
+      >
         <X className="size-5" />
       </button>
       <h3 className="flex items-center gap-2 text-xl font-semibold">
@@ -40,7 +44,9 @@ export function InstalarCard() {
       </h3>
       {evento ? (
         <>
-          <p className="text-muted-foreground">Agrega PaMaRa a tu pantalla de inicio y ábrela como cualquier app.</p>
+          <p className="text-muted-foreground">
+            Agrega PaMaRa a tu pantalla de inicio y ábrela como cualquier app.
+          </p>
           <button
             onClick={() => void evento.prompt().then(ocultar)}
             className="flex h-14 w-full items-center justify-center rounded-2xl bg-primary text-lg font-bold text-primary-foreground"
@@ -50,15 +56,27 @@ export function InstalarCard() {
         </>
       ) : ios ? (
         <ol className="list-decimal space-y-1 pl-5 text-muted-foreground">
-          <li>Abre esta página en <b>Safari</b>.</li>
-          <li>Toca el botón <b>Compartir</b> (cuadrito con flecha hacia arriba).</li>
-          <li>Elige <b>"Agregar a pantalla de inicio"</b>.</li>
+          <li>
+            Abre esta página en <b>Safari</b>.
+          </li>
+          <li>
+            Toca el botón <b>Compartir</b> (cuadrito con flecha hacia arriba).
+          </li>
+          <li>
+            Elige <b>"Agregar a pantalla de inicio"</b>.
+          </li>
         </ol>
       ) : (
         <ol className="list-decimal space-y-1 pl-5 text-muted-foreground">
-          <li>Abre esta página en <b>Chrome</b>.</li>
-          <li>Toca los <b>tres puntitos ⋮</b> arriba a la derecha.</li>
-          <li>Elige <b>"Agregar a pantalla principal"</b> o <b>"Instalar app"</b>.</li>
+          <li>
+            Abre esta página en <b>Chrome</b>.
+          </li>
+          <li>
+            Toca los <b>tres puntitos ⋮</b> arriba a la derecha.
+          </li>
+          <li>
+            Elige <b>"Agregar a pantalla principal"</b> o <b>"Instalar app"</b>.
+          </li>
         </ol>
       )}
     </section>

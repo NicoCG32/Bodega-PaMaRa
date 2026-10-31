@@ -38,7 +38,12 @@ export type Producto = {
 export const esOtro = (p: Producto) => p.tipo === "otro" || p.codigo.startsWith("O-");
 /** Days since the product last moved (last sale or arrival to stock). */
 export function diasQuieto(p: Producto) {
-  const ref = p.ultimaVenta && p.fechaIngreso ? (p.ultimaVenta > p.fechaIngreso ? p.ultimaVenta : p.fechaIngreso) : p.ultimaVenta || p.fechaIngreso;
+  const ref =
+    p.ultimaVenta && p.fechaIngreso
+      ? p.ultimaVenta > p.fechaIngreso
+        ? p.ultimaVenta
+        : p.fechaIngreso
+      : p.ultimaVenta || p.fechaIngreso;
   return ref ? -diasHasta(ref) : 0;
 }
 export const DIAS_REMATE = 30;
@@ -62,7 +67,9 @@ export function reposicion(productos: Producto[], encargos: Encargo[]) {
   return productos
     .filter((p) => p.stock === 0)
     .map((p) => {
-      const pedidos = encargos.filter((e) => !e.entregado && normCodigo(e.codigo) === p.codigo).length;
+      const pedidos = encargos.filter(
+        (e) => !e.entregado && normCodigo(e.codigo) === p.codigo,
+      ).length;
       const vendidoHace = p.ultimaVenta ? -diasHasta(p.ultimaVenta) : Infinity;
       return { p, pedidos, rapido: vendidoHace <= DIAS_DEMANDA };
     })
@@ -83,10 +90,19 @@ export function conCatalogo(productos: Producto[]): Producto[] {
   const porCodigo = new Map(productos.map((p) => [p.codigo, p]));
   const out = productos.map((p) => {
     const ref = PERFUMES.find(([c]) => c === p.codigo);
-    return ref && !p.inspiracion && !p.nombre ? { ...p, inspiracion: ref[1], nombre: `${ref[1]} · ${ref[2]}` } : p;
+    return ref && !p.inspiracion && !p.nombre
+      ? { ...p, inspiracion: ref[1], nombre: `${ref[1]} · ${ref[2]}` }
+      : p;
   });
   for (const [codigo, frag, marca] of PERFUMES)
-    if (!porCodigo.has(codigo)) out.push({ codigo, nombre: `${frag} · ${marca}`, inspiracion: frag, stock: 0, tipo: "perfume" });
+    if (!porCodigo.has(codigo))
+      out.push({
+        codigo,
+        nombre: `${frag} · ${marca}`,
+        inspiracion: frag,
+        stock: 0,
+        tipo: "perfume",
+      });
   return out;
 }
 
@@ -160,12 +176,17 @@ export function saldo(d: Deuda) {
 
 /** Next unpaid installment, or null. */
 export function proximaCuota(d: Deuda): Cuota | null {
-  return [...d.cuotas].filter((c) => !c.pagada).sort((a, b) => a.fecha.localeCompare(b.fecha))[0] ?? null;
+  return (
+    [...d.cuotas].filter((c) => !c.pagada).sort((a, b) => a.fecha.localeCompare(b.fecha))[0] ?? null
+  );
 }
 
 export function normCodigo(c: string) {
-  const m = c.toUpperCase().replace(/\s/g, "").match(/^([HMTFJ])-?(\d{1,3})$/);
-  const letra = m ? ({ F: "M", J: "T" } as Record<string, string>)[m[1] ?? ""] ?? m[1] : "";
+  const m = c
+    .toUpperCase()
+    .replace(/\s/g, "")
+    .match(/^([HMTFJ])-?(\d{1,3})$/);
+  const letra = m ? (({ F: "M", J: "T" } as Record<string, string>)[m[1] ?? ""] ?? m[1]) : "";
   return m ? `${letra}-${(m[2] ?? "").padStart(2, "0")}` : c.toUpperCase().trim();
 }
 
@@ -199,10 +220,16 @@ export const actions = {
     set((s) => ({ ...s, deudas: s.deudas.filter((d) => d.id !== id) }));
   },
   addEncargo(e: Omit<Encargo, "id" | "creada" | "entregado">) {
-    set((s) => ({ ...s, encargos: [{ ...e, id: uid(), creada: hoy(), entregado: false }, ...s.encargos] }));
+    set((s) => ({
+      ...s,
+      encargos: [{ ...e, id: uid(), creada: hoy(), entregado: false }, ...s.encargos],
+    }));
   },
   toggleEncargo(id: string) {
-    set((s) => ({ ...s, encargos: s.encargos.map((e) => (e.id === id ? { ...e, entregado: !e.entregado } : e)) }));
+    set((s) => ({
+      ...s,
+      encargos: s.encargos.map((e) => (e.id === id ? { ...e, entregado: !e.entregado } : e)),
+    }));
   },
   borrarEncargo(id: string) {
     set((s) => ({ ...s, encargos: s.encargos.filter((e) => e.id !== id) }));
@@ -212,7 +239,9 @@ export const actions = {
       const exists = s.productos.some((x) => x.codigo === p.codigo);
       return {
         ...s,
-        productos: exists ? s.productos.map((x) => (x.codigo === p.codigo ? p : x)) : [...s.productos, p],
+        productos: exists
+          ? s.productos.map((x) => (x.codigo === p.codigo ? p : x))
+          : [...s.productos, p],
       };
     });
   },
@@ -228,7 +257,16 @@ export const actions = {
             if (delta < 0 && x.stock > 0) n.ultimaVenta = hoy();
             return n;
           })
-        : [...s.productos, { codigo, nombre: "", stock: Math.max(0, delta), tipo: "perfume" as const, fechaIngreso: delta > 0 ? hoy() : undefined }];
+        : [
+            ...s.productos,
+            {
+              codigo,
+              nombre: "",
+              stock: Math.max(0, delta),
+              tipo: "perfume" as const,
+              fechaIngreso: delta > 0 ? hoy() : undefined,
+            },
+          ];
       return { ...s, productos };
     });
   },
@@ -236,14 +274,24 @@ export const actions = {
     set((s) => ({ ...s, productos: s.productos.filter((p) => p.codigo !== codigo) }));
   },
   toggleBoutique(codigo: string) {
-    set((s) => ({ ...s, productos: s.productos.map((p) => (p.codigo === codigo ? { ...p, enBoutique: p.enBoutique === false } : p)) }));
+    set((s) => ({
+      ...s,
+      productos: s.productos.map((p) =>
+        p.codigo === codigo ? { ...p, enBoutique: p.enBoutique === false } : p,
+      ),
+    }));
   },
   setTelefono(cliente: string, tel: string) {
     set((s) => ({ ...s, telefonos: { ...s.telefonos, [cliente.toLowerCase()]: tel } }));
   },
 };
 
-export function whatsappLink(tel: string | undefined, cliente: string, monto: number, fecha?: string) {
+export function whatsappLink(
+  tel: string | undefined,
+  cliente: string,
+  monto: number,
+  fecha?: string,
+) {
   const msg = `Hola ${cliente} 🌸, te saluda PaMaRa AyN. Te recuerdo con cariño tu pago de ${clp(monto)}${
     fecha ? ` comprometido para el ${fechaBonita(fecha)}` : ""
   }. ¡Muchas gracias por tu confianza! 💛`;

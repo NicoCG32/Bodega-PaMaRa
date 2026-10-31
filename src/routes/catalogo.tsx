@@ -5,7 +5,19 @@ import { AdminGate } from "@/components/AdminGate";
 import { BodegaCapture } from "@/components/BodegaCapture";
 import { CrearTrend, PanelAnuncio, PublicarStock } from "@/components/Promocion";
 import { anuncioIndividual } from "@/lib/anuncios";
-import { actions, clp, DIAS_REMATE, diasQuieto, esOtro, normCodigo, reposicion, resumenBodega, uid, useStore, type Producto } from "@/lib/store";
+import {
+  actions,
+  clp,
+  DIAS_REMATE,
+  diasQuieto,
+  esOtro,
+  normCodigo,
+  reposicion,
+  resumenBodega,
+  uid,
+  useStore,
+  type Producto,
+} from "@/lib/store";
 
 function Resumen() {
   const { productos } = useStore();
@@ -14,11 +26,24 @@ function Resumen() {
   return (
     <div className="space-y-1">
       <div className="grid grid-cols-3 gap-2">
-        <div className={caja}><p className="text-2xl font-extrabold">{r.unidades}</p><p className="text-sm text-muted-foreground">unidades</p></div>
-        <div className={caja}><p className="text-xl font-extrabold">{clp(r.valor)}</p><p className="text-sm text-muted-foreground">valor bodega</p></div>
-        <div className={`${caja} ${r.remate ? "bg-accent text-accent-foreground" : ""}`}><p className="text-2xl font-extrabold">{r.remate}</p><p className="text-sm">para rematar</p></div>
+        <div className={caja}>
+          <p className="text-2xl font-extrabold">{r.unidades}</p>
+          <p className="text-sm text-muted-foreground">unidades</p>
+        </div>
+        <div className={caja}>
+          <p className="text-xl font-extrabold">{clp(r.valor)}</p>
+          <p className="text-sm text-muted-foreground">valor bodega</p>
+        </div>
+        <div className={`${caja} ${r.remate ? "bg-accent text-accent-foreground" : ""}`}>
+          <p className="text-2xl font-extrabold">{r.remate}</p>
+          <p className="text-sm">para rematar</p>
+        </div>
       </div>
-      {r.sinPrecio > 0 && <p className="text-center text-sm text-muted-foreground">{r.sinPrecio} producto(s) sin precio no suman al valor</p>}
+      {r.sinPrecio > 0 && (
+        <p className="text-center text-sm text-muted-foreground">
+          {r.sinPrecio} producto(s) sin precio no suman al valor
+        </p>
+      )}
     </div>
   );
 }
@@ -33,9 +58,15 @@ function Reposicion() {
       <ul className="mt-2 space-y-2">
         {lista.map(({ p, pedidos, rapido }) => (
           <li key={p.codigo} className="flex items-center justify-between gap-2">
-            <span className="min-w-0 truncate font-bold">{titulo(p)} <span className="font-normal text-muted-foreground">{detalle(p)}</span></span>
+            <span className="min-w-0 truncate font-bold">
+              {titulo(p)} <span className="font-normal text-muted-foreground">{detalle(p)}</span>
+            </span>
             <span className="shrink-0 rounded-full bg-secondary px-3 py-0.5 text-sm font-bold">
-              {pedidos > 0 ? `${pedidos} encargo${pedidos > 1 ? "s" : ""}` : rapido ? "Se vende rápido" : ""}
+              {pedidos > 0
+                ? `${pedidos} encargo${pedidos > 1 ? "s" : ""}`
+                : rapido
+                  ? "Se vende rápido"
+                  : ""}
             </span>
           </li>
         ))}
@@ -48,14 +79,21 @@ export const Route = createFileRoute("/catalogo")({
   head: () => ({
     meta: [
       { title: "Bodega y Catálogo · PaMaRa AyN" },
-      { name: "description", content: "Lo que hay en la repisa para entregar hoy y lo que se puede encargar." },
+      {
+        name: "description",
+        content: "Lo que hay en la repisa para entregar hoy y lo que se puede encargar.",
+      },
       { property: "og:title", content: "Bodega y Catálogo · PaMaRa AyN" },
       { property: "og:description", content: "Perfumes, ropa y cosmética: en bodega o a encargo." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
   }),
-  component: () => (<AdminGate><Catalogo /></AdminGate>),
+  component: () => (
+    <AdminGate>
+      <Catalogo />
+    </AdminGate>
+  ),
 });
 
 const filtros = [
@@ -65,10 +103,13 @@ const filtros = [
   { k: "T", label: "Juvenil" },
 ];
 
-const ordenar = (a: Producto, b: Producto) => a.codigo.localeCompare(b.codigo, "es", { numeric: true }) || a.nombre.localeCompare(b.nombre);
+const ordenar = (a: Producto, b: Producto) =>
+  a.codigo.localeCompare(b.codigo, "es", { numeric: true }) || a.nombre.localeCompare(b.nombre);
 const titulo = (p: Producto) => (esOtro(p) ? p.nombre || "Sin nombre" : p.codigo);
 const detalle = (p: Producto) =>
-  esOtro(p) ? p.categoria || "" : [p.inspiracion, p.version].filter(Boolean).join(" · ") || p.nombre;
+  esOtro(p)
+    ? p.categoria || ""
+    : [p.inspiracion, p.version].filter(Boolean).join(" · ") || p.nombre;
 
 function Catalogo() {
   const { productos } = useStore();
@@ -88,18 +129,28 @@ function Catalogo() {
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-2 rounded-3xl bg-secondary p-1.5">
         {(["bodega", "catalogo"] as const).map((v) => (
-          <button key={v} onClick={() => setVista(v)} className={`h-14 rounded-2xl text-lg font-bold ${vista === v ? "bg-primary text-primary-foreground shadow-soft" : ""}`}>
+          <button
+            key={v}
+            onClick={() => setVista(v)}
+            className={`h-14 rounded-2xl text-lg font-bold ${vista === v ? "bg-primary text-primary-foreground shadow-soft" : ""}`}
+          >
             {v === "bodega" ? "📦 Bodega" : "📖 Catálogo"}
           </button>
         ))}
       </div>
       <p className="text-center text-muted-foreground">
-        {vista === "bodega" ? `Listo para entregar hoy · ${unidades} unidades` : "Todo lo que puedes vender o encargar"}
+        {vista === "bodega"
+          ? `Listo para entregar hoy · ${unidades} unidades`
+          : "Todo lo que puedes vender o encargar"}
       </p>
 
       <div className="flex gap-2">
         {(["perfume", "otro"] as const).map((t) => (
-          <button key={t} onClick={() => setTipo(t)} className={`flex-1 rounded-2xl border-2 py-3 font-bold ${tipo === t ? "border-primary bg-card text-primary" : "border-transparent bg-secondary"}`}>
+          <button
+            key={t}
+            onClick={() => setTipo(t)}
+            className={`flex-1 rounded-2xl border-2 py-3 font-bold ${tipo === t ? "border-primary bg-card text-primary" : "border-transparent bg-secondary"}`}
+          >
             {t === "perfume" ? "🌸 Perfumes" : "🧴 Ropa y Cosmética"}
           </button>
         ))}
@@ -108,7 +159,11 @@ function Catalogo() {
       {tipo === "perfume" && (
         <div className="flex gap-2 overflow-x-auto">
           {filtros.map((x) => (
-            <button key={x.k} onClick={() => setF(x.k)} className={`rounded-full px-5 py-2 font-bold ${f === x.k ? "bg-primary text-primary-foreground" : "bg-secondary"}`}>
+            <button
+              key={x.k}
+              onClick={() => setF(x.k)}
+              className={`rounded-full px-5 py-2 font-bold ${f === x.k ? "bg-primary text-primary-foreground" : "bg-secondary"}`}
+            >
               {x.label}
             </button>
           ))}
@@ -125,7 +180,9 @@ function Catalogo() {
         <button
           onClick={() => {
             if (lista.length === 0) return alert("No hay perfumes en bodega para enviar.");
-            const lineas = lista.map((p) => `• ${p.codigo}${detalle(p) ? ` ${detalle(p)}` : ""}`).join("\n");
+            const lineas = lista
+              .map((p) => `• ${p.codigo}${detalle(p) ? ` ${detalle(p)}` : ""}`)
+              .join("\n");
             const msg = `¡Hola! 🌸 Te saluda PaMaRa AyN. Tengo disponibles para entrega inmediata:\n${lineas}\n\n¿Te interesa alguno? 💛`;
             window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, "_blank");
           }}
@@ -138,14 +195,19 @@ function Catalogo() {
       {nuevo ? (
         <Editor tipo={tipo} onClose={() => setNuevo(false)} />
       ) : (
-        <button onClick={() => setNuevo(true)} className="h-14 w-full rounded-2xl border-2 border-dashed border-primary text-lg font-bold text-primary">
+        <button
+          onClick={() => setNuevo(true)}
+          className="h-14 w-full rounded-2xl border-2 border-dashed border-primary text-lg font-bold text-primary"
+        >
           + Agregar {tipo === "perfume" ? "perfume" : "producto"}
         </button>
       )}
 
       {lista.length === 0 && (
         <p className="py-6 text-center text-muted-foreground">
-          {vista === "bodega" ? "No hay nada en la repisa en esta sección." : "Aún no hay productos aquí."}
+          {vista === "bodega"
+            ? "No hay nada en la repisa en esta sección."
+            : "Aún no hay productos aquí."}
         </p>
       )}
       <ul className="space-y-3">
@@ -162,7 +224,12 @@ function Tarjeta({ p }: { p: Producto }) {
   const [anuncio, setAnuncio] = useState(false);
   const dias = diasQuieto(p);
   const remate = p.stock > 0 && dias >= DIAS_REMATE;
-  if (editar) return <li><Editor tipo={esOtro(p) ? "otro" : "perfume"} p={p} onClose={() => setEditar(false)} /></li>;
+  if (editar)
+    return (
+      <li>
+        <Editor tipo={esOtro(p) ? "otro" : "perfume"} p={p} onClose={() => setEditar(false)} />
+      </li>
+    );
   return (
     <li className={`rounded-3xl bg-card p-4 shadow-soft ${remate ? "ring-2 ring-accent" : ""}`}>
       <div className="flex items-center gap-3">
@@ -170,21 +237,37 @@ function Tarjeta({ p }: { p: Producto }) {
           <p className="truncate text-2xl font-extrabold">{titulo(p)}</p>
           {detalle(p) && <p className="text-muted-foreground">{detalle(p)}</p>}
           <div className="mt-1 flex flex-wrap gap-1.5">
-            <span className={`rounded-full px-3 py-0.5 text-sm font-bold ${p.stock > 0 ? "bg-success text-success-foreground" : "bg-secondary"}`}>
+            <span
+              className={`rounded-full px-3 py-0.5 text-sm font-bold ${p.stock > 0 ? "bg-success text-success-foreground" : "bg-secondary"}`}
+            >
               {p.stock > 0 ? `En bodega: ${p.stock}` : "A encargo"}
             </span>
-            {p.precio ? <span className="rounded-full bg-secondary px-3 py-0.5 text-sm font-bold">{clp(p.precio)}</span> : null}
+            {p.precio ? (
+              <span className="rounded-full bg-secondary px-3 py-0.5 text-sm font-bold">
+                {clp(p.precio)}
+              </span>
+            ) : null}
           </div>
         </div>
-        <button onClick={() => actions.ajustarStock(p.codigo, -1)} aria-label="Quitar uno" className="flex size-14 items-center justify-center rounded-2xl bg-secondary">
+        <button
+          onClick={() => actions.ajustarStock(p.codigo, -1)}
+          aria-label="Quitar uno"
+          className="flex size-14 items-center justify-center rounded-2xl bg-secondary"
+        >
           <Minus />
         </button>
-        <button onClick={() => actions.ajustarStock(p.codigo, 1)} aria-label="Sumar uno" className="flex size-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
+        <button
+          onClick={() => actions.ajustarStock(p.codigo, 1)}
+          aria-label="Sumar uno"
+          className="flex size-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground"
+        >
           <Plus />
         </button>
       </div>
       {p.stock > 0 && (
-        <p className={`mt-3 rounded-2xl px-3 py-2 text-sm font-bold ${remate ? "bg-accent text-accent-foreground" : "bg-secondary text-muted-foreground"}`}>
+        <p
+          className={`mt-3 rounded-2xl px-3 py-2 text-sm font-bold ${remate ? "bg-accent text-accent-foreground" : "bg-secondary text-muted-foreground"}`}
+        >
           {remate
             ? `📦 ${dias} días sin venderse · Sugerencia: rematar o bajar el precio`
             : p.ultimaVenta
@@ -193,7 +276,10 @@ function Tarjeta({ p }: { p: Producto }) {
         </p>
       )}
       <div className="mt-2 flex items-center justify-between">
-        <button onClick={() => setEditar(true)} className="flex items-center gap-1 text-sm font-bold text-primary">
+        <button
+          onClick={() => setEditar(true)}
+          className="flex items-center gap-1 text-sm font-bold text-primary"
+        >
           <Pencil className="size-4" /> Editar datos
         </button>
         <button
@@ -204,17 +290,32 @@ function Tarjeta({ p }: { p: Producto }) {
           {p.enBoutique !== false ? "👁 En Boutique" : "🔒 Solo privado"}
         </button>
         {p.stock > 0 && !anuncio && (
-          <button onClick={() => setAnuncio(true)} className="rounded-full bg-accent px-4 py-2 text-sm font-bold text-accent-foreground">
+          <button
+            onClick={() => setAnuncio(true)}
+            className="rounded-full bg-accent px-4 py-2 text-sm font-bold text-accent-foreground"
+          >
             📣 Crear anuncio FB
           </button>
         )}
       </div>
-      {anuncio && <div className="mt-3"><PanelAnuncio texto={anuncioIndividual(p)} onClose={() => setAnuncio(false)} /></div>}
+      {anuncio && (
+        <div className="mt-3">
+          <PanelAnuncio texto={anuncioIndividual(p)} onClose={() => setAnuncio(false)} />
+        </div>
+      )}
     </li>
   );
 }
 
-function Editor({ tipo, p, onClose }: { tipo: "perfume" | "otro"; p?: Producto; onClose: () => void }) {
+function Editor({
+  tipo,
+  p,
+  onClose,
+}: {
+  tipo: "perfume" | "otro";
+  p?: Producto;
+  onClose: () => void;
+}) {
   const [codigo, setCodigo] = useState(p && !esOtro(p) ? p.codigo : "");
   const [nombre, setNombre] = useState(p?.nombre ?? "");
   const [inspiracion, setInspiracion] = useState(p?.inspiracion ?? "");
@@ -247,7 +348,7 @@ function Editor({ tipo, p, onClose }: { tipo: "perfume" | "otro"; p?: Producto; 
       categoria: categoria.trim() || undefined,
       precio: pr,
       stock: st,
-      fechaIngreso: st > 0 ? (p?.stock ? p.fechaIngreso ?? hoyStr : hoyStr) : p?.fechaIngreso,
+      fechaIngreso: st > 0 ? (p?.stock ? (p.fechaIngreso ?? hoyStr) : hoyStr) : p?.fechaIngreso,
       ultimaVenta: p?.ultimaVenta,
     });
     onClose();
@@ -255,41 +356,93 @@ function Editor({ tipo, p, onClose }: { tipo: "perfume" | "otro"; p?: Producto; 
 
   return (
     <div className="space-y-3 rounded-3xl bg-card p-4 shadow-soft">
-      <p className="text-xl font-bold">{p ? "Editar" : "Nuevo"} {tipo === "perfume" ? "perfume" : "producto"}</p>
+      <p className="text-xl font-bold">
+        {p ? "Editar" : "Nuevo"} {tipo === "perfume" ? "perfume" : "producto"}
+      </p>
       {tipo === "perfume" ? (
         <>
-          <input value={codigo} onChange={(e) => setCodigo(e.target.value)} placeholder="Código, ej: H-17" className={campo} autoFocus />
-          <input value={inspiracion} onChange={(e) => setInspiracion(e.target.value)} placeholder="¿A quién imita? ej: Cristiano Ronaldo" className={campo} />
-          <input value={version} onChange={(e) => setVersion(e.target.value)} placeholder="Versión, ej: GOAT" className={campo} />
+          <input
+            value={codigo}
+            onChange={(e) => setCodigo(e.target.value)}
+            placeholder="Código, ej: H-17"
+            className={campo}
+            autoFocus
+          />
+          <input
+            value={inspiracion}
+            onChange={(e) => setInspiracion(e.target.value)}
+            placeholder="¿A quién imita? ej: Cristiano Ronaldo"
+            className={campo}
+          />
+          <input
+            value={version}
+            onChange={(e) => setVersion(e.target.value)}
+            placeholder="Versión, ej: GOAT"
+            className={campo}
+          />
         </>
       ) : (
         <>
-          <input value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Nombre, ej: Aceite de argán" className={campo} autoFocus />
-          <input value={categoria} onChange={(e) => setCategoria(e.target.value)} placeholder="Tipo, ej: Cabello, Ropa, Crema" className={campo} />
+          <input
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+            placeholder="Nombre, ej: Aceite de argán"
+            className={campo}
+            autoFocus
+          />
+          <input
+            value={categoria}
+            onChange={(e) => setCategoria(e.target.value)}
+            placeholder="Tipo, ej: Cabello, Ropa, Crema"
+            className={campo}
+          />
         </>
       )}
       <div className="grid grid-cols-2 gap-2">
         <label className="text-sm font-bold text-muted-foreground">
           Precio
-          <input value={precio} onChange={(e) => setPrecio(e.target.value)} inputMode="numeric" placeholder="$" className={campo} />
+          <input
+            value={precio}
+            onChange={(e) => setPrecio(e.target.value)}
+            inputMode="numeric"
+            placeholder="$"
+            className={campo}
+          />
         </label>
         <label className="text-sm font-bold text-muted-foreground">
           En bodega
-          <input value={stock} onChange={(e) => setStock(e.target.value)} inputMode="numeric" className={campo} />
+          <input
+            value={stock}
+            onChange={(e) => setStock(e.target.value)}
+            inputMode="numeric"
+            className={campo}
+          />
         </label>
       </div>
       <div className="flex gap-2">
         {p && (
           <button
-            onClick={() => confirm("¿Borrar este producto?") && (actions.borrarProducto(p.codigo), onClose())}
+            onClick={() =>
+              confirm("¿Borrar este producto?") && (actions.borrarProducto(p.codigo), onClose())
+            }
             aria-label="Borrar"
             className="flex size-14 items-center justify-center rounded-2xl bg-secondary text-destructive"
           >
             <Trash2 />
           </button>
         )}
-        <button onClick={onClose} className="h-14 flex-1 rounded-2xl bg-secondary text-lg font-bold">Cancelar</button>
-        <button onClick={guardar} className="h-14 flex-1 rounded-2xl bg-primary text-lg font-bold text-primary-foreground">Guardar</button>
+        <button
+          onClick={onClose}
+          className="h-14 flex-1 rounded-2xl bg-secondary text-lg font-bold"
+        >
+          Cancelar
+        </button>
+        <button
+          onClick={guardar}
+          className="h-14 flex-1 rounded-2xl bg-primary text-lg font-bold text-primary-foreground"
+        >
+          Guardar
+        </button>
       </div>
     </div>
   );

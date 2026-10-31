@@ -26,7 +26,13 @@ describe("Boutique", () => {
   });
   it("mensaje incluye total y comuna", () => {
     const pub = aPublico(ps);
-    const msg = mensajePedido([{ item: pub[0]!, cantidad: 2 }, { item: pub[1]!, cantidad: 1 }], "Calama");
+    const msg = mensajePedido(
+      [
+        { item: pub[0]!, cantidad: 2 },
+        { item: pub[1]!, cantidad: 1 },
+      ],
+      "Calama",
+    );
     expect(msg).toContain("Total: $45.000");
     expect(msg).toContain("Comuna de entrega: Calama");
   });

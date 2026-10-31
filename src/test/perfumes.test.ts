@@ -10,7 +10,10 @@ describe("catálogo de perfumes", () => {
   });
   it("no toca el stock existente", () => {
     const p = conCatalogo([{ codigo: "M-43", nombre: "", stock: 4 }]);
-    expect(p.find((x) => x.codigo === "M-43")).toMatchObject({ stock: 4, inspiracion: "Good Girl" });
+    expect(p.find((x) => x.codigo === "M-43")).toMatchObject({
+      stock: 4,
+      inspiracion: "Good Girl",
+    });
   });
   it("F y J se convierten en Mujer y Juvenil", () => {
     expect(normCodigo("f43")).toBe("M-43");

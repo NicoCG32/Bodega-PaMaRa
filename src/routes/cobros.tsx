@@ -7,7 +7,10 @@ export const Route = createFileRoute("/cobros")({
   head: () => ({
     meta: [
       { title: "Cobros y Deudores · PaMaRa AyN" },
-      { name: "description", content: "Quién debe, cuánto y cuándo paga. Recordatorios por WhatsApp con un toque." },
+      {
+        name: "description",
+        content: "Quién debe, cuánto y cuándo paga. Recordatorios por WhatsApp con un toque.",
+      },
       { property: "og:title", content: "Cobros y Deudores · PaMaRa AyN" },
       { property: "og:description", content: "Quién debe, cuánto y cuándo paga." },
       { property: "og:type", content: "website" },
@@ -28,11 +31,15 @@ function Cobros() {
   const total = pend.reduce((a, d) => a + saldo(d), 0);
   const mes = new Date().toISOString().slice(0, 7);
   const cobradoMes = deudas.reduce(
-    (a, d) => a + d.abonos.filter((b) => b.fecha.slice(0, 7) === mes).reduce((x, b) => x + b.monto, 0),
+    (a, d) =>
+      a + d.abonos.filter((b) => b.fecha.slice(0, 7) === mes).reduce((x, b) => x + b.monto, 0),
     0,
   );
   const fechaSaldada = (d: (typeof deudas)[number]) =>
-    d.abonos.map((b) => b.fecha.slice(0, 10)).sort().at(-1) ?? d.creada.slice(0, 10);
+    d.abonos
+      .map((b) => b.fecha.slice(0, 10))
+      .sort()
+      .at(-1) ?? d.creada.slice(0, 10);
   const pagadosOrden = [...pagados].sort((a, b) => fechaSaldada(b).localeCompare(fechaSaldada(a)));
 
   return (
@@ -67,7 +74,10 @@ function Cobros() {
       {verPagados && (
         <ul className="space-y-2">
           {pagadosOrden.map((d) => (
-            <li key={d.id} className="flex items-center justify-between rounded-2xl bg-card p-4 shadow-soft">
+            <li
+              key={d.id}
+              className="flex items-center justify-between rounded-2xl bg-card p-4 shadow-soft"
+            >
               <div>
                 <p className="text-lg font-bold">{d.cliente}</p>
                 <p className="text-muted-foreground">

@@ -1,13 +1,18 @@
 import { clp, DIAS_REMATE, diasQuieto, esOtro, type Producto } from "./store";
 
 export const FB_CREAR = "https://www.facebook.com/marketplace/create/item";
-export const chatgptUrl = (prompt: string) => `https://chatgpt.com/?q=${encodeURIComponent(prompt)}`;
+export const chatgptUrl = (prompt: string) =>
+  `https://chatgpt.com/?q=${encodeURIComponent(prompt)}`;
 
 export type FiltroStock = "todo" | "M" | "H";
 
 /** Words that get Marketplace posts blocked; never appear in generated copy. */
 const PROHIBIDAS = /\b(r[eé]plica|imitaci[oó]n|copia|falso|clon|alternativo)\w*/gi;
-const limpiar = (s: string) => s.replace(PROHIBIDAS, "").replace(/\s{2,}/g, " ").trim();
+const limpiar = (s: string) =>
+  s
+    .replace(PROHIBIDAS, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
 
 export const enRemate = (p: Producto) => p.stock > 0 && diasQuieto(p) >= DIAS_REMATE;
 
@@ -18,7 +23,13 @@ function nombreProducto(p: Producto) {
 }
 
 const publico = (p: Producto) =>
-  esOtro(p) ? "" : p.codigo.startsWith("H-") ? "Hombre" : p.codigo.startsWith("M-") ? "Mujer" : "Juvenil";
+  esOtro(p)
+    ? ""
+    : p.codigo.startsWith("H-")
+      ? "Hombre"
+      : p.codigo.startsWith("M-")
+        ? "Mujer"
+        : "Juvenil";
 
 export function anuncioIndividual(p: Producto): string {
   const remate = enRemate(p);
@@ -30,7 +41,9 @@ export function anuncioIndividual(p: Producto): string {
       ? `• ${p.categoria ? limpiar(p.categoria) : "Producto de calidad"}`
       : `• Perfume ${publico(p)} · Código ${p.codigo}`,
     !esOtro(p) ? "• Inspiración de alta fijación y gran duración" : null,
-    p.precio ? `• Precio: ${clp(p.precio)}${remate ? " (precio especial por tiempo limitado)" : ""}` : null,
+    p.precio
+      ? `• Precio: ${clp(p.precio)}${remate ? " (precio especial por tiempo limitado)" : ""}`
+      : null,
     p.stock <= 2 ? "• ¡Últimas unidades!" : null,
     "• Entrega inmediata 🎁",
     "",

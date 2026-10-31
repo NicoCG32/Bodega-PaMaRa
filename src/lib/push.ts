@@ -1,11 +1,15 @@
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, isSupported } from "firebase/messaging";
 
-const appId = import.meta.env["VITE_LOVABLE_CONNECTOR_FIREBASE_MESSAGING_APP_ID"] as string | undefined;
-const vapidKey = import.meta.env["VITE_LOVABLE_CONNECTOR_FIREBASE_MESSAGING_VAPID_KEY"] as string | undefined;
+const appId = import.meta.env["VITE_LOVABLE_CONNECTOR_FIREBASE_MESSAGING_APP_ID"] as
+  string | undefined;
+const vapidKey = import.meta.env["VITE_LOVABLE_CONNECTOR_FIREBASE_MESSAGING_VAPID_KEY"] as
+  string | undefined;
 const firebaseConfig = {
-  apiKey: import.meta.env["VITE_LOVABLE_CONNECTOR_FIREBASE_MESSAGING_WEB_API_KEY"] as string | undefined,
-  projectId: import.meta.env["VITE_LOVABLE_CONNECTOR_FIREBASE_MESSAGING_PROJECT_ID"] as string | undefined,
+  apiKey: import.meta.env["VITE_LOVABLE_CONNECTOR_FIREBASE_MESSAGING_WEB_API_KEY"] as
+    string | undefined,
+  projectId: import.meta.env["VITE_LOVABLE_CONNECTOR_FIREBASE_MESSAGING_PROJECT_ID"] as
+    string | undefined,
   appId,
   messagingSenderId: appId?.split(":")[1] ?? "",
 };
@@ -16,7 +20,13 @@ export type PushResult =
 
 // Llamar desde un botón: los navegadores exigen un toque de la usuaria.
 export async function enablePush(): Promise<PushResult> {
-  if (!firebaseConfig.apiKey || !firebaseConfig.projectId || !appId || !vapidKey || !firebaseConfig.messagingSenderId) {
+  if (
+    !firebaseConfig.apiKey ||
+    !firebaseConfig.projectId ||
+    !appId ||
+    !vapidKey ||
+    !firebaseConfig.messagingSenderId
+  ) {
     return { status: "not-configured" };
   }
   if (!("Notification" in window) || !(await isSupported())) {
@@ -26,13 +36,16 @@ export async function enablePush(): Promise<PushResult> {
     return { status: "open-in-new-tab" };
   }
 
-  const permission = Notification.permission === "granted" ? "granted" : await Notification.requestPermission();
+  const permission =
+    Notification.permission === "granted" ? "granted" : await Notification.requestPermission();
   if (permission !== "granted") {
     return { status: "denied" };
   }
 
   const query = new URLSearchParams(firebaseConfig as Record<string, string>).toString();
-  const serviceWorkerRegistration = await navigator.serviceWorker.register(`/firebase-messaging-sw.js?${query}`);
+  const serviceWorkerRegistration = await navigator.serviceWorker.register(
+    `/firebase-messaging-sw.js?${query}`,
+  );
   const messaging = getMessaging(initializeApp(firebaseConfig as Record<string, string>));
   const token = await getToken(messaging, { vapidKey, serviceWorkerRegistration });
   return token ? { status: "registered", token } : { status: "denied" };

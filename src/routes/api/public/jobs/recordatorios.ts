@@ -21,7 +21,11 @@ function saldo(d: Deuda) {
 }
 
 function proximaCuota(d: Deuda): Cuota | null {
-  return [...(d.cuotas ?? [])].filter((c) => !c.pagada).sort((a, b) => a.fecha.localeCompare(b.fecha))[0] ?? null;
+  return (
+    [...(d.cuotas ?? [])]
+      .filter((c) => !c.pagada)
+      .sort((a, b) => a.fecha.localeCompare(b.fecha))[0] ?? null
+  );
 }
 
 const clp = (n: number) => "$" + Math.round(n).toLocaleString("es-CL");
@@ -53,7 +57,10 @@ export const Route = createFileRoute("/api/public/jobs/recordatorios")({
         if (authFailure) return authFailure;
 
         if (!process.env["LOVABLE_API_KEY"] || !process.env["FIREBASE_MESSAGING_API_KEY"]) {
-          return Response.json({ ok: false, error: "Faltan claves del servicio de avisos" }, { status: 500 });
+          return Response.json(
+            { ok: false, error: "Faltan claves del servicio de avisos" },
+            { status: 500 },
+          );
         }
 
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");

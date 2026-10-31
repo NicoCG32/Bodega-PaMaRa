@@ -34,7 +34,8 @@ export function aPublico(productos: Producto[]): ItemPublico[] {
     }));
 }
 
-const esAccesorio = (i: ItemPublico) => /accesorio|joya|bolso|cartera|aro|collar/i.test(i.categoria ?? i.nombre);
+const esAccesorio = (i: ItemPublico) =>
+  /accesorio|joya|bolso|cartera|aro|collar/i.test(i.categoria ?? i.nombre);
 
 export function enColeccion(i: ItemPublico, c: Coleccion) {
   if (c === "todo") return true;
@@ -54,10 +55,16 @@ export function totalBolsa(b: Linea[]) {
 
 export function mensajePedido(b: Linea[], comuna: string) {
   const lineas = b.map((l) => {
-    const t = [l.item.perfume ? `[${l.item.codigo}]` : "", l.item.nombre, l.item.inspiracion ? `(${l.item.inspiracion})` : ""]
+    const t = [
+      l.item.perfume ? `[${l.item.codigo}]` : "",
+      l.item.nombre,
+      l.item.inspiracion ? `(${l.item.inspiracion})` : "",
+    ]
       .filter(Boolean)
       .join(" ");
-    const precio = l.item.precio ? ` — ${clp(l.item.precio * l.cantidad)}` : " — precio a confirmar";
+    const precio = l.item.precio
+      ? ` — ${clp(l.item.precio * l.cantidad)}`
+      : " — precio a confirmar";
     return `• ${t} x${l.cantidad}${precio}`;
   });
   return [

@@ -57,9 +57,14 @@ export function VoiceCapture() {
         try {
           const buf = new Uint8Array(await blob.arrayBuffer());
           let bin = "";
-          for (let i = 0; i < buf.length; i += 0x8000) bin += String.fromCharCode(...buf.subarray(i, i + 0x8000));
-          const t = await transcribirConRespaldo(() => tx({ data: { audio: btoa(bin), mime: blob.type } }), () => respaldo);
-          if (!t.texto) throw new Error("No te escuché bien. Intenta de nuevo, más cerca del teléfono.");
+          for (let i = 0; i < buf.length; i += 0x8000)
+            bin += String.fromCharCode(...buf.subarray(i, i + 0x8000));
+          const t = await transcribirConRespaldo(
+            () => tx({ data: { audio: btoa(bin), mime: blob.type } }),
+            () => respaldo,
+          );
+          if (!t.texto)
+            throw new Error("No te escuché bien. Intenta de nuevo, más cerca del teléfono.");
           setFuentes(t);
           setEscribir(true);
           await procesar(t.texto, t);
@@ -88,11 +93,18 @@ export function VoiceCapture() {
         codigo,
         total,
         abonos: ini > 0 ? [{ monto: ini, fecha: hoy() }] : [],
-        cuotas: res.cuotas.map((c) => ({ id: uid(), monto: c.monto, fecha: c.fecha, pagada: false })),
+        cuotas: res.cuotas.map((c) => ({
+          id: uid(),
+          monto: c.monto,
+          fecha: c.fecha,
+          pagada: false,
+        })),
       });
       if (codigo) actions.ajustarStock(codigo, -1);
     } else if (res.tipo === "abono") {
-      const d = deudas.find((x) => x.cliente.toLowerCase() === cliente.toLowerCase() && saldo(x) > 0);
+      const d = deudas.find(
+        (x) => x.cliente.toLowerCase() === cliente.toLowerCase() && saldo(x) > 0,
+      );
       if (!d) {
         toast.error(`No encontré una deuda de ${cliente}.`);
         return;
@@ -117,7 +129,9 @@ export function VoiceCapture() {
       {!res && (
         <div className="flex flex-col items-center gap-4 rounded-3xl bg-card p-6 text-center shadow-soft">
           <h2 className="text-2xl font-semibold">¿Qué pasó hoy?</h2>
-          <p className="text-muted-foreground">Toca el botón y cuéntame, como si me mandaras un audio.</p>
+          <p className="text-muted-foreground">
+            Toca el botón y cuéntame, como si me mandaras un audio.
+          </p>
           <button
             onClick={estado === "grabando" ? () => rec.current?.stop() : empezar}
             disabled={estado === "pensando"}
@@ -135,12 +149,20 @@ export function VoiceCapture() {
             )}
           </button>
           <p className="text-lg font-bold">
-            {estado === "grabando" ? "Te escucho… toca para terminar" : estado === "pensando" ? "Entendiendo…" : "Toca para hablar"}
+            {estado === "grabando"
+              ? "Te escucho… toca para terminar"
+              : estado === "pensando"
+                ? "Entendiendo…"
+                : "Toca para hablar"}
           </p>
           <p className="text-sm italic text-muted-foreground">
-            Ej: “Le fié a Carmen el H-05 en 18 mil, me paga 9 mil el viernes y el resto a fin de mes”
+            Ej: “Le fié a Carmen el H-05 en 18 mil, me paga 9 mil el viernes y el resto a fin de
+            mes”
           </p>
-          <button onClick={() => setEscribir((v) => !v)} className="flex items-center gap-2 font-bold text-primary underline">
+          <button
+            onClick={() => setEscribir((v) => !v)}
+            className="flex items-center gap-2 font-bold text-primary underline"
+          >
             <Keyboard className="size-5" /> Prefiero escribir
           </button>
           {escribir && (
@@ -153,12 +175,18 @@ export function VoiceCapture() {
             >
               <textarea
                 value={texto}
-                onChange={(e) => { setTexto(e.target.value); setFuentes(null); }}
+                onChange={(e) => {
+                  setTexto(e.target.value);
+                  setFuentes(null);
+                }}
                 rows={3}
                 placeholder="Escribe aquí lo que pasó…"
                 className="w-full rounded-2xl border-2 border-input bg-background p-4 text-lg"
               />
-              <button disabled={estado === "pensando"} className="h-14 w-full rounded-2xl bg-primary text-lg font-bold text-primary-foreground">
+              <button
+                disabled={estado === "pensando"}
+                className="h-14 w-full rounded-2xl bg-primary text-lg font-bold text-primary-foreground"
+              >
                 Listo
               </button>
             </form>
@@ -174,14 +202,19 @@ export function VoiceCapture() {
           <dl className="grid grid-cols-2 gap-3 text-base">
             {res.cliente && <Dato k="Clienta/e" v={res.cliente} />}
             {res.codigo && <Dato k="Código" v={normCodigo(res.codigo)} />}
-            {res.total != null && <Dato k={res.tipo === "abono" ? "Pagó" : "Total"} v={clp(res.total)} />}
+            {res.total != null && (
+              <Dato k={res.tipo === "abono" ? "Pagó" : "Total"} v={clp(res.total)} />
+            )}
             {res.tipo === "fiado" && <Dato k="Pagó ahora" v={clp(res.abono_inicial ?? 0)} />}
             {res.cantidad != null && <Dato k="Cantidad" v={String(res.cantidad)} />}
           </dl>
           {res.cuotas.length > 0 && (
             <ul className="space-y-2">
               {res.cuotas.map((c, i) => (
-                <li key={i} className="flex justify-between rounded-xl bg-secondary px-4 py-3 font-bold">
+                <li
+                  key={i}
+                  className="flex justify-between rounded-xl bg-secondary px-4 py-3 font-bold"
+                >
                   <span className="capitalize">{fechaBonita(c.fecha)}</span>
                   <span>{clp(c.monto)}</span>
                 </li>
@@ -189,10 +222,16 @@ export function VoiceCapture() {
             </ul>
           )}
           <div className="grid grid-cols-2 gap-3">
-            <button onClick={() => setRes(null)} className="flex h-16 items-center justify-center gap-2 rounded-2xl border-2 border-border text-lg font-bold">
+            <button
+              onClick={() => setRes(null)}
+              className="flex h-16 items-center justify-center gap-2 rounded-2xl border-2 border-border text-lg font-bold"
+            >
               <X /> Corregir
             </button>
-            <button onClick={guardar} className="flex h-16 items-center justify-center gap-2 rounded-2xl bg-success text-lg font-bold text-success-foreground">
+            <button
+              onClick={guardar}
+              className="flex h-16 items-center justify-center gap-2 rounded-2xl bg-success text-lg font-bold text-success-foreground"
+            >
               <Check /> Guardar
             </button>
           </div>

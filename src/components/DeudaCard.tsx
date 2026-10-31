@@ -1,11 +1,25 @@
 import { useState } from "react";
 import { MessageCircle, Phone, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-import { actions, clp, diasHasta, fechaBonita, proximaCuota, saldo, useStore, whatsappLink, type Deuda } from "@/lib/store";
+import {
+  actions,
+  clp,
+  diasHasta,
+  fechaBonita,
+  proximaCuota,
+  saldo,
+  useStore,
+  whatsappLink,
+  type Deuda,
+} from "@/lib/store";
 
 export function cuandoTexto(fecha: string) {
   const d = diasHasta(fecha);
-  if (d < 0) return { txt: `Atrasado ${-d} día${d === -1 ? "" : "s"}`, cls: "bg-destructive text-destructive-foreground" };
+  if (d < 0)
+    return {
+      txt: `Atrasado ${-d} día${d === -1 ? "" : "s"}`,
+      cls: "bg-destructive text-destructive-foreground",
+    };
   if (d === 0) return { txt: "¡Hoy!", cls: "bg-accent text-accent-foreground" };
   if (d === 1) return { txt: "Mañana", cls: "bg-secondary text-secondary-foreground" };
   return { txt: `En ${d} días`, cls: "bg-muted text-muted-foreground" };
@@ -60,7 +74,9 @@ export function DeudaCard({ d }: { d: Deuda }) {
             <span className="text-2xl font-extrabold text-primary">{clp(s)}</span>
           </p>
         ) : (
-          <span className="rounded-full bg-success px-3 py-1 font-bold text-success-foreground">Pagado ✓</span>
+          <span className="rounded-full bg-success px-3 py-1 font-bold text-success-foreground">
+            Pagado ✓
+          </span>
         )}
       </div>
       {c && s > 0 && cuando && (
@@ -68,15 +84,25 @@ export function DeudaCard({ d }: { d: Deuda }) {
           <span className="capitalize">
             {fechaBonita(c.fecha)} · <b>{clp(Math.min(c.monto, s))}</b>
           </span>
-          <span className={`shrink-0 whitespace-nowrap rounded-full px-3 py-1 text-sm font-bold ${cuando.cls}`}>{cuando.txt}</span>
+          <span
+            className={`shrink-0 whitespace-nowrap rounded-full px-3 py-1 text-sm font-bold ${cuando.cls}`}
+          >
+            {cuando.txt}
+          </span>
         </div>
       )}
       {s > 0 && (
         <div className="grid grid-cols-2 gap-3">
-          <button onClick={wsp} className="flex h-14 items-center justify-center gap-2 rounded-2xl bg-whatsapp text-lg font-bold text-success-foreground">
+          <button
+            onClick={wsp}
+            className="flex h-14 items-center justify-center gap-2 rounded-2xl bg-whatsapp text-lg font-bold text-success-foreground"
+          >
             <MessageCircle /> Recordar
           </button>
-          <button onClick={() => setAbrir((v) => !v)} className="h-14 rounded-2xl bg-primary text-lg font-bold text-primary-foreground">
+          <button
+            onClick={() => setAbrir((v) => !v)}
+            className="h-14 rounded-2xl bg-primary text-lg font-bold text-primary-foreground"
+          >
             Me pagó
           </button>
         </div>
@@ -102,7 +128,9 @@ export function DeudaCard({ d }: { d: Deuda }) {
             placeholder="¿Cuánto? ej: 9000"
             className="h-14 flex-1 rounded-2xl border-2 border-input bg-background px-4 text-lg"
           />
-          <button className="h-14 rounded-2xl bg-success px-5 text-lg font-bold text-success-foreground">OK</button>
+          <button className="h-14 rounded-2xl bg-success px-5 text-lg font-bold text-success-foreground">
+            OK
+          </button>
         </form>
       )}
       {pedirTel && (
@@ -117,10 +145,16 @@ export function DeudaCard({ d }: { d: Deuda }) {
             className="h-14 w-full rounded-2xl border-2 border-input bg-background px-4 text-xl"
           />
           <div className="grid grid-cols-2 gap-3">
-            <button onClick={() => setPedirTel(null)} className="h-14 rounded-2xl bg-muted text-lg font-bold">
+            <button
+              onClick={() => setPedirTel(null)}
+              className="h-14 rounded-2xl bg-muted text-lg font-bold"
+            >
               Cancelar
             </button>
-            <button onClick={guardarTel} className="h-14 rounded-2xl bg-whatsapp text-lg font-bold text-success-foreground">
+            <button
+              onClick={guardarTel}
+              className="h-14 rounded-2xl bg-whatsapp text-lg font-bold text-success-foreground"
+            >
               {pedirTel === "enviar" ? "Enviar" : "Guardar"}
             </button>
           </div>

@@ -18,12 +18,24 @@ describe("resumen de bodega", () => {
 });
 
 describe("reposición", () => {
-  const enc = (codigo: string, entregado = false): Encargo => ({ id: codigo, cliente: "A", codigo, nota: "", entregado, creada: hoy() });
+  const enc = (codigo: string, entregado = false): Encargo => ({
+    id: codigo,
+    cliente: "A",
+    codigo,
+    nota: "",
+    entregado,
+    creada: hoy(),
+  });
   it("alerta agotados con encargos pendientes", () => {
-    const r = reposicion([{ codigo: "H-17", nombre: "", stock: 0 }], [enc("h17"), enc("H-17", true)]);
+    const r = reposicion(
+      [{ codigo: "H-17", nombre: "", stock: 0 }],
+      [enc("h17"), enc("H-17", true)],
+    );
     expect(r[0]?.pedidos).toBe(1);
   });
   it("ignora agotados sin encargos ni venta reciente", () => {
-    expect(reposicion([{ codigo: "H-17", nombre: "", stock: 0, ultimaVenta: hace(60) }], [])).toHaveLength(0);
+    expect(
+      reposicion([{ codigo: "H-17", nombre: "", stock: 0, ultimaVenta: hace(60) }], []),
+    ).toHaveLength(0);
   });
 });

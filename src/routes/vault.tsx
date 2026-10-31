@@ -7,9 +7,15 @@ export const Route = createFileRoute("/vault")({
   head: () => ({
     meta: [
       { title: "PaMaRa Vault · Anotar por voz" },
-      { name: "description", content: "Anota ventas, fiados y encargos de PaMaRa AyN hablando al teléfono." },
+      {
+        name: "description",
+        content: "Anota ventas, fiados y encargos de PaMaRa AyN hablando al teléfono.",
+      },
       { property: "og:title", content: "PaMaRa Vault · Anotar por voz" },
-      { property: "og:description", content: "Anota ventas, fiados y encargos hablando al teléfono." },
+      {
+        property: "og:description",
+        content: "Anota ventas, fiados y encargos hablando al teléfono.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],

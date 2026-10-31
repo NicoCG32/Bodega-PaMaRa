@@ -32,18 +32,39 @@ function Encargos() {
         onSubmit={(e) => {
           e.preventDefault();
           if (!cliente.trim()) return;
-          actions.addEncargo({ cliente: cliente.trim(), codigo: codigo ? normCodigo(codigo) : "", nota: "" });
+          actions.addEncargo({
+            cliente: cliente.trim(),
+            codigo: codigo ? normCodigo(codigo) : "",
+            nota: "",
+          });
           setCliente("");
           setCodigo("");
         }}
       >
-        <input value={cliente} onChange={(e) => setCliente(e.target.value)} placeholder="¿Para quién?" className="h-14 w-full rounded-2xl border-2 border-input bg-background px-4 text-lg" />
-        <input value={codigo} onChange={(e) => setCodigo(e.target.value)} placeholder="Código o producto (ej: M-12)" className="h-14 w-full rounded-2xl border-2 border-input bg-background px-4 text-lg" />
-        <button className="h-14 w-full rounded-2xl bg-primary text-lg font-bold text-primary-foreground">Agregar encargo</button>
+        <input
+          value={cliente}
+          onChange={(e) => setCliente(e.target.value)}
+          placeholder="¿Para quién?"
+          className="h-14 w-full rounded-2xl border-2 border-input bg-background px-4 text-lg"
+        />
+        <input
+          value={codigo}
+          onChange={(e) => setCodigo(e.target.value)}
+          placeholder="Código o producto (ej: M-12)"
+          className="h-14 w-full rounded-2xl border-2 border-input bg-background px-4 text-lg"
+        />
+        <button className="h-14 w-full rounded-2xl bg-primary text-lg font-bold text-primary-foreground">
+          Agregar encargo
+        </button>
       </form>
-      {pend.length === 0 && <p className="text-center text-muted-foreground">No hay encargos pendientes.</p>}
+      {pend.length === 0 && (
+        <p className="text-center text-muted-foreground">No hay encargos pendientes.</p>
+      )}
       {[...pend, ...listos].map((e) => (
-        <div key={e.id} className={`flex items-center gap-3 rounded-3xl bg-card p-4 shadow-soft ${e.entregado ? "opacity-60" : ""}`}>
+        <div
+          key={e.id}
+          className={`flex items-center gap-3 rounded-3xl bg-card p-4 shadow-soft ${e.entregado ? "opacity-60" : ""}`}
+        >
           <button
             onClick={() => actions.toggleEncargo(e.id)}
             aria-label="Marcar entregado"
@@ -57,7 +78,11 @@ function Encargos() {
               {e.codigo || "—"} {e.nota && `· ${e.nota}`}
             </p>
           </div>
-          <button onClick={() => confirm("¿Borrar encargo?") && actions.borrarEncargo(e.id)} aria-label="Borrar" className="p-2 text-muted-foreground">
+          <button
+            onClick={() => confirm("¿Borrar encargo?") && actions.borrarEncargo(e.id)}
+            aria-label="Borrar"
+            className="p-2 text-muted-foreground"
+          >
             <Trash2 />
           </button>
         </div>

@@ -33,7 +33,9 @@ export function NubeCard() {
         setAvisos("activos");
         toast.success("Avisos activados en este teléfono 🔔");
       } else if (r.status === "open-in-new-tab") {
-        toast.info("Abre la app en su propia pestaña (no dentro del editor) para activar los avisos.");
+        toast.info(
+          "Abre la app en su propia pestaña (no dentro del editor) para activar los avisos.",
+        );
       } else if (r.status === "denied") {
         toast.error("El navegador bloqueó las notificaciones. Actívalas en los ajustes del sitio.");
       } else if (r.status === "unsupported") {
@@ -55,8 +57,9 @@ export function NubeCard() {
           <CloudUpload className="size-6 text-primary" /> Respaldo en la nube
         </h3>
         <p className="text-muted-foreground">
-          Guarda una copia de tus datos en internet. Si cambias de teléfono o borras el navegador, los recuperas al
-          entrar con tu cuenta. Además podrás recibir avisos de cobro aunque la app esté cerrada.
+          Guarda una copia de tus datos en internet. Si cambias de teléfono o borras el navegador,
+          los recuperas al entrar con tu cuenta. Además podrás recibir avisos de cobro aunque la app
+          esté cerrada.
         </p>
         <button
           onClick={entrarConGoogle}
