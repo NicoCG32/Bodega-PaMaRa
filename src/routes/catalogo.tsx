@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Minus, Pencil, Plus, Trash2 } from "lucide-react";
+import { AdminGate } from "@/components/AdminGate";
 import { BodegaCapture } from "@/components/BodegaCapture";
 import { CrearTrend, PanelAnuncio, PublicarStock } from "@/components/Promocion";
 import { anuncioIndividual } from "@/lib/anuncios";
@@ -54,7 +55,7 @@ export const Route = createFileRoute("/catalogo")({
       { name: "twitter:card", content: "summary" },
     ],
   }),
-  component: Catalogo,
+  component: () => (<AdminGate><Catalogo /></AdminGate>),
 });
 
 const filtros = [
