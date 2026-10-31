@@ -1,14 +1,6 @@
 # 01 — Arquitectura por niveles
 
-<!-- DOCUMENTACION:nivel-2026-10-29:BEGIN -->
-
-**Nivel:** técnica.
-
 ## Arquitectura del sistema por niveles
-
-Revisión documental: 2026-10-29. Base `482ddd6b2f71` en `main`; árbol inicialmente limpio. La inspección de fuentes no sustituye pruebas de ejecución.
-
-**Estado y alcance:** Aplicación web y cliente Android beta documentados. El código actual añade catálogo/boutique y captura paralela; notificaciones, actualización y operación real requieren evidencia específica.
 
 ### Nivel 1 — Contexto y fronteras de ejecución
 
@@ -40,7 +32,7 @@ Registro móvil por voz/texto con revisión, catálogo por código y seguimiento
 | Sincronización | Snapshot por cuenta                     | [src/lib/cloudSync.ts](../src/lib/cloudSync.ts)       |
 | Boutique       | Proyección pública del catálogo         | [src/lib/boutique.ts](../src/lib/boutique.ts)         |
 
-Las flechas del contexto representan comunicación/flujo. No se deduce una dependencia de código o transacción compartida sólo porque dos componentes intercambien datos.
+Las flechas muestran el flujo de información entre componentes. Las transacciones y dependencias de código se detallan en los contratos de cada módulo.
 
 ### Nivel 3 — Dominio, contratos y adaptadores
 
@@ -50,7 +42,7 @@ localStorage contiene el State; Supabase guarda un snapshot JSON por cuenta seg�
 - Códigos se normalizan antes de enlazar catálogo/operación.
 - Las dos transcripciones representan alternativas del mismo relato, no movimientos que deban sumarse.
 
-Consultar [04-base-de-datos.md](04-base-de-datos.md) para entidades, cardinalidades y representación; [05-motor-o-nucleo-de-negocio.md](05-motor-o-nucleo-de-negocio.md) para invariantes. En un prototipo, las piezas rotuladas propuestas no son clases implementadas.
+Consultar [04-base-de-datos.md](04-base-de-datos.md) para entidades, cardinalidades y representación; [05-motor-o-nucleo-de-negocio.md](05-motor-o-nucleo-de-negocio.md) para invariantes. Las piezas marcadas como propuestas pertenecen al diseño del prototipo.
 
 ### Nivel 4 — Despliegue y distribución
 
@@ -64,7 +56,7 @@ Consultar [04-base-de-datos.md](04-base-de-datos.md) para entidades, cardinalida
                                                           [Usuario y sus datos]
 ```
 
-La persistencia y los servicios del contexto anterior conservan sus propias fronteras. Distribuir un APK no incorpora automáticamente el servidor, una PWA no acredita un instalador y el firmware requiere dispositivo. El capítulo [09-instalacion-y-despliegue.md](09-instalacion-y-despliegue.md) concreta la puesta en marcha.
+El cliente Android beta abre la aplicación publicada mediante Trusted Web Activity. Conserva la firma y el identificador al actualizarlo. La asociación HTTPS del dominio y los servicios de la web se administran por separado de la release del APK. El capítulo [09-instalacion-y-despliegue.md](09-instalacion-y-despliegue.md) concreta la puesta en marcha.
 
 ### Calidad y límites arquitectónicos
 
@@ -73,9 +65,8 @@ La persistencia y los servicios del contexto anterior conservan sus propias fron
 - Exposición de datos de cobro al catálogo público
 - Cron/push y custodia de firma Android
 
-No se publican garantías de latencia, disponibilidad o escala sin medición para la revisión/entorno concretos. Un diagrama explica responsabilidades; no es una certificación de ejecución o seguridad del servicio desplegado.
+El rendimiento y la capacidad dependen del entorno de ejecución. Consulta las guías de instalación y las limitaciones de cada plataforma antes de desplegar.
 
-## Fuentes de implementación y contratos
+## Código y documentación relacionada
 
 [README.md](../README.md) · [src/lib/store.ts](../src/lib/store.ts) · [src/lib/cloudSync.ts](../src/lib/cloudSync.ts) · [src/lib/ai.functions.ts](../src/lib/ai.functions.ts) · [src/lib/vozNativa.ts](../src/lib/vozNativa.ts) · [docs/09-instalacion-y-despliegue.md](09-instalacion-y-despliegue.md).
-<!-- DOCUMENTACION:nivel-2026-10-29:END -->

@@ -1,14 +1,8 @@
 # 02 — Catálogo funcional
 
-<!-- DOCUMENTACION:nivel-2026-10-29:BEGIN -->
+## Capacidades y límites
 
-**Nivel:** general / técnica.
-
-## Catálogo de capacidades — revisión 2026-10-29
-
-Revisión documental: 2026-10-29. Base `482ddd6b2f71` en `main`; árbol inicialmente limpio. La inspección de fuentes no sustituye pruebas de ejecución.
-
-**Estado y alcance:** Aplicación web y cliente Android beta documentados. El código actual añade catálogo/boutique y captura paralela; notificaciones, actualización y operación real requieren evidencia específica.
+**Disponibilidad:** Aplicación web y Android beta para ventas, cobros, encargos e inventario, con catálogo público. Las notificaciones y la actualización deben comprobarse en el dispositivo de uso.
 
 | Módulo          | Capacidad / propósito        | Caso borde o límite                |
 | --------------- | ---------------------------- | ---------------------------------- |
@@ -19,9 +13,8 @@ Revisión documental: 2026-10-29. Base `482ddd6b2f71` en `main`; árbol inicialm
 | Boutique        | Catálogo público             | Separación de datos privados       |
 | Respaldo/avisos | Sync y recordatorios         | Conflicto, permisos y app cerrada  |
 
-Los módulos propuestos se identifican expresamente. La disponibilidad en una plataforma no se extrapola a las demás; la aceptación debe cubrir los casos borde del recorrido principal.
+Las capacidades previstas se distinguen de las disponibles. Consulta los requisitos de la plataforma que vas a utilizar.
 
-## Fuentes de implementación y contratos
+## Código y documentación relacionada
 
 [README.md](../README.md) · [src/lib/store.ts](../src/lib/store.ts) · [src/lib/cloudSync.ts](../src/lib/cloudSync.ts) · [src/lib/ai.functions.ts](../src/lib/ai.functions.ts) · [src/lib/vozNativa.ts](../src/lib/vozNativa.ts) · [docs/09-instalacion-y-despliegue.md](09-instalacion-y-despliegue.md).
-<!-- DOCUMENTACION:nivel-2026-10-29:END -->
