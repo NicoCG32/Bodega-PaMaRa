@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { NubeCard } from "@/components/NubeCard";
 import { InstalarCard } from "@/components/InstalarCard";
+import { CambiarClaveCard } from "@/components/AdminGate";
 
 export const Route = createFileRoute("/ajustes")({
   head: () => ({
@@ -26,6 +27,7 @@ function Ajustes() {
       <h2 className="text-3xl font-semibold">Ajustes</h2>
       <NubeCard />
       <InstalarCard />
+      <CambiarClaveCard />
     </div>
   );
 }
