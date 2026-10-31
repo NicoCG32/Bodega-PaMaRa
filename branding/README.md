@@ -1,28 +1,46 @@
-# Identidad visual
+# Identidad visual de PaMaRa Bodega
 
-Recursos de identidad del proyecto: originales para documentación, interfaz e iconos de distribución. Las variantes se conservan con sus formatos y proporciones; un PNG ampliado no se presenta como detalle vectorial nuevo.
+Este catálogo reúne los originales y variantes de la identidad. Las dimensiones indican el lienzo del archivo: en SVG son unidades vectoriales; en PNG, WebP y JPG son píxeles.
 
-- [Banner claro](03_Banners/PaMaRa_AyN_banner_claro.png).
-- [Banner oscuro](03_Banners/PaMaRa_AyN_banner_oscuro.png).
-- Para interfaz, utilizar el logotipo horizontal adecuado al fondo; para favicon o launcher, los iconos preparados para ese tamaño. Un banner no se utiliza como icono.
-- Los archivos maestros de esta carpeta no se cargan todos en la aplicación: el runtime incorpora sólo los recursos seleccionados.
-- Las marcas y recursos visuales conservan sus atribuciones y condiciones; la licencia del código no cambia derechos de terceros. Ver [licencia y créditos](../LICENSING.md).
+- [Banner claro](banners/PaMaRa_AyN_banner_claro.png) · [Banner oscuro](banners/PaMaRa_AyN_banner_oscuro.png).
+- Utiliza logos horizontales en cabeceras, isotipos en espacios compactos y banners en presentaciones. Conserva la proporción y deja espacio alrededor de la marca.
+- Los iconos cuadrados se reservan para favicon, PWA y aplicaciones; el archivo ICO contiene sus tamaños de navegador o escritorio.
+- Las variantes de mayor tamaño sirven para exportación. Ampliar un raster no añade detalle al original.
+- La aplicación carga sólo los recursos que necesita. Los originales de este catálogo se mantienen separados de las variantes de interfaz.
+- [Licencia y créditos](../LICENSING.md).
 
-## Archivos
+## Logos e isotipos
 
-- [01_Logo_principal/PaMaRa_AyN_logo_2x_reescalado.png](01_Logo_principal/PaMaRa_AyN_logo_2x_reescalado.png).
-- [01_Logo_principal/PaMaRa_AyN_logo_original.png](01_Logo_principal/PaMaRa_AyN_logo_original.png).
-- [01_Logo_principal/PaMaRa_AyN_logo_transparente.png](01_Logo_principal/PaMaRa_AyN_logo_transparente.png).
-- [02_Monograma_AyN/PaMaRa_AyN_monograma_1024.png](02_Monograma_AyN/PaMaRa_AyN_monograma_1024.png).
-- [02_Monograma_AyN/PaMaRa_AyN_monograma_transparente.png](02_Monograma_AyN/PaMaRa_AyN_monograma_transparente.png).
-- [03_Banners/PaMaRa_AyN_banner_claro.png](03_Banners/PaMaRa_AyN_banner_claro.png).
-- [03_Banners/PaMaRa_AyN_banner_oscuro.png](03_Banners/PaMaRa_AyN_banner_oscuro.png).
-- [04_Iconos_Web_y_App/PaMaRa_AyN_apple_touch_180.png](04_Iconos_Web_y_App/PaMaRa_AyN_apple_touch_180.png).
-- [04_Iconos_Web_y_App/PaMaRa_AyN_favicon.ico](04_Iconos_Web_y_App/PaMaRa_AyN_favicon.ico).
-- [04_Iconos_Web_y_App/PaMaRa_AyN_icono_1024.png](04_Iconos_Web_y_App/PaMaRa_AyN_icono_1024.png).
-- [04_Iconos_Web_y_App/PaMaRa_AyN_icono_192.png](04_Iconos_Web_y_App/PaMaRa_AyN_icono_192.png).
-- [04_Iconos_Web_y_App/PaMaRa_AyN_icono_512.png](04_Iconos_Web_y_App/PaMaRa_AyN_icono_512.png).
-- [04_Iconos_Web_y_App/PaMaRa_AyN_icono_64.png](04_Iconos_Web_y_App/PaMaRa_AyN_icono_64.png).
-- [04_Iconos_Web_y_App/PaMaRa_AyN_icono_claro_1024.png](04_Iconos_Web_y_App/PaMaRa_AyN_icono_claro_1024.png).
-- [05_Web_Optimizado/PaMaRa_AyN_logo.webp](05_Web_Optimizado/PaMaRa_AyN_logo.webp).
-- [05_Web_Optimizado/PaMaRa_AyN_monograma.webp](05_Web_Optimizado/PaMaRa_AyN_monograma.webp).
+| Archivo                                                                              | Dimensiones | Formato |     Tamaño |
+| ------------------------------------------------------------------------------------ | ----------- | ------- | ---------: |
+| [PaMaRa_AyN_logo.webp](logos/PaMaRa_AyN_logo.webp)                                   | 1442 × 1442 | WEBP    |  536.2 KiB |
+| [PaMaRa_AyN_logo_transparente.png](logos/PaMaRa_AyN_logo_transparente.png)           | 1442 × 1442 | PNG     | 1551.7 KiB |
+| [PaMaRa_AyN_monograma.webp](logos/PaMaRa_AyN_monograma.webp)                         | 760 × 760   | WEBP    |  223.1 KiB |
+| [PaMaRa_AyN_monograma_1024.png](logos/PaMaRa_AyN_monograma_1024.png)                 | 1024 × 1024 | PNG     | 1073.4 KiB |
+| [PaMaRa_AyN_monograma_transparente.png](logos/PaMaRa_AyN_monograma_transparente.png) | 760 × 760   | PNG     |  631.2 KiB |
+
+## Iconos de aplicación y navegador
+
+| Archivo                                                                   | Dimensiones                                              | Formato |    Tamaño |
+| ------------------------------------------------------------------------- | -------------------------------------------------------- | ------- | --------: |
+| [PaMaRa_AyN_apple_touch_180.png](iconos/PaMaRa_AyN_apple_touch_180.png)   | 180 × 180                                                | PNG     |  33.3 KiB |
+| [PaMaRa_AyN_favicon.ico](iconos/PaMaRa_AyN_favicon.ico)                   | 16 × 16, 32 × 32, 48 × 48, 64 × 64, 128 × 128, 256 × 256 | ICO     |  98.7 KiB |
+| [PaMaRa_AyN_icono_1024.png](iconos/PaMaRa_AyN_icono_1024.png)             | 1024 × 1024                                              | PNG     | 579.2 KiB |
+| [PaMaRa_AyN_icono_192.png](iconos/PaMaRa_AyN_icono_192.png)               | 192 × 192                                                | PNG     |  37.1 KiB |
+| [PaMaRa_AyN_icono_512.png](iconos/PaMaRa_AyN_icono_512.png)               | 512 × 512                                                | PNG     | 207.1 KiB |
+| [PaMaRa_AyN_icono_64.png](iconos/PaMaRa_AyN_icono_64.png)                 | 64 × 64                                                  | PNG     |   6.0 KiB |
+| [PaMaRa_AyN_icono_claro_1024.png](iconos/PaMaRa_AyN_icono_claro_1024.png) | 1024 × 1024                                              | PNG     | 578.5 KiB |
+
+## Banners
+
+| Archivo                                                              | Dimensiones | Formato |    Tamaño |
+| -------------------------------------------------------------------- | ----------- | ------- | --------: |
+| [PaMaRa_AyN_banner_claro.png](banners/PaMaRa_AyN_banner_claro.png)   | 2400 × 920  | PNG     | 546.6 KiB |
+| [PaMaRa_AyN_banner_oscuro.png](banners/PaMaRa_AyN_banner_oscuro.png) | 2400 × 920  | PNG     | 520.1 KiB |
+
+## Referencias y originales
+
+| Archivo                                                                            | Dimensiones | Formato |     Tamaño |
+| ---------------------------------------------------------------------------------- | ----------- | ------- | ---------: |
+| [PaMaRa_AyN_logo_2x_reescalado.png](referencias/PaMaRa_AyN_logo_2x_reescalado.png) | 2820 × 2820 | PNG     | 4826.8 KiB |
+| [PaMaRa_AyN_logo_original.png](referencias/PaMaRa_AyN_logo_original.png)           | 1254 × 1254 | PNG     | 1542.3 KiB |

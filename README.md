@@ -1,8 +1,8 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="branding/03_Banners/PaMaRa_AyN_banner_oscuro.png" />
-  <img src="branding/03_Banners/PaMaRa_AyN_banner_claro.png" alt="Identidad visual de PaMaRa Bodega" width="100%" />
+  <source media="(prefers-color-scheme: dark)" srcset="branding/banners/PaMaRa_AyN_banner_oscuro.png" />
+  <img src="branding/banners/PaMaRa_AyN_banner_claro.png" alt="Identidad visual de PaMaRa Bodega" width="100%" />
 </picture>
 
 # PaMaRa Bodega

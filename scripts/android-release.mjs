@@ -243,7 +243,7 @@ async function main() {
   for (const file of ["LICENSE", "NOTICE", "LICENSING.md"])
     copyFileSync(path.join(root, file), path.join(out, file));
   copyFileSync(
-    path.join(root, "branding/03_Banners/PaMaRa_AyN_banner_claro.png"),
+    path.join(root, "branding/banners/PaMaRa_AyN_banner_claro.png"),
     path.join(out, "BRANDING.png"),
   );
   const assets = [

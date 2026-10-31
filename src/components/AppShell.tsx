@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Mic, Wallet, Package, ClipboardList, Settings } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
-import logo from "@/assets/pamara-logo.webp";
+import logo from "@/assets/pamara-monograma.webp";
 import { useStore, saldo, proximaCuota, diasHasta, hoy, clp } from "@/lib/store";
 
 const tabs = [
@@ -36,18 +36,25 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="mx-auto flex min-h-screen max-w-md flex-col bg-background">
       <header className="flex items-center justify-between bg-hero px-5 pb-4 pt-5 text-primary-foreground">
-        <div className="flex items-center gap-3">
-          <img src={logo} alt="PaMaRa AyN" className="h-16 w-auto" />
-          <p className="text-xs uppercase tracking-[0.3em] text-accent">
-            Perfumes
-            <br />
-            Ropa · Cosmética
-          </p>
+        <div className="flex min-w-0 flex-1 items-center gap-3">
+          <img
+            src={logo}
+            alt=""
+            width={760}
+            height={760}
+            className="size-14 shrink-0 object-contain"
+          />
+          <div className="min-w-0">
+            <p className="font-display text-lg leading-tight">PaMaRa AyN</p>
+            <p className="mt-1 text-[10px] uppercase tracking-widest text-accent">
+              Perfumes · Ropa · Cosmética
+            </p>
+          </div>
         </div>
         <Link
           to="/ajustes"
           aria-label="Ajustes"
-          className="flex size-12 items-center justify-center rounded-full bg-primary-foreground/10"
+          className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary-foreground/10"
         >
           <Settings className="size-6" />
         </Link>

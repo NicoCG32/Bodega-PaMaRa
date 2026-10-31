@@ -1,24 +1,202 @@
 {
   "schemaVersion": 1,
   "project": "PaMaRa Bodega",
-  "bannerLight": "03_Banners/PaMaRa_AyN_banner_claro.png",
-  "bannerDark": "03_Banners/PaMaRa_AyN_banner_oscuro.png",
+  "bannerLight": "banners/PaMaRa_AyN_banner_claro.png",
+  "bannerDark": "banners/PaMaRa_AyN_banner_oscuro.png",
   "resources": [
-    "01_Logo_principal/PaMaRa_AyN_logo_2x_reescalado.png",
-    "01_Logo_principal/PaMaRa_AyN_logo_original.png",
-    "01_Logo_principal/PaMaRa_AyN_logo_transparente.png",
-    "02_Monograma_AyN/PaMaRa_AyN_monograma_1024.png",
-    "02_Monograma_AyN/PaMaRa_AyN_monograma_transparente.png",
-    "03_Banners/PaMaRa_AyN_banner_claro.png",
-    "03_Banners/PaMaRa_AyN_banner_oscuro.png",
-    "04_Iconos_Web_y_App/PaMaRa_AyN_apple_touch_180.png",
-    "04_Iconos_Web_y_App/PaMaRa_AyN_favicon.ico",
-    "04_Iconos_Web_y_App/PaMaRa_AyN_icono_1024.png",
-    "04_Iconos_Web_y_App/PaMaRa_AyN_icono_192.png",
-    "04_Iconos_Web_y_App/PaMaRa_AyN_icono_512.png",
-    "04_Iconos_Web_y_App/PaMaRa_AyN_icono_64.png",
-    "04_Iconos_Web_y_App/PaMaRa_AyN_icono_claro_1024.png",
-    "05_Web_Optimizado/PaMaRa_AyN_logo.webp",
-    "05_Web_Optimizado/PaMaRa_AyN_monograma.webp"
-  ]
+    "banners/PaMaRa_AyN_banner_claro.png",
+    "banners/PaMaRa_AyN_banner_oscuro.png",
+    "iconos/PaMaRa_AyN_apple_touch_180.png",
+    "iconos/PaMaRa_AyN_favicon.ico",
+    "iconos/PaMaRa_AyN_icono_1024.png",
+    "iconos/PaMaRa_AyN_icono_192.png",
+    "iconos/PaMaRa_AyN_icono_512.png",
+    "iconos/PaMaRa_AyN_icono_64.png",
+    "iconos/PaMaRa_AyN_icono_claro_1024.png",
+    "logos/PaMaRa_AyN_logo.webp",
+    "logos/PaMaRa_AyN_logo_transparente.png",
+    "logos/PaMaRa_AyN_monograma.webp",
+    "logos/PaMaRa_AyN_monograma_1024.png",
+    "logos/PaMaRa_AyN_monograma_transparente.png",
+    "referencias/PaMaRa_AyN_logo_2x_reescalado.png",
+    "referencias/PaMaRa_AyN_logo_original.png"
+  ],
+  "groups": {
+    "logos": [
+      "logos/PaMaRa_AyN_logo.webp",
+      "logos/PaMaRa_AyN_logo_transparente.png",
+      "logos/PaMaRa_AyN_monograma.webp",
+      "logos/PaMaRa_AyN_monograma_1024.png",
+      "logos/PaMaRa_AyN_monograma_transparente.png"
+    ],
+    "iconos": [
+      "iconos/PaMaRa_AyN_apple_touch_180.png",
+      "iconos/PaMaRa_AyN_favicon.ico",
+      "iconos/PaMaRa_AyN_icono_1024.png",
+      "iconos/PaMaRa_AyN_icono_192.png",
+      "iconos/PaMaRa_AyN_icono_512.png",
+      "iconos/PaMaRa_AyN_icono_64.png",
+      "iconos/PaMaRa_AyN_icono_claro_1024.png"
+    ],
+    "banners": ["banners/PaMaRa_AyN_banner_claro.png", "banners/PaMaRa_AyN_banner_oscuro.png"],
+    "portadas": [],
+    "referencias": [
+      "referencias/PaMaRa_AyN_logo_2x_reescalado.png",
+      "referencias/PaMaRa_AyN_logo_original.png"
+    ]
+  },
+  "metadata": {
+    "banners/PaMaRa_AyN_banner_claro.png": {
+      "format": "png",
+      "bytes": 559720,
+      "sha256": "f795a8c064e12afa604211b59d8e42527b27d1939bee8e057b220e73c186e931",
+      "width": 2400,
+      "height": 920,
+      "scalable": false,
+      "alpha": false
+    },
+    "banners/PaMaRa_AyN_banner_oscuro.png": {
+      "format": "png",
+      "bytes": 532546,
+      "sha256": "d0a1b581b4e70380e2e4942e70ab3b11d246a0371bcebf23944697a12aae5832",
+      "width": 2400,
+      "height": 920,
+      "scalable": false,
+      "alpha": false
+    },
+    "iconos/PaMaRa_AyN_apple_touch_180.png": {
+      "format": "png",
+      "bytes": 34143,
+      "sha256": "bead54c68fbfa55961056e853c56835ed2e99f43acab5aad2886cc83de643b3c",
+      "width": 180,
+      "height": 180,
+      "scalable": false,
+      "alpha": true
+    },
+    "iconos/PaMaRa_AyN_favicon.ico": {
+      "format": "ico",
+      "bytes": 101044,
+      "sha256": "079bd97b049d0a10c847ef5f16bd0140e437aab26c9f4c343bf86f76994dc5d3",
+      "width": 256,
+      "height": 256,
+      "scalable": false,
+      "alpha": true,
+      "frames": [
+        [16, 16],
+        [32, 32],
+        [48, 48],
+        [64, 64],
+        [128, 128],
+        [256, 256]
+      ]
+    },
+    "iconos/PaMaRa_AyN_icono_1024.png": {
+      "format": "png",
+      "bytes": 593151,
+      "sha256": "e2befba41a882a1e1822de12b15e2a7fb18042bb4003b0a0fe794ffdaae86a66",
+      "width": 1024,
+      "height": 1024,
+      "scalable": false,
+      "alpha": true
+    },
+    "iconos/PaMaRa_AyN_icono_192.png": {
+      "format": "png",
+      "bytes": 38034,
+      "sha256": "f5d84a3e9f29c594a58819614b7e696cbd3f584ff79ce2ff04d67a34e1158c1c",
+      "width": 192,
+      "height": 192,
+      "scalable": false,
+      "alpha": true
+    },
+    "iconos/PaMaRa_AyN_icono_512.png": {
+      "format": "png",
+      "bytes": 212034,
+      "sha256": "fe622d13f61f6011abf7b1e99b99085d0dba044d93c3f2b826c3f8d34387d8f6",
+      "width": 512,
+      "height": 512,
+      "scalable": false,
+      "alpha": true
+    },
+    "iconos/PaMaRa_AyN_icono_64.png": {
+      "format": "png",
+      "bytes": 6124,
+      "sha256": "84dee5251139ad00ac18bb3108c46ecf85fadb7262e71d555baa10a37737c658",
+      "width": 64,
+      "height": 64,
+      "scalable": false,
+      "alpha": true
+    },
+    "iconos/PaMaRa_AyN_icono_claro_1024.png": {
+      "format": "png",
+      "bytes": 592393,
+      "sha256": "67757624868b4b4592c6b4b2e4a7f291a38b32818f7f3792f846f2f79e5365e4",
+      "width": 1024,
+      "height": 1024,
+      "scalable": false,
+      "alpha": true
+    },
+    "logos/PaMaRa_AyN_logo.webp": {
+      "format": "webp",
+      "bytes": 549074,
+      "sha256": "0437848e51da2653764f9f7da69a66516acbda6020c3427c5a32c039bd12f4c3",
+      "width": 1442,
+      "height": 1442,
+      "scalable": false,
+      "alpha": true
+    },
+    "logos/PaMaRa_AyN_logo_transparente.png": {
+      "format": "png",
+      "bytes": 1588906,
+      "sha256": "df5190e69527df1bf5b37a18a1c1add436be584e11e62a491abbed8f3747d29f",
+      "width": 1442,
+      "height": 1442,
+      "scalable": false,
+      "alpha": true
+    },
+    "logos/PaMaRa_AyN_monograma.webp": {
+      "format": "webp",
+      "bytes": 228424,
+      "sha256": "78ab6fdb6b54be2a25daba43b9c2b46ed3f950b97e6d39d402d3e43bbb0ded9d",
+      "width": 760,
+      "height": 760,
+      "scalable": false,
+      "alpha": true
+    },
+    "logos/PaMaRa_AyN_monograma_1024.png": {
+      "format": "png",
+      "bytes": 1099156,
+      "sha256": "65944226fa18d30b2107f970b67e3cdd0150704da67230ddf0fa638917f37cef",
+      "width": 1024,
+      "height": 1024,
+      "scalable": false,
+      "alpha": true
+    },
+    "logos/PaMaRa_AyN_monograma_transparente.png": {
+      "format": "png",
+      "bytes": 646396,
+      "sha256": "84487eb8d4f0448355df16efe44ad265599b35dcb0705f9f89a03cd94570aee4",
+      "width": 760,
+      "height": 760,
+      "scalable": false,
+      "alpha": true
+    },
+    "referencias/PaMaRa_AyN_logo_2x_reescalado.png": {
+      "format": "png",
+      "bytes": 4942661,
+      "sha256": "8defb862faa5ecb30497862215b0264084fcd9b2d22aa25b4facdfec92b8a8b7",
+      "width": 2820,
+      "height": 2820,
+      "scalable": false,
+      "alpha": true
+    },
+    "referencias/PaMaRa_AyN_logo_original.png": {
+      "format": "png",
+      "bytes": 1579290,
+      "sha256": "5694059fe3ab586d9438c3b1e4327ec8bf92ae58321608dc23760181c759e73f",
+      "width": 1254,
+      "height": 1254,
+      "scalable": false,
+      "alpha": true
+    }
+  }
 }

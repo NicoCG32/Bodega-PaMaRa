@@ -21,6 +21,6 @@ Comprueba estos criterios en los recorridos principales y en los tamaños de pan
 
 [Catálogo de originales y variantes](../branding/README.md) · [Manifest de identidad](../branding/manifest.json).
 
-La web usa el logotipo completo PaMaRa AyN optimizado en WebP. Favicon, Apple Touch y PWA utilizan el monograma; el launcher Android incorpora el icono preparado. La TWA sigue dependiendo del sitio publicado.
+La tienda presenta el logotipo completo PaMaRa AyN en WebP. La cabecera de gestión utiliza el monograma y el nombre en texto para mantener su legibilidad en pantallas pequeñas. Favicon, Apple Touch y PWA utilizan el monograma; el launcher Android incorpora el icono preparado. La TWA sigue dependiendo del sitio publicado.
 
 Los banners de presentación se seleccionan por tema en el README. Las aplicaciones incorporan sólo los recursos necesarios, con dimensiones/proporción estables; las variantes y originales permanecen en branding. La identidad visual no amplía funcionalidades ni cambia las condiciones de uso.

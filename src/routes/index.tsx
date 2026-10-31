@@ -84,7 +84,13 @@ function Boutique() {
       <header className="bg-hero px-5 pb-8 pt-6 text-center text-primary-foreground">
         <div className="mx-auto flex max-w-5xl items-start justify-between">
           <span className="size-10" />
-          <img src={logo} alt="PaMaRa AyN" className="h-24 w-auto" />
+          <img
+            src={logo}
+            alt="PaMaRa AyN"
+            width={1442}
+            height={1442}
+            className="size-24 shrink-0 object-contain"
+          />
           <Link
             to="/vault"
             aria-label="Entrar al Vault"
