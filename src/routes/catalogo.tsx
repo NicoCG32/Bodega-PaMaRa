@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Minus, Pencil, Plus, Trash2 } from "lucide-react";
-import { AdminGate } from "@/components/AdminGate";
 import { BodegaCapture } from "@/components/BodegaCapture";
 import { CrearTrend, PanelAnuncio, PublicarStock } from "@/components/Promocion";
 import { anuncioIndividual } from "@/lib/anuncios";
@@ -25,25 +24,16 @@ function Resumen() {
   const caja = "rounded-3xl bg-card p-3 text-center shadow-soft";
   return (
     <div className="space-y-1">
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-2 gap-2">
         <div className={caja}>
           <p className="text-2xl font-extrabold">{r.unidades}</p>
           <p className="text-sm text-muted-foreground">unidades</p>
-        </div>
-        <div className={caja}>
-          <p className="text-xl font-extrabold">{clp(r.valor)}</p>
-          <p className="text-sm text-muted-foreground">valor bodega</p>
         </div>
         <div className={`${caja} ${r.remate ? "bg-accent text-accent-foreground" : ""}`}>
           <p className="text-2xl font-extrabold">{r.remate}</p>
           <p className="text-sm">para rematar</p>
         </div>
       </div>
-      {r.sinPrecio > 0 && (
-        <p className="text-center text-sm text-muted-foreground">
-          {r.sinPrecio} producto(s) sin precio no suman al valor
-        </p>
-      )}
     </div>
   );
 }
@@ -89,11 +79,7 @@ export const Route = createFileRoute("/catalogo")({
       { name: "twitter:card", content: "summary" },
     ],
   }),
-  component: () => (
-    <AdminGate>
-      <Catalogo />
-    </AdminGate>
-  ),
+  component: Catalogo,
 });
 
 const filtros = [
