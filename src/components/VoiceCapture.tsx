@@ -111,7 +111,13 @@ export function VoiceCapture() {
       }
       actions.abonar(d.id, res.total ?? 0);
     } else if (res.tipo === "encargo") {
-      actions.addEncargo({ cliente, codigo, nota: res.nota ?? "" });
+      const prod = productos.find((x) => x.codigo === codigo);
+      actions.addEncargo({
+        cliente,
+        codigo,
+        nota: res.nota ?? "",
+        precio: res.total || (prod ? precioVenta({ ...prod, stock: 0 }, precios).precio : precios?.base),
+      });
     } else if (res.tipo === "stock" && codigo) {
       actions.ajustarStock(codigo, res.cantidad ?? 1);
     } else {

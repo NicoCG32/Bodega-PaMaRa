@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Check, Trash2 } from "lucide-react";
-import { actions, normCodigo, useStore } from "@/lib/store";
+import { actions, clp, normCodigo, precioVenta, useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/encargos")({
   head: () => ({
@@ -18,7 +18,7 @@ export const Route = createFileRoute("/encargos")({
 });
 
 function Encargos() {
-  const { encargos } = useStore();
+  const { encargos, productos, precios } = useStore();
   const [cliente, setCliente] = useState("");
   const [codigo, setCodigo] = useState("");
   const pend = encargos.filter((e) => !e.entregado);
@@ -32,10 +32,13 @@ function Encargos() {
         onSubmit={(e) => {
           e.preventDefault();
           if (!cliente.trim()) return;
+          const c = codigo ? normCodigo(codigo) : "";
+          const prod = productos.find((x) => x.codigo === c);
           actions.addEncargo({
             cliente: cliente.trim(),
-            codigo: codigo ? normCodigo(codigo) : "",
+            codigo: c,
             nota: "",
+            precio: prod ? precioVenta({ ...prod, stock: 0 }, precios).precio : undefined,
           });
           setCliente("");
           setCodigo("");
@@ -75,7 +78,7 @@ function Encargos() {
           <div className="flex-1">
             <p className="text-xl font-bold">{e.cliente}</p>
             <p className="text-muted-foreground">
-              {e.codigo || "—"} {e.nota && `· ${e.nota}`}
+              {e.codigo || "—"} {e.precio ? `· ${clp(e.precio)}` : ""} {e.nota && `· ${e.nota}`}
             </p>
           </div>
           <button
