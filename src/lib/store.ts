@@ -18,6 +18,8 @@ export type Encargo = {
   nota: string;
   entregado: boolean;
   creada: string;
+  /** Precio acordado (dictado o calculado). */
+  precio?: number | undefined;
 };
 export type Producto = {
   /** Unique key: H-NN/M-NN/T-NN for perfumes, O-xxxx for other products. */
@@ -77,7 +79,26 @@ export function reposicion(productos: Producto[], encargos: Encargo[]) {
     .sort((a, b) => b.pedidos - a.pedidos);
 }
 
+/** Montos fijos en pesos que la dueña ajusta en Ajustes. */
+export type Precios = { base: number; recargoEncargo: number; descuentoRemate: number };
+export const PRECIOS_INICIALES: Precios = { base: 15000, recargoEncargo: 2000, descuentoRemate: 3000 };
+
+export type EstadoVenta = "stock" | "remate" | "encargo";
+/** Precio para la clienta: precio propio del producto (o el general) ± monto fijo según estado. */
+export function precioVenta(p: Producto, cfg: Precios = PRECIOS_INICIALES) {
+  const base = p.precio || cfg.base;
+  const estado: EstadoVenta = p.stock <= 0 ? "encargo" : enRemate(p) ? "remate" : "stock";
+  const precio =
+    estado === "encargo"
+      ? base + cfg.recargoEncargo
+      : estado === "remate"
+        ? Math.max(0, base - cfg.descuentoRemate)
+        : base;
+  return { estado, precio, base };
+}
+
 export type State = {
+  precios?: Precios;
   deudas: Deuda[];
   encargos: Encargo[];
   productos: Producto[];
@@ -215,6 +236,9 @@ export const actions = {
         return { ...d, abonos, cuotas };
       }),
     }));
+  },
+  setPrecios(precios: Precios) {
+    set((s) => ({ ...s, precios }));
   },
   borrarDeuda(id: string) {
     set((s) => ({ ...s, deudas: s.deudas.filter((d) => d.id !== id) }));
