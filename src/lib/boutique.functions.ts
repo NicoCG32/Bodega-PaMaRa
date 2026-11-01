@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { aPublico, type ItemPublico } from "./boutique";
-import type { Producto } from "./store";
+import type { Precios, Producto } from "./store";
 
 /** Público: lee el respaldo más reciente de la dueña y devuelve solo productos visibles. */
 export const catalogoPublico = createServerFn({ method: "GET" }).handler(
@@ -13,9 +13,10 @@ export const catalogoPublico = createServerFn({ method: "GET" }).handler(
       .limit(1)
       .maybeSingle();
     if (error || !data) return [];
-    const productos = ((data.data as { productos?: Producto[] })?.productos ?? []).filter(
+    const snap = data.data as { productos?: Producto[]; precios?: Precios };
+    const productos = (snap?.productos ?? []).filter(
       (p) => p && typeof p.codigo === "string",
     );
-    return aPublico(productos);
+    return aPublico(productos, snap?.precios);
   },
 );
