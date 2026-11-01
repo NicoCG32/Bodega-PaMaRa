@@ -8,7 +8,7 @@ const tabs = [
   { to: "/vault", label: "Anotar", icon: Mic },
   { to: "/cobros", label: "Cobros", icon: Wallet },
   { to: "/encargos", label: "Encargos", icon: ClipboardList },
-  { to: "/catalogo", label: "Catálogo", icon: Package },
+  { to: "/catalogo", label: "Bodega", icon: Package },
 ] as const;
 
 export function AppShell({ children }: { children: ReactNode }) {

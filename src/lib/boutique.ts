@@ -1,4 +1,4 @@
-import { clp, esOtro, type Producto } from "./store";
+import { clp, esOtro, precioVenta, type EstadoVenta, type Precios, type Producto } from "./store";
 
 /** Número de WhatsApp de la tienda (formato 569XXXXXXXX). Vacío = la clienta elige el chat. */
 export const TIENDA_WHATSAPP = "56935774427";
@@ -16,23 +16,38 @@ export type ItemPublico = {
   precio: number | null;
   stock: number;
   perfume: boolean;
+  estado: EstadoVenta;
 };
 
-/** Solo lo visible al público: con stock y no marcado "Solo privado". */
-export function aPublico(productos: Producto[]): ItemPublico[] {
+export type Disponibilidad = "todo" | EstadoVenta;
+
+/** Lo visible al público: todo lo no marcado "Solo privado"; sin stock se ofrece a encargo. */
+export function aPublico(productos: Producto[], cfg?: Precios): ItemPublico[] {
   return productos
-    .filter((p) => p.stock > 0 && p.enBoutique !== false)
-    .map((p) => ({
+    .filter((p) => p.enBoutique !== false && (p.stock > 0 || !!(p.inspiracion || p.nombre)))
+    .map((p) => {
+      const v = precioVenta(p, cfg);
+      return {
       codigo: p.codigo,
       nombre: p.nombre,
       inspiracion: p.inspiracion ?? null,
       version: p.version ?? null,
       categoria: p.categoria ?? null,
-      precio: p.precio ?? null,
-      stock: p.stock,
+      precio: v.precio || null,
+      stock: Math.max(0, p.stock),
       perfume: !esOtro(p),
-    }));
+      estado: v.estado,
+      };
+    })
+    .sort((a, b) => orden[a.estado] - orden[b.estado]);
 }
+const orden: Record<EstadoVenta, number> = { remate: 0, stock: 1, encargo: 2 };
+
+export const ETIQUETA: Record<EstadoVenta, string> = {
+  stock: "Entrega hoy",
+  remate: "Liquidación",
+  encargo: "A pedido · llega en pocos días",
+};
 
 const esAccesorio = (i: ItemPublico) =>
   /accesorio|joya|bolso|cartera|aro|collar/i.test(i.categoria ?? i.nombre);
@@ -45,7 +60,14 @@ export function enColeccion(i: ItemPublico, c: Coleccion) {
   return !i.perfume && !esAccesorio(i);
 }
 
-export const badge = (i: ItemPublico) => (i.stock <= ULTIMAS ? "Últimas unidades" : "Disponible");
+export const badge = (i: ItemPublico) =>
+  i.estado === "encargo"
+    ? "A pedido"
+    : i.estado === "remate"
+      ? "Liquidación"
+      : i.stock <= ULTIMAS
+        ? "Últimas unidades"
+        : "Entrega hoy";
 
 export type Linea = { item: ItemPublico; cantidad: number };
 
@@ -65,7 +87,8 @@ export function mensajePedido(b: Linea[], comuna: string) {
     const precio = l.item.precio
       ? ` — ${clp(l.item.precio * l.cantidad)}`
       : " — precio a confirmar";
-    return `• ${t} x${l.cantidad}${precio}`;
+    const modo = l.item.estado === "encargo" ? " (por encargo)" : l.item.estado === "remate" ? " (liquidación)" : " (en stock, entrega hoy)";
+    return `• ${t} x${l.cantidad}${modo}${precio}`;
   });
   return [
     "¡Hola PaMaRa! 🌸 Quiero hacer este pedido:",

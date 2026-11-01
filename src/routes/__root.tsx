@@ -12,6 +12,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import { AppShell } from "@/components/AppShell";
+import { AdminGate } from "@/components/AdminGate";
 import { Toaster } from "@/components/ui/sonner";
 import { initCloudSync } from "@/lib/cloudSync";
 import { supabase } from "@/integrations/supabase/client";
@@ -151,9 +152,13 @@ function RootComponent() {
   );
 }
 
-/** La Boutique pública ("/") va sin la barra del Vault. */
+/** La Boutique pública ("/") va sola; todo lo demás es el Vault privado con clave. */
 function ShellSegunRuta({ children }: { children: ReactNode }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
   if (path === "/") return <>{children}</>;
-  return <AppShell>{children}</AppShell>;
+  return (
+    <AppShell>
+      <AdminGate>{children}</AdminGate>
+    </AppShell>
+  );
 }

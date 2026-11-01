@@ -188,7 +188,7 @@ Montos en pesos chilenos: "18 mil" = 18000, "lucas" = mil pesos.
 tipo:
 - "fiado": se vendió a crédito. total = precio; abono_inicial = lo pagado ahora (0 si nada); cuotas = pagos futuros comprometidos con fecha AAAA-MM-DD (resuelve "el viernes" al próximo viernes, "fin de mes" al último día del mes actual). Si dice "me paga X el viernes y el resto a fin de mes", el resto = total - abono_inicial - X.
 - "abono": un cliente pagó parte de una deuda existente. total = monto pagado.
-- "encargo": pedido de un producto para un cliente.
+- "encargo": pedido de un producto para un cliente. total = precio acordado solo si lo dice (ej. "a 18 mil" = 18000), si no null.
 - "stock": llegó o se vendió mercadería. cantidad positiva si llegó, negativa si salió.
 - "otro": cualquier otra cosa.
 Nombres de clientes con mayúscula inicial. resumen: una frase corta y cálida en español explicando lo entendido.`;

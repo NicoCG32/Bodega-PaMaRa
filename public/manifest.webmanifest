@@ -3,7 +3,7 @@
   "short_name": "PaMaRa",
   "description": "Cobros, fiados, encargos y stock por voz",
   "id": "/",
-  "start_url": "/",
+  "start_url": "/vault",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",

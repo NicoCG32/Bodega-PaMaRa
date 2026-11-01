@@ -78,7 +78,7 @@ export function AdminGate({ children }: { children: ReactNode }) {
     <div className="mx-auto max-w-xs space-y-5 pt-4">
       <div className="text-center">
         <Lock className="mx-auto size-10 text-primary" />
-        <h2 className="mt-2 text-3xl font-semibold">Bodega</h2>
+        <h2 className="mt-2 text-3xl font-semibold">PaMaRa Vault</h2>
         <p className="text-muted-foreground">Ingresa la clave de Administrador</p>
       </div>
       <Teclado

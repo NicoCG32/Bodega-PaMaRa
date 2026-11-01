@@ -1,7 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { Lock, Minus, Plus, ShoppingBag, X } from "lucide-react";
+import { Minus, Plus, ShoppingBag, X } from "lucide-react";
 import logo from "@/assets/pamara-logo.webp";
 import { catalogoPublico } from "@/lib/boutique.functions";
 import {
@@ -11,6 +11,8 @@ import {
   linkPedido,
   totalBolsa,
   type Coleccion,
+  type Disponibilidad,
+  ETIQUETA,
   type ItemPublico,
   type Linea,
 } from "@/lib/boutique";
@@ -50,6 +52,16 @@ export const Route = createFileRoute("/")({
   component: Boutique,
 });
 
+const DISPONIBLE: { id: Disponibilidad; label: string }[] = [
+  { id: "todo", label: "Todo" },
+  { id: "stock", label: "📦 Entrega hoy" },
+  { id: "encargo", label: "✨ A pedido" },
+  { id: "remate", label: "🔥 Liquidación" },
+];
+
+const accion = (i: ItemPublico) =>
+  i.estado === "encargo" ? "Encargar" : i.estado === "remate" ? "Aprovechar" : "Agregar";
+
 const COLECCIONES: { id: Coleccion; label: string }[] = [
   { id: "todo", label: "Todo" },
   { id: "mujer", label: "Mujer" },
@@ -61,19 +73,21 @@ const COLECCIONES: { id: Coleccion; label: string }[] = [
 function Boutique() {
   const { data: items } = useSuspenseQuery(catalogoQuery);
   const [col, setCol] = useState<Coleccion>("todo");
+  const [disp, setDisp] = useState<Disponibilidad>("todo");
   const [bolsa, setBolsa] = useState<Linea[]>([]);
   const [ficha, setFicha] = useState<ItemPublico | null>(null);
   const [abierta, setAbierta] = useState(false);
   const [comuna, setComuna] = useState<string>(COMUNAS[0]);
 
-  const visibles = items.filter((i) => enColeccion(i, col));
+  const visibles = items.filter((i) => enColeccion(i, col) && (disp === "todo" || i.estado === disp));
   const unidades = bolsa.reduce((a, l) => a + l.cantidad, 0);
 
   const cambiar = (item: ItemPublico, d: number) =>
     setBolsa((b) => {
       const l = b.find((x) => x.item.codigo === item.codigo);
       if (!l) return d > 0 ? [...b, { item, cantidad: 1 }] : b;
-      const cantidad = Math.min(item.stock, l.cantidad + d);
+      const tope = item.estado === "encargo" ? 20 : item.stock;
+      const cantidad = Math.min(tope, l.cantidad + d);
       return cantidad <= 0
         ? b.filter((x) => x !== l)
         : b.map((x) => (x === l ? { ...x, cantidad } : x));
@@ -91,13 +105,7 @@ function Boutique() {
             height={1442}
             className="size-24 shrink-0 object-contain"
           />
-          <Link
-            to="/vault"
-            aria-label="Entrar al Vault"
-            className="flex size-10 items-center justify-center rounded-full text-primary-foreground/40 hover:text-accent"
-          >
-            <Lock className="size-4" />
-          </Link>
+          <span className="size-10" />
         </div>
         <p className="mt-3 font-display text-2xl italic">Boutique</p>
         <p className="mt-1 text-xs uppercase tracking-[0.35em] text-accent">
@@ -122,6 +130,20 @@ function Boutique() {
             </li>
           ))}
         </ul>
+        <ul className="mx-auto flex max-w-5xl gap-2 overflow-x-auto px-4 pb-3">
+          {DISPONIBLE.map((c) => (
+            <li key={c.id}>
+              <button
+                onClick={() => setDisp(c.id)}
+                className={`min-h-11 whitespace-nowrap rounded-full px-4 text-sm font-semibold transition ${
+                  disp === c.id ? "bg-accent text-accent-foreground" : "bg-secondary text-muted-foreground"
+                }`}
+              >
+                {c.label}
+              </button>
+            </li>
+          ))}
+        </ul>
       </nav>
 
       <main className="mx-auto max-w-5xl px-4 pb-32 pt-6">
@@ -138,7 +160,7 @@ function Boutique() {
               >
                 <button onClick={() => setFicha(i)} className="flex-1 text-left">
                   <span
-                    className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${i.stock <= 2 ? "bg-primary/10 text-primary" : "bg-secondary text-secondary-foreground"}`}
+                    className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${i.estado === "remate" ? "bg-primary text-primary-foreground" : i.estado === "encargo" ? "bg-secondary text-muted-foreground" : "bg-accent/30 text-foreground"}`}
                   >
                     {badge(i)}
                   </span>
@@ -155,9 +177,9 @@ function Boutique() {
                 </button>
                 <button
                   onClick={() => cambiar(i, 1)}
-                  className="mt-3 rounded-full bg-primary py-2.5 text-sm font-bold text-primary-foreground"
+                  className="mt-3 min-h-12 rounded-full bg-primary text-sm font-bold text-primary-foreground"
                 >
-                  + Agregar
+                  + {accion(i)}
                 </button>
               </li>
             ))}
@@ -180,7 +202,7 @@ function Boutique() {
       {ficha && (
         <Hoja onClose={() => setFicha(null)}>
           <span className="text-xs font-bold uppercase tracking-wider text-primary">
-            {badge(ficha)}
+            {ETIQUETA[ficha.estado]}
           </span>
           {ficha.perfume && (
             <p className="mt-2 text-sm tracking-widest text-muted-foreground">{ficha.codigo}</p>
@@ -209,7 +231,7 @@ function Boutique() {
             }}
             className="mt-5 w-full rounded-full bg-primary py-4 text-lg font-bold text-primary-foreground"
           >
-            Agregar a mi bolsa
+            {accion(ficha)} · {ficha.precio ? clp(ficha.precio) : "precio a confirmar"}
           </button>
         </Hoja>
       )}
@@ -223,13 +245,14 @@ function Boutique() {
                 <div className="flex-1">
                   <p className="font-semibold">{l.item.inspiracion || l.item.nombre}</p>
                   <p className="text-sm text-muted-foreground">
+                    {badge(l.item)} ·{" "}
                     {l.item.precio ? clp(l.item.precio * l.cantidad) : "Precio a confirmar"}
                   </p>
                 </div>
                 <button
                   aria-label="Quitar uno"
                   onClick={() => cambiar(l.item, -1)}
-                  className="flex size-9 items-center justify-center rounded-full border border-border"
+                  className="flex size-12 items-center justify-center rounded-full border border-border"
                 >
                   <Minus className="size-4" />
                 </button>
@@ -237,7 +260,7 @@ function Boutique() {
                 <button
                   aria-label="Agregar uno"
                   onClick={() => cambiar(l.item, 1)}
-                  className="flex size-9 items-center justify-center rounded-full border border-border"
+                  className="flex size-12 items-center justify-center rounded-full border border-border"
                 >
                   <Plus className="size-4" />
                 </button>
@@ -250,7 +273,7 @@ function Boutique() {
               <button
                 key={c}
                 onClick={() => setComuna(c)}
-                className={`rounded-full border py-2 text-sm font-semibold ${comuna === c ? "border-primary bg-primary text-primary-foreground" : "border-border"}`}
+                className={`min-h-12 rounded-full border text-sm font-semibold ${comuna === c ? "border-primary bg-primary text-primary-foreground" : "border-border"}`}
               >
                 {c}
               </button>
