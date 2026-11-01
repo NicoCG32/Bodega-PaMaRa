@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { avisarMotor } from "@/lib/motor";
 import { escucharNativo, transcribirConRespaldo, type Transcripciones } from "@/lib/vozNativa";
 import { transcribir, interpretar, type Interpretacion } from "@/lib/ai.functions";
-import { actions, clp, fechaBonita, hoy, normCodigo, uid, useStore, saldo } from "@/lib/store";
+import { actions, clp, fechaBonita, hoy, normCodigo, uid, useStore, saldo, precioVenta } from "@/lib/store";
 
 const tipoLabel: Record<Interpretacion["tipo"], string> = {
   fiado: "Venta fiada",
@@ -18,7 +18,7 @@ const tipoLabel: Record<Interpretacion["tipo"], string> = {
 export function VoiceCapture() {
   const tx = useServerFn(transcribir);
   const ai = useServerFn(interpretar);
-  const { deudas } = useStore();
+  const { deudas, productos, precios } = useStore();
   const [estado, setEstado] = useState<"idle" | "grabando" | "pensando">("idle");
   const [texto, setTexto] = useState("");
   const [escribir, setEscribir] = useState(false);

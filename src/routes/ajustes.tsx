@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { NubeCard } from "@/components/NubeCard";
 import { InstalarCard } from "@/components/InstalarCard";
 import { CambiarClaveCard } from "@/components/AdminGate";
+import { PreciosCard } from "@/components/PreciosCard";
 
 export const Route = createFileRoute("/ajustes")({
   head: () => ({
@@ -21,10 +22,11 @@ export const Route = createFileRoute("/ajustes")({
 function Ajustes() {
   return (
     <div className="space-y-4">
-      <Link to="/cobros" className="flex h-12 items-center gap-2 text-lg font-bold text-primary">
+      <Link to="/vault" className="flex h-12 items-center gap-2 text-lg font-bold text-primary">
         <ArrowLeft /> Volver
       </Link>
       <h2 className="text-3xl font-semibold">Ajustes</h2>
+      <PreciosCard />
       <NubeCard />
       <InstalarCard />
       <CambiarClaveCard />

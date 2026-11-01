@@ -11,12 +11,12 @@ const ps: Producto[] = [
 ];
 
 describe("Boutique", () => {
-  it("oculta agotados y los marcados solo privado", () => {
-    expect(aPublico(ps).map((i) => i.codigo)).toEqual(["M-12", "H-05", "O-ab"]);
+  it("oculta los marcados solo privado; agotados quedan a pedido al final", () => {
+    expect(aPublico(ps).map((i) => i.codigo)).toEqual(["M-12", "H-05", "O-ab", "H-09"]);
   });
   it("2 o menos unidades = Últimas unidades", () => {
     const [m, h] = aPublico(ps);
-    expect(badge(m!)).toBe("Disponible");
+    expect(badge(m!)).toBe("Entrega hoy");
     expect(badge(h!)).toBe("Últimas unidades");
   });
   it("filtra Mujer y Cosmética", () => {
@@ -34,6 +34,7 @@ describe("Boutique", () => {
       "Calama",
     );
     expect(msg).toContain("Total: $45.000");
+    expect(msg).toContain("(en stock, entrega hoy)");
     expect(msg).toContain("Comuna de entrega: Calama");
   });
   it("el pedido abre el WhatsApp de la tienda", () => {
