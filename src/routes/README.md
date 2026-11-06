@@ -1,21 +1,17 @@
-# Routes
+# Rutas de PaMaRa Bodega
 
-TanStack Start uses **file-based routing**. Every `.tsx` file in this directory
-defines a route. Do **not** create `src/pages/`, `src/routes/_app/index.tsx`, or
-`app/layout.tsx` — those are Next.js / Remix conventions. The only root layout
-is `src/routes/__root.tsx`.
+TanStack Start genera las rutas a partir de los archivos de esta carpeta.
 
-## Conventions
+| Archivo                            | Ruta                             | Pantalla                                       |
+| ---------------------------------- | -------------------------------- | ---------------------------------------------- |
+| `index.tsx`                        | `/`                              | Boutique pública.                              |
+| `vault.tsx`                        | `/vault`                         | Registro por voz o texto.                      |
+| `cobros.tsx`                       | `/cobros`                        | Fiados, abonos y cuotas.                       |
+| `encargos.tsx`                     | `/encargos`                      | Encargos y entregas.                           |
+| `catalogo.tsx`                     | `/catalogo`                      | Productos y existencias.                       |
+| `ajustes.tsx`                      | `/ajustes`                       | Precios, respaldo, avisos y PIN.               |
+| `api/public/jobs/recordatorios.ts` | `/api/public/jobs/recordatorios` | Endpoint de recordatorios con secreto de cron. |
 
-| File | URL |
-| --- | --- |
-| `index.tsx` | `/` |
-| `about.tsx` | `/about` |
-| `users/index.tsx` | `/users` |
-| `users/$id.tsx` | `/users/:id` (dynamic — bare `$`, no curly braces) |
-| `posts/{-$category}.tsx` | `/posts/:category?` (optional segment) |
-| `files/$.tsx` | `/files/*` (splat — read via `_splat` param, never `*`) |
-| `_layout.tsx` | layout route (renders children via `<Outlet />`) |
-| `__root.tsx` | app shell — wraps every page; preserve `<Outlet />` |
+`__root.tsx` define la estructura común. Las pantallas de gestión se envuelven con `AppShell` y `AdminGate`; la Boutique usa su propia presentación. El archivo `src/routeTree.gen.ts` se genera automáticamente.
 
-`routeTree.gen.ts` is auto-generated. Don't edit it by hand.
+[Arquitectura](../../docs/tecnica/01-arquitectura.md) · [Desarrollo local](../../docs/desarrollo/01-desarrollo-local.md)

@@ -2,66 +2,84 @@
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="branding/banners/PaMaRa_AyN_banner_oscuro.png" />
-  <img src="branding/banners/PaMaRa_AyN_banner_claro.png" alt="Identidad visual de PaMaRa Bodega" width="100%" />
+  <img src="branding/banners/PaMaRa_AyN_banner_claro.png" alt="PaMaRa AyN: banner de la marca" width="100%" />
 </picture>
 
 # PaMaRa Bodega
 
-**Cobros, encargos y stock con una experiencia cercana.**
+**La libreta digital de un emprendimiento familiar.**
 
-[![Estado: Android beta](https://img.shields.io/badge/Estado-Android%20beta-9C5871?style=flat-square&labelColor=263244)](#sobre-el-proyecto) [![Plataforma: Android / Web](https://img.shields.io/badge/Plataforma-Android%20%2F%20Web-386B8F?style=flat-square&labelColor=263244)](#usar-o-descargar) [![Licencia: PolyForm NC](https://img.shields.io/badge/Licencia-PolyForm%20NC-596273?style=flat-square&labelColor=263244)](LICENSING.md) [![Calidad](https://github.com/NicoCG32/pamara-bodega/actions/workflows/calidad.yml/badge.svg)](https://github.com/NicoCG32/pamara-bodega/actions/workflows/calidad.yml)
+[![Web y Android beta](https://img.shields.io/badge/Estado-Web%20%7C%20Android%20beta-77354B?style=flat-square)](docs/general/02-alcance-y-funciones.md)
+[![React 19](https://img.shields.io/badge/React-19-20232A?style=flat-square&logo=react)](docs/tecnica/01-arquitectura.md)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white)](docs/desarrollo/01-desarrollo-local.md)
+[![Licencia](https://img.shields.io/badge/Licencia-PolyForm%20NC-596273?style=flat-square)](LICENSE)
+[![Calidad](https://github.com/NicoCG32/Bodega-PaMaRa/actions/workflows/calidad.yml/badge.svg)](https://github.com/NicoCG32/Bodega-PaMaRa/actions/workflows/calidad.yml)
 
-[![React 19](https://img.shields.io/badge/React%2019-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](#tecnologías) [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=FFFFFF)](#tecnologías) [![TanStack Start](https://img.shields.io/badge/TanStack%20Start-155E75?style=for-the-badge&logo=tanstack&logoColor=FFFFFF)](#tecnologías) [![Android](https://img.shields.io/badge/Android-24633C?style=for-the-badge&logo=android&logoColor=FFFFFF)](#tecnologías)
-
-[Abrir aplicación](https://pamara-bodega.lovable.app) · [Releases y descargas](https://github.com/NicoCG32/pamara-bodega/releases) · [Documentación](docs/README.md) · [Arquitectura](docs/01-arquitectura-general.md) · [Inicio rápido](#ejecutar-desde-el-código)
+[Abrir boutique](https://pamara-bodega.lovable.app/) · [Abrir Vault](https://pamara-bodega.lovable.app/vault) · [Descargas Android](https://github.com/NicoCG32/Bodega-PaMaRa/releases) · [Documentación](docs/README.md)
 
 </div>
 
----
+## Resumen ejecutivo
 
-## Sobre el proyecto
+PaMaRa Bodega ayuda a administrar un emprendimiento familiar desde el teléfono: reúne inventario, fiados, abonos y encargos, con captura por voz, texto o foto que se revisa antes de guardar. La boutique permite consultar productos y preparar pedidos por WhatsApp. Está disponible como aplicación web y APK Android beta, con respaldo opcional mediante una cuenta de Google.
 
-Aplicación para PaMaRa AyN que organiza deudas, abonos, encargos, productos y stock. La entrada por voz o texto produce una propuesta revisable antes de registrar; incluye catálogo web y respaldo/sincronización opcional.
+## Por qué lo hice
 
-**Estado:** Web y APK Android beta basada en Trusted Web Activity. Android requiere Internet, el backend publicado y un navegador compatible; las notificaciones y la actualización deben validarse en dispositivo.
+PaMaRa AyN es el emprendimiento de mi mamá. Entre perfumes, otros productos, ventas fiadas y encargos, había información que no debía depender de recordar una conversación o buscar un mensaje antiguo. Empecé esta aplicación para que anotar un movimiento, saber qué hay en bodega y revisar un cobro fuese más sencillo desde el teléfono.
 
-## Tecnologías
+El flujo principal es sencillo: **dictar o escribir, revisar y recién entonces guardar**.
 
-| Área                  | Tecnologías y responsabilidad                                                         |
-| --------------------- | ------------------------------------------------------------------------------------- |
-| **Aplicación**        | React 19, TypeScript, TanStack Start y Tailwind CSS.                                  |
-| **Datos y servicios** | localStorage; snapshots y cuentas con Supabase, IA/voz con Groq y notificaciones FCM. |
-| **Android**           | Java, Android Browser Helper y Trusted Web Activity; compilación Gradle.              |
+## Qué permite hacer
 
-> **Enfoque técnico:** Revisión antes de registrar y sincronización opcional mediante snapshots.
+| Para administrar                                                                 | Para quien visita la boutique                                       |
+| -------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| Registrar fiados, abonos y cuotas; consultar saldos.                             | Ver productos visibles, disponibilidad y precio calculado.          |
+| Crear y entregar encargos; contar y ajustar existencias.                         | Filtrar productos y preparar una bolsa de pedido.                   |
+| Revisar propuestas obtenidas de voz, texto o una foto de bodega.                 | Enviar la consulta o pedido por WhatsApp.                           |
+| Ajustar precios generales, preparar anuncios y gestionar un respaldo con Google. | Elegir comuna de entrega; **la tarifa de envío no se calcula aún**. |
 
-## Usar o descargar
+**Estado:** web y Android **beta** mediante Trusted Web Activity (TWA). El APK requiere conexión y el sitio publicado. Los pedidos se coordinan por WhatsApp y se registran por separado en Vault; los avisos push requieren configurar Firebase y comprobar la recepción en el teléfono.
 
-[Abrir la web](https://pamara-bodega.lovable.app) · [Descargar APK beta y consultar releases](https://github.com/NicoCG32/pamara-bodega/releases) · [Instalación y actualización](docs/09-instalacion-y-despliegue.md). Elige una release publicada y su archivo `.apk`, conserva el checksum y consulta sus notas.
+## Cómo está construido
 
-## Ejecutar desde el código
+- **Interfaz y servidor web:** React 19, TypeScript, TanStack Start, Vite y Tailwind CSS.
+- **Trabajo diario:** estado persistido en `localStorage` con lógica en [`src/lib/store.ts`](src/lib/store.ts).
+- **Respaldo:** autenticación con Google y snapshot JSON por cuenta en Supabase, si se inicia sesión.
+- **Asistencia:** transcripción y análisis con Groq, más reconocimiento de voz del teléfono cuando está disponible; respuesta revisada antes de guardar.
+- **Boutique pública:** catálogo derivado del respaldo, con disponibilidad, precios y pedidos por WhatsApp.
 
-Con Bun y el entorno de prueba configurado, desde la raíz:
+[Arquitectura, límites y diagramas](docs/tecnica/01-arquitectura.md) · [Datos, sincronización y seguridad](docs/tecnica/03-persistencia-y-sincronizacion.md)
 
-```sh
+## Ejecutar el proyecto
+
+Requiere un entorno de Node/Bun compatible y las variables de los servicios conectados. Las claves privadas permanecen **sólo en el servidor**.
+
+```bash
 bun install --frozen-lockfile
 bun run dev
 ```
 
-Las claves de proveedores se mantienen en el servidor. [Criterios de aceptación Android](docs/android-acceptance.md).
+Verificar antes de publicar:
 
-## Documentación
+```bash
+bun run lint
+bunx tsc --noEmit
+bun run test
+bun run build
+```
 
-[Índice completo y rutas de lectura](docs/README.md) · [Recorrido de registro y cobros](docs/03-flujo-de-usuario.md).
+[Guía de desarrollo](docs/desarrollo/01-desarrollo-local.md) · [Entrega Android](docs/desarrollo/02-android-y-despliegue.md) · [Guía de pruebas](docs/desarrollo/03-pruebas-y-limitaciones.md)
 
-| Tipo       | Lectura                                                                                                                                                                          |
-| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| General    | [Problema, cliente y solución](docs/00-problematica-cliente-y-valor.md) · [Motivación](docs/16-motivacion-y-contexto.md)                                                         |
-| Técnica    | [Arquitectura y diagramas](docs/01-arquitectura-general.md) · [Dominio y datos](docs/04-base-de-datos.md)                                                                        |
-| Desarrollo | [Etapas y metodología](docs/17-desarrollo-y-metodologia.md) · [Proyección](docs/15-escalabilidad-y-nuevos-mercados.md) · [Costos CLP/USD](docs/18-analisis-economico-clp-usd.md) |
+## Documentación por público
 
-[Identidad visual](branding/README.md): logos, banners y variantes de aplicación.
+| General                                                               | Técnica                                                   | Desarrollo                                                           |
+| --------------------------------------------------------------------- | --------------------------------------------------------- | -------------------------------------------------------------------- |
+| [Origen y propósito](docs/general/01-origen-y-proposito.md)           | [Arquitectura](docs/tecnica/01-arquitectura.md)           | [Entorno y comandos](docs/desarrollo/01-desarrollo-local.md)         |
+| [Funciones y límites](docs/general/02-alcance-y-funciones.md)         | [Dominio y reglas](docs/tecnica/02-dominio-y-reglas.md)   | [Android y despliegue](docs/desarrollo/02-android-y-despliegue.md)   |
+| [Experiencia e identidad](docs/general/03-experiencia-e-identidad.md) | [Datos](docs/tecnica/03-persistencia-y-sincronizacion.md) | [Pruebas y pendientes](docs/desarrollo/03-pruebas-y-limitaciones.md) |
 
-## Licencia y créditos
+[Índice completo y recorridos de lectura](docs/README.md)
 
-Código y documentación propios: [PolyForm Noncommercial 1.0.0](LICENSE), con [atribución](NOTICE). Uso comercial fuera de sus permisos: acuerdo previo de créditos y compensación. [Alcance y contacto](LICENSING.md).
+## Licencia e identidad
+
+El código y la documentación propios se distribuyen según [PolyForm Noncommercial 1.0.0](LICENSE); consulta [alcance, atribuciones y licencias de terceros](LICENSING.md) y [NOTICE](NOTICE). Los recursos gráficos de **PaMaRa AyN** están en [`branding/`](branding/README.md).

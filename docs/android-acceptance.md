@@ -1,21 +1,20 @@
-# Aceptación de una candidata Android
+# Aceptación de una candidata Android beta
 
-Usar exclusivamente datos sintéticos y una cuenta de pruebas. Registrar versión APK, SHA-256, certificado, Android, navegador/versión, fecha y resultado de cada recorrido. Las casillas describen criterios, no certifican que se hayan ejecutado.
+Usa una **cuenta de prueba y datos ficticios**. Anota commit, versión y SHA-256 del APK, Android, navegador, fecha y resultado; marca cada casilla al completar su comprobación.
 
-- [ ] APK release firmada; paquete/versión/API y SHA-256 coinciden con el manifiesto de release; sin firma debug ni datos privados.
-- [ ] Instalar desde cero y abrir desde el icono sin crash.
-- [ ] Asociación HTTPS verificada en Android y arranque TWA sin barra; enlaces ajenos muestran claramente el navegador.
-- [ ] Google: entrar, cancelar, volver a la app y cerrar sesión; ningún bucle o pérdida de estado.
-- [ ] Crear fiado con abono inicial y cuotas; registrar otro abono y comprobar saldo.
-- [ ] Crear/entregar encargo; modificar stock y comprobar catálogo.
-- [ ] Dictar voz, revisar la interpretación y confirmar/cancelar sin escrituras involuntarias.
-- [ ] Denegar micrófono, recuperarlo desde ajustes del sitio y repetir; no bloquear la app.
-- [ ] Compartir anuncio y abrir WhatsApp; comprobar retorno a la app sin enviar mensajes durante la prueba.
-- [ ] Cerrar/reabrir app y navegador conservando registros.
-- [ ] Perder red: comprobar el comportamiento real y mensajes; recuperar red sin declarar guardados que no ocurrieron.
-- [ ] Guardar snapshot; recuperar desde otro perfil de prueba; comprobar regla de snapshot más reciente y documentar conflictos.
-- [ ] Denegar notificaciones; activar después si Firebase está configurado; verificar aviso real con app cerrada y horario UTC/Chile.
-- [ ] Instalar actualización firmada con la misma clave y `versionCode` mayor conservando registros. Para la primera entrega, preparar una compilación previa de prueba en un perfil aislado; no simular una actualización mediante desinstalación.
-- [ ] Revisar tamaños de texto, teclado, navegación atrás, rotación y áreas seguras en el teléfono objetivo.
-- [ ] Keystore y contraseña respaldados fuera de Git/artefactos y recuperación de la copia comprobada.
-- [ ] Release contiene APK, checksum, procedencia y notas honestas. Todo caso pendiente/fallido aparece en las limitaciones; no anunciar estabilidad con pendientes críticos.
+- [ ] Verificar APK, firma, paquete, versión, checksum y archivos de la release.
+- [ ] Instalar desde cero y abrir con conexión; comprobar asociación HTTPS de TWA sin barra.
+- [ ] Iniciar sesión con Google, cancelar, volver y cerrar sesión sin perder el estado esperado.
+- [ ] Registrar fiado, abono, cuotas y encargo; modificar stock y confirmar saldos.
+- [ ] Probar voz con permiso, permiso denegado, red lenta y cancelación antes de guardar.
+- [ ] Capturar foto de conteo, corregir cantidades y confirmar que se suma sólo una vez.
+- [ ] Revisar catálogo desde otro navegador (sin sesión) y verificar cuenta propietaria y productos ocultos.
+- [ ] Abrir WhatsApp con bolsa y comuna; comprobar que no se registra una venta automática.
+- [ ] Cerrar/reabrir y verificar persistencia. Con otra cuenta de prueba comprobar respaldo/conflictos.
+- [ ] Activar FCM (si está configurado) y recibir aviso real con la app cerrada y horario correcto.
+- [ ] Instalar actualización firmada con el mismo certificado y `versionCode` superior; **sin desinstalar**.
+- [ ] Comprobar zoom, texto, teclado, lector de pantalla, navegación atrás y área segura.
+- [ ] Conservar keystore y contraseñas fuera de Git y confirmar su recuperación segura.
+- [ ] Registrar fallos y pendientes en las notas de la versión.
+
+[Guía de entrega](desarrollo/02-android-y-despliegue.md) · [Limitaciones](desarrollo/03-pruebas-y-limitaciones.md)

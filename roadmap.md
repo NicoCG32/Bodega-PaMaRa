@@ -1,12 +1,11 @@
-# Tareas pendientes
+# Próximos pasos
 
-- [x] Activar Lovable Cloud (base de datos + cuentas)
-- [x] Conectar Firebase Cloud Messaging (notificaciones push)
-- [x] Migrar datos de localStorage a la nube (respaldo automático con inicio de sesión Google)
-- [x] Registro de notificaciones push en el navegador (service worker + token)
-- [x] Envío automático de avisos de cobro en fechas pactadas (tarea diaria 10:00 Chile)
-- [ ] BLOQUEADA: la conexión de Firebase no incluye "notificaciones web" — la usuaria debe actualizarla (opción "Include web push") para que los avisos funcionen
-- [x] Reemplazar toda IA de Lovable por Groq para texto y fotos
-- [x] Dictado paralelo Groq y teléfono, validación y registro sin esperas por reintentos
-- [x] Comprobar respaldo nativo simulado, interpretación real, corrección de foto y registro completo
-- [ ] Prueba de voz real en el teléfono de la dueña: requiere su dispositivo y permisos de micrófono; la foto de prueba necesitó corregir cantidades antes de confirmar
+Las etapas y prioridades del proyecto se mantienen en la [guía de evolución](docs/desarrollo/04-evolucion.md).
+
+- Revisar registro, abonos y stock con la administradora.
+- Mejorar respaldo y recuperación entre dispositivos.
+- Vincular el catálogo público al negocio y conservar la visibilidad al editar productos.
+- Completar la configuración de Firebase Web Push y probar avisos con la aplicación cerrada.
+- Probar voz, permisos y actualización Android en el teléfono de uso.
+
+[Guía de pruebas](docs/desarrollo/03-pruebas-y-limitaciones.md) · [Aceptación Android](docs/android-acceptance.md)

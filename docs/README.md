@@ -1,46 +1,37 @@
-# Documentación de PaMaRa Bodega
+# Documentación · PaMaRa Bodega
 
-Aplicación web y Android beta para ventas, cobros, encargos e inventario, con catálogo público. Las notificaciones y la actualización deben comprobarse en el dispositivo de uso.
+Guías para conocer PaMaRa Bodega, entender su funcionamiento y trabajar en el código. La aplicación reúne la gestión del negocio en Vault y la consulta de productos en la Boutique pública.
 
-## Documentación por cuatro tipos
+## General · entender el proyecto
 
-| Tipo                    | Qué encontrarás                                                 | Por dónde empezar                                                                                                                                |
-| ----------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| General                 | Problemática, público, solución y motivación personal           | [Propuesta](00-problematica-cliente-y-valor.md) · [Origen](16-motivacion-y-contexto.md)                                                          |
-| Técnica                 | Arquitectura, dominio, datos, interfaz y puesta en marcha       | [Arquitectura](01-arquitectura-general.md) · [Instalación](09-instalacion-y-despliegue.md)                                                       |
-| Desarrollo del proyecto | Etapas, metodología, justificación, proyección y costos CLP/USD | [Metodología](17-desarrollo-y-metodologia.md) · [Proyección](15-escalabilidad-y-nuevos-mercados.md) · [Costos](18-analisis-economico-clp-usd.md) |
-| Académica/formativa     | No aplica al origen de este proyecto                            | —                                                                                                                                                |
+1. [Por qué nació y para quién](general/01-origen-y-proposito.md)
+2. [Funciones y alcance](general/02-alcance-y-funciones.md)
+3. [Experiencia, identidad y accesibilidad](general/03-experiencia-e-identidad.md)
 
-## Rutas de lectura
+## Técnica · entender el funcionamiento
 
-- **Conocer el proyecto:** [propuesta](00-problematica-cliente-y-valor.md) → [motivación](16-motivacion-y-contexto.md) → [funcionalidades](02-funcionalidades.md).
-- **Utilizarlo o desplegarlo:** [recorrido](03-flujo-de-usuario.md) → [instalación](09-instalacion-y-despliegue.md).
-- **Desarrollar o contribuir:** [arquitectura](01-arquitectura-general.md) → [dominio y datos](04-base-de-datos.md) → [reglas](05-motor-o-nucleo-de-negocio.md).
-- **Evaluar su evolución:** [metodología](17-desarrollo-y-metodologia.md) → [proyección](15-escalabilidad-y-nuevos-mercados.md) → [costos](18-analisis-economico-clp-usd.md).
+1. [Arquitectura y despliegue — diagramas por niveles](tecnica/01-arquitectura.md)
+2. [Dominio y reglas de negocio — modelo y estados](tecnica/02-dominio-y-reglas.md)
+3. [Persistencia, esquema SQL y sincronización](tecnica/03-persistencia-y-sincronizacion.md)
+4. [Voz, fotografías e IA — contratos y secuencias](tecnica/04-captura-e-ia.md)
+5. [Boutique, privacidad y seguridad](tecnica/05-boutique-y-seguridad.md)
+6. [Recordatorios y notificaciones](tecnica/06-notificaciones.md)
 
-## Tabla de contenidos
+## Desarrollo · mantener y comprobar
 
-| Capítulo | Documento                                                                          |
-| -------- | ---------------------------------------------------------------------------------- |
-| 00       | [Problemática, cliente y solución](00-problematica-cliente-y-valor.md)             |
-| 01       | [Arquitectura por niveles](01-arquitectura-general.md)                             |
-| 02       | [Catálogo funcional](02-funcionalidades.md)                                        |
-| 03       | [Recorrido y estados](03-flujo-de-usuario.md)                                      |
-| 04       | [Dominio, entidades y persistencia](04-base-de-datos.md)                           |
-| 05       | [Reglas y núcleo](05-motor-o-nucleo-de-negocio.md)                                 |
-| 06       | [Integraciones y asistencia](06-capa-de-ia-o-analisis.md)                          |
-| 07       | [Diseño y accesibilidad](07-diseno-e-identidad.md)                                 |
-| 08       | [Salidas y entregables](08-exportacion-e-informes.md)                              |
-| 09       | [Instalación y distribución Android](09-instalacion-y-despliegue.md)               |
-| 15       | [Justificación, proyección y escalabilidad](15-escalabilidad-y-nuevos-mercados.md) |
-| 16       | [Motivación personal y contexto](16-motivacion-y-contexto.md)                      |
-| 17       | [Etapas y metodología](17-desarrollo-y-metodologia.md)                             |
-| 18       | [Escenarios económicos CLP / USD](18-analisis-economico-clp-usd.md)                |
+1. [Entorno, estructura y comandos](desarrollo/01-desarrollo-local.md)
+2. [Web, Android TWA y distribución](desarrollo/02-android-y-despliegue.md)
+3. [Pruebas y limitaciones](desarrollo/03-pruebas-y-limitaciones.md)
+4. [Evolución del proyecto y decisiones pendientes](desarrollo/04-evolucion.md)
 
-## Guías especializadas
+## Rutas cortas
 
-- [Aceptación de una candidata Android](android-acceptance.md).
+| Quiero…                      | Leer en este orden                                                                                                                            |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Conocer la iniciativa        | [Origen](general/01-origen-y-proposito.md) → [Funciones](general/02-alcance-y-funciones.md)                                                   |
+| Comprender el sistema        | [Arquitectura](tecnica/01-arquitectura.md) → [Dominio](tecnica/02-dominio-y-reglas.md) → [Datos](tecnica/03-persistencia-y-sincronizacion.md) |
+| Comprender el acceso a datos | [Boutique y seguridad](tecnica/05-boutique-y-seguridad.md) → [Persistencia](tecnica/03-persistencia-y-sincronizacion.md)                      |
+| Trabajar en el código        | [Entorno](desarrollo/01-desarrollo-local.md) → [Pruebas](desarrollo/03-pruebas-y-limitaciones.md) → [Evolución](desarrollo/04-evolucion.md)   |
+| Preparar un APK              | [Android](desarrollo/02-android-y-despliegue.md) → [Aceptación en dispositivo](android-acceptance.md)                                         |
 
-## Uso y distribución
-
-[Presentación y descargas](../README.md) · [Licencia y créditos](../LICENSING.md).
+[Volver a la portada](../README.md) · [Recursos de marca](../branding/README.md) · [Licencia](../LICENSING.md)
