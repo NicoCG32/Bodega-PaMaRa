@@ -20,6 +20,14 @@ La solicitud debe indicar producto/servicio, finalidad, partes reutilizadas, dis
 
 Que una aplicación sea gratuita para su usuario no determina por sí solo que la reutilización del código sea no comercial. La licencia del código tampoco concede acceso a los servicios alojados, a sus cuentas o a datos reales. El uso de una instancia o APK distribuida por el titular sigue las condiciones que este haya autorizado para esa entrega.
 
+## Identidad comercial y materiales de terceros
+
+**PaMaRa AyN** es el emprendimiento familiar de la madre del desarrollador; **PaMaRa Bodega** es la aplicación creada para apoyarlo. La licencia del software no concede automáticamente derechos sobre la marca, los logotipos, fotografías ni otros elementos de identidad del negocio.
+
+Los recursos en `branding/`, las dependencias web y el envoltorio Android deben revisarse por separado. No se presume que PolyForm Noncommercial permita reutilizarlos sin autorización ni que su procedencia esté completamente acreditada. Consulta el [inventario de licencias y recursos](docs/desarrollo/05-licencias-y-recursos.md).
+
+**Esta explicación no modifica el texto de `LICENSE` ni los avisos de `NOTICE`.**
+
 ## Versiones y distribución
 
 Consulta los avisos incluidos en cada APK o ZIP para conocer las condiciones de esa versión. Al redistribuir el proyecto, incluye LICENSE, NOTICE y este documento, además de los avisos de terceros aplicables.

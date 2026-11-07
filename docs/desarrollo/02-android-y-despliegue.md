@@ -2,7 +2,7 @@
 
 ## Dos entregas, un mismo producto
 
-La web vive en `https://pamara-bodega.lovable.app/`, usa TanStack Start y servicios configurados en el entorno alojado. El cliente Android usa **Trusted Web Activity** para abrir ese origen en un navegador compatible. No incluye una copia independiente del servidor ni un almacén SQLite de los datos.
+La web vive en `https://pamara-bodega.lovable.app/`, usa TanStack Start y servicios configurados en el entorno alojado. El cliente Android usa **Trusted Web Activity** para abrir ese origen en un navegador compatible. El `launchUrl` de la APK apunta a `/` (**Boutique**); la gestión está en `/bodega`. No incluye una copia independiente del servidor ni un almacén SQLite de los datos.
 
 ```mermaid
 flowchart LR
