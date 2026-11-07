@@ -34,7 +34,7 @@ async function bajar() {
   const precios = (aj?.precios as unknown as typeof local.precios) ?? local.precios;
   preciosNube = JSON.stringify(aj?.precios ?? null);
   aplicando = true;
-  restoreState({ ...local, productos, precios });
+  restoreState(precios ? { ...local, productos, precios } : { ...local, productos });
   aplicando = false;
   programar(); // sube productos nuevos del catálogo, si faltan
   return true;

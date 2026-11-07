@@ -152,7 +152,7 @@ function RootComponent() {
   );
 }
 
-/** La Boutique pública ("/") va sola; todo lo demás es el Vault privado con clave. */
+/** La Boutique pública ("/") va sola; todo lo demás es el Vault privado (Google + Administradora). */
 function ShellSegunRuta({ children }: { children: ReactNode }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
   if (path === "/") return <>{children}</>;
