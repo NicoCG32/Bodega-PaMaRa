@@ -23,6 +23,21 @@
 
 PaMaRa Bodega ayuda a administrar un emprendimiento familiar desde el teléfono: reúne inventario, fiados, abonos y encargos, con captura por voz, texto o foto que se revisa antes de guardar. La boutique permite consultar productos y preparar pedidos por WhatsApp. Está disponible como aplicación web y APK Android beta, con respaldo opcional mediante una cuenta de Google.
 
+## Estado real del proyecto
+
+| Nivel | Alcance de esta versión |
+| --- | --- |
+| ✅ **Implementado** | Vault para inventario, fiados y encargos, boutique consultable, integración con WhatsApp y captura asistida revisable; aplicación web disponible. |
+| 🧪 **En validación** | APK Android beta tipo TWA, permisos y uso en teléfono; avisos push sujetos a configuración Firebase y pruebas de recepción, además de sincronización/respaldo opcional. |
+| 🧭 **No debe asumirse** | Operación offline completa de la APK, envío automático de pedidos por WhatsApp o notificaciones garantizadas para todas las instalaciones. |
+
+<details>
+<summary><strong>¿Cómo leer este estado?</strong></summary>
+
+«Implementado» significa que hay código o una entrega identificable; no equivale por sí solo a una prueba exhaustiva. «En validación» señala pruebas y límites todavía abiertos. «Propuesto» describe una intención, **no una función disponible**. Para evaluación técnica, consulta los documentos y las releases de cada versión.
+
+</details>
+
 ## Por qué lo hice
 
 PaMaRa AyN es el emprendimiento de mi mamá. Entre perfumes, otros productos, ventas fiadas y encargos, había información que no debía depender de recordar una conversación o buscar un mensaje antiguo. Empecé esta aplicación para que anotar un movimiento, saber qué hay en bodega y revisar un cobro fuese más sencillo desde el teléfono.
