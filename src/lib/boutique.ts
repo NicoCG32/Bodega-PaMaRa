@@ -28,15 +28,15 @@ export function aPublico(productos: Producto[], cfg?: Precios): ItemPublico[] {
     .map((p) => {
       const v = precioVenta(p, cfg);
       return {
-      codigo: p.codigo,
-      nombre: p.nombre,
-      inspiracion: p.inspiracion ?? null,
-      version: p.version ?? null,
-      categoria: p.categoria ?? null,
-      precio: v.precio || null,
-      stock: Math.max(0, p.stock),
-      perfume: !esOtro(p),
-      estado: v.estado,
+        codigo: p.codigo,
+        nombre: p.nombre,
+        inspiracion: p.inspiracion ?? null,
+        version: p.version ?? null,
+        categoria: p.categoria ?? null,
+        precio: v.precio || null,
+        stock: Math.max(0, p.stock),
+        perfume: !esOtro(p),
+        estado: v.estado,
       };
     })
     .sort((a, b) => orden[a.estado] - orden[b.estado]);
@@ -87,7 +87,12 @@ export function mensajePedido(b: Linea[], comuna: string) {
     const precio = l.item.precio
       ? ` — ${clp(l.item.precio * l.cantidad)}`
       : " — precio a confirmar";
-    const modo = l.item.estado === "encargo" ? " (por encargo)" : l.item.estado === "remate" ? " (liquidación)" : " (en stock, entrega hoy)";
+    const modo =
+      l.item.estado === "encargo"
+        ? " (por encargo)"
+        : l.item.estado === "remate"
+          ? " (liquidación)"
+          : " (en stock, entrega hoy)";
     return `• ${t} x${l.cantidad}${modo}${precio}`;
   });
   return [

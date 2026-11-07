@@ -210,7 +210,9 @@ function Catalogo() {
             onClick={() => setVerTodo(!verTodo)}
             className="flex min-h-12 w-full items-center justify-between rounded-2xl bg-secondary px-4 font-bold"
           >
-            <span>{verTodo ? "Mostrando todo el catálogo" : "Mostrando solo lo que hay en repisa"}</span>
+            <span>
+              {verTodo ? "Mostrando todo el catálogo" : "Mostrando solo lo que hay en repisa"}
+            </span>
             <span className="text-primary">{verTodo ? "Ver solo repisa" : "Ver todo"}</span>
           </button>
 
@@ -287,7 +289,9 @@ function Tarjeta({ p }: { p: Producto }) {
       {abierta && (
         <div className="mt-3 space-y-2 border-t border-border pt-3">
           {p.stock > 0 && (
-            <p className={`rounded-2xl px-3 py-2 font-bold ${remate ? "bg-accent text-accent-foreground" : "bg-secondary"}`}>
+            <p
+              className={`rounded-2xl px-3 py-2 font-bold ${remate ? "bg-accent text-accent-foreground" : "bg-secondary"}`}
+            >
               {remate
                 ? `${dias} días sin venderse: se ofrece en liquidación`
                 : `${dias === 0 ? "Llegó hoy" : `${dias} días en repisa`}`}
@@ -319,7 +323,9 @@ function Tarjeta({ p }: { p: Producto }) {
               📣 Crear anuncio de Facebook
             </button>
           )}
-          {anuncio && <PanelAnuncio texto={anuncioIndividual(p)} onClose={() => setAnuncio(false)} />}
+          {anuncio && (
+            <PanelAnuncio texto={anuncioIndividual(p)} onClose={() => setAnuncio(false)} />
+          )}
         </div>
       )}
     </li>

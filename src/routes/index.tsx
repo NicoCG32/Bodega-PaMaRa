@@ -79,7 +79,9 @@ function Boutique() {
   const [abierta, setAbierta] = useState(false);
   const [comuna, setComuna] = useState<string>(COMUNAS[0]);
 
-  const visibles = items.filter((i) => enColeccion(i, col) && (disp === "todo" || i.estado === disp));
+  const visibles = items.filter(
+    (i) => enColeccion(i, col) && (disp === "todo" || i.estado === disp),
+  );
   const unidades = bolsa.reduce((a, l) => a + l.cantidad, 0);
 
   const cambiar = (item: ItemPublico, d: number) =>
@@ -136,7 +138,9 @@ function Boutique() {
               <button
                 onClick={() => setDisp(c.id)}
                 className={`min-h-11 whitespace-nowrap rounded-full px-4 text-sm font-semibold transition ${
-                  disp === c.id ? "bg-accent text-accent-foreground" : "bg-secondary text-muted-foreground"
+                  disp === c.id
+                    ? "bg-accent text-accent-foreground"
+                    : "bg-secondary text-muted-foreground"
                 }`}
               >
                 {c.label}

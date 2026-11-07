@@ -35,7 +35,10 @@ function Index() {
   return (
     <div className="space-y-6">
       <VoiceCapture />
-      <Link to="/bodega/cobros" className="flex items-center justify-between rounded-3xl bg-secondary p-5">
+      <Link
+        to="/bodega/cobros"
+        className="flex items-center justify-between rounded-3xl bg-secondary p-5"
+      >
         <span className="text-lg">Te deben en total</span>
         <span className="text-3xl font-extrabold text-primary">{clp(total)}</span>
       </Link>

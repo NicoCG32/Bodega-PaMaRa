@@ -5,7 +5,17 @@ import { toast } from "sonner";
 import { avisarMotor } from "@/lib/motor";
 import { escucharNativo, transcribirConRespaldo, type Transcripciones } from "@/lib/vozNativa";
 import { transcribir, interpretar, type Interpretacion } from "@/lib/ai.functions";
-import { actions, clp, fechaBonita, hoy, normCodigo, uid, useStore, saldo, precioVenta } from "@/lib/store";
+import {
+  actions,
+  clp,
+  fechaBonita,
+  hoy,
+  normCodigo,
+  uid,
+  useStore,
+  saldo,
+  precioVenta,
+} from "@/lib/store";
 
 const tipoLabel: Record<Interpretacion["tipo"], string> = {
   fiado: "Venta fiada",
@@ -116,7 +126,8 @@ export function VoiceCapture() {
         cliente,
         codigo,
         nota: res.nota ?? "",
-        precio: res.total || (prod ? precioVenta({ ...prod, stock: 0 }, precios).precio : precios?.base),
+        precio:
+          res.total || (prod ? precioVenta({ ...prod, stock: 0 }, precios).precio : precios?.base),
       });
     } else if (res.tipo === "stock" && codigo) {
       actions.ajustarStock(codigo, res.cantidad ?? 1);

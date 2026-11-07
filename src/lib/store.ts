@@ -81,7 +81,11 @@ export function reposicion(productos: Producto[], encargos: Encargo[]) {
 
 /** Montos fijos en pesos que la dueña ajusta en Ajustes. */
 export type Precios = { base: number; recargoEncargo: number; descuentoRemate: number };
-export const PRECIOS_INICIALES: Precios = { base: 15000, recargoEncargo: 2000, descuentoRemate: 3000 };
+export const PRECIOS_INICIALES: Precios = {
+  base: 15000,
+  recargoEncargo: 2000,
+  descuentoRemate: 3000,
+};
 
 export type EstadoVenta = "stock" | "remate" | "encargo";
 /** Precio para la clienta: precio propio del producto (o el general) ± monto fijo según estado. */
