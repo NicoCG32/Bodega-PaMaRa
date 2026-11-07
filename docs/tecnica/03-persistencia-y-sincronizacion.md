@@ -1,113 +1,146 @@
-# Datos y sincronización
+# Persistencia · productos compartidos y respaldo por cuenta
 
-## Dos capas, dos objetivos
+[← Técnica](../README.md) · [Arquitectura](01-arquitectura.md) · [Boutique y seguridad](05-boutique-y-seguridad.md)
 
-La aplicación trabaja primero contra **`localStorage`** bajo la clave `pamara-ayn-v1`. Allí guarda un `State` completo con deudas, encargos, productos, teléfonos, precios opcionales y `actualizado`. El catálogo base de perfumes se agrega en la carga con stock cero, sin modificar el stock que la persona ya registró.
+El modelo actual tiene **tres responsabilidades distintas**. Separarlas evita explicar erróneamente la Boutique como una copia del último respaldo global.
 
-Cuando la administradora inicia sesión, [`cloudSync.ts`](../../src/lib/cloudSync.ts) conecta ese estado con un único **snapshot JSON** en Supabase para el usuario autenticado. No hay tablas SQL `productos`, `deudas`, `abonos` ni `encargos`.
+## Qué vive dónde
 
-```mermaid
-flowchart LR
-  UI[Acción confirmada] --> Store[State en memoria]
-  Store --> LS[(localStorage: pamara-ayn-v1)]
-  Store -->|si hay sesion| Delay[Espera 1,5 s]
-  Delay --> Backup[(backups.data JSONB)]
-  Backup -->|al iniciar sesion y comparar fechas| Store
-```
+| Almacenamiento | Contenido | A quién sirve |
+| --- | --- | --- |
+| **`localStorage`** (`pamara-ayn-v1`) | `State` con deudas, abonos, cuotas, encargos, teléfonos, productos, precios y `actualizado` | Estado de trabajo del dispositivo |
+| **`productos` y `ajustes_tienda`** (PostgreSQL) | Productos en JSONB, marca `en_boutique`, precios compartidos | Administración autorizada y catálogo público |
+| **`backups`** (PostgreSQL) | Snapshot JSONB del estado completo, ligado a `user_id` | Recuperación de cobros, encargos, teléfonos y otros campos |
+| **`push_tokens` y `user_roles`** (PostgreSQL) | Tokens de dispositivo y rol `admin` | Avisos, control de acceso e inicialización |
 
-## Esquema relacional físico existente
+Las migraciones `0000` y `0001` son la fuente del esquema físico. `drizzle/schema.ts` no sustituye estas migraciones como referencia de todas las tablas, roles y políticas.
+
+## Modelo físico SQL documentado
 
 ```mermaid
 erDiagram
-  AUTH_USER ||..o| BACKUPS : "hasta 1 snapshot por user_id; sin FK declarada"
-  AUTH_USER ||..o{ PUSH_TOKENS : "varios dispositivos; sin FK declarada"
-  BACKUPS {
-    uuid user_id PK
-    jsonb data
-    timestamptz updated_at
-  }
-  PUSH_TOKENS {
-    uuid id PK
-    uuid user_id
-    text token UK
-    timestamptz created_at
-  }
-  AUTH_USER {
-    uuid id PK
-  }
+    AUTH_USERS ||--o{ USER_ROLES : "FK en migración 0001"
+    AUTH_USERS ||..o| BACKUPS : "user_id sin FK declarada"
+    AUTH_USERS ||..o{ PUSH_TOKENS : "user_id sin FK declarada"
+    USER_ROLES {
+      uuid id PK
+      uuid user_id FK
+      app_role role
+    }
+    BACKUPS {
+      uuid user_id PK
+      jsonb data
+      timestamptz updated_at
+    }
+    PUSH_TOKENS {
+      uuid id PK
+      uuid user_id
+      text token UK
+      timestamptz created_at
+    }
+    PRODUCTOS {
+      text codigo PK
+      jsonb data
+      boolean en_boutique
+      timestamptz updated_at
+    }
+    AJUSTES_TIENDA {
+      int id PK
+      jsonb precios
+      timestamptz updated_at
+    }
+    AUTH_USERS {
+      uuid id PK
+    }
 ```
 
-`AUTH_USER` representa conceptualmente una cuenta de Supabase Auth; **no es una tabla creada por la migración**. Las líneas punteadas son asociaciones por `user_id`: el SQL de `drizzle/migrations/0000_create_backups_and_push_tokens.sql` **no declara claves foráneas**. La única restricción de unicidad adicional relevante es `push_tokens.token`.
+`AUTH_USERS` representa **conceptualmente** `auth.users`: no se crea como una tabla de negocio en las migraciones del repositorio. Solo `user_roles.user_id` declara una clave foránea a esa tabla de Auth. Las líneas punteadas son referencias **lógicas**, no FK. `productos` y `ajustes_tienda` no tienen FK entre sí; son catálogos/ajustes compartidos.
 
-Las dos tablas tienen **Row Level Security** activado. Sus políticas de lectura y escritura para el rol `authenticated` exigen `auth.uid() = user_id`. El servidor utiliza un cliente privilegiado para la boutique y el trabajo de recordatorios, lo que obliga a controlar la selección y exposición desde el propio código de servidor.
-
-## El contenido de `backups.data`
-
-```text
-State
-├── deudas[]
-│   ├── id, cliente, codigo, total, creada
-│   ├── abonos[]: monto, fecha
-│   └── cuotas[]: id, monto, fecha, pagada
-├── encargos[]: id, cliente, codigo, nota, entregado, creada, precio?
-├── productos[]: codigo, nombre, stock, tipo?, inspiracion?, version?,
-│                 categoria?, precio?, fechaIngreso?, ultimaVenta?, enBoutique?
-├── telefonos: { nombreCliente: numero }
-├── precios?: { base, recargoEncargo, descuentoRemate }
-└── actualizado: fecha ISO
-```
-
-La copia incluye información personal de cobros y teléfonos. No debe publicarse como fixture, JSON de ejemplo real ni payload de diagnóstico.
-
-## Sincronización por cuenta · secuencia real
+## 1. Productos y precios compartidos
 
 ```mermaid
 sequenceDiagram
-  participant U as Administradora
-  participant UI as App web
-  participant L as Estado local
-  participant S as Supabase backups
-  U->>UI: Iniciar sesión
-  UI->>S: Leer data y updated_at con RLS
-  S-->>UI: Snapshot o vacío
-  UI->>L: Consultar State local y actualizado
-  alt No hay snapshot remoto
-    UI->>S: Programar primer upsert
-  else Local vacío o respaldo más reciente
-    UI->>L: Sustituir State completo por el remoto
-  else Local más reciente
-    UI->>S: Programar upsert del State local
-  end
-  U->>UI: Cambiar datos
-  UI->>L: Guardar State completo
-  UI->>S: Upsert tras 1500 ms si hay sesión
+    autonumber
+    actor A as Administradora con rol
+    participant UI as Bodega web
+    participant S as productosSync.ts
+    participant DB as productos / ajustes_tienda
+    participant RT as Supabase Realtime
+    A->>UI: Inicia sesión
+    UI->>S: iniciarProductos() tras recuperar respaldo
+    S->>DB: Leer productos y precios
+    DB-->>S: Filas o lista vacía
+    alt Existen filas
+      S->>UI: Reemplazar productos/precios del State
+    else Tabla vacía
+      S->>S: Programar primera subida desde el dispositivo
+    end
+    A->>UI: Modifica stock o precio
+    UI->>S: Cambio del State
+    S->>DB: Upsert / eliminación tras espera breve
+    DB-->>RT: Evento de productos
+    RT-->>S: Releer y conciliar mediante código actual
 ```
 
-En la comparación, `updated_at` de Supabase y `State.actualizado` son tiempos ISO; no hay versión de esquema ni fusión campo a campo. Además, `conCatalogo()` agrega productos de referencia al cargar, por lo que “sin productos” no es una señal fiable de un estado originalmente vacío.
+`src/lib/productosSync.ts` compara los objetos por código y JSON, espera **800 ms** antes de guardar y recibe eventos de `productos` con una nueva consulta programada a **1500 ms**. **Esto no constituye una estrategia de resolución robusta de conflictos concurrentes**: los cambios en dos dispositivos deben probarse antes de prometer sincronización sin pérdidas.
 
-## Estado del respaldo
+Los precios de `ajustes_tienda` son un registro global con `id = 1`, y `productos` usa `codigo` como clave primaria. La columna `en_boutique` permite filtrar la lectura pública por RLS; el objeto `data` contiene atributos del producto, no cobros ni teléfonos.
+
+## 2. Respaldo del estado completo
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant UI as Interfaz
+    participant L as localStorage / State
+    participant S as cloudSync.ts
+    participant DB as backups (RLS por cuenta)
+    UI->>S: Inicio de sesión Google
+    S->>DB: Leer data, updated_at
+    DB-->>S: Snapshot o vacío
+    S->>L: Leer State local
+    alt Respaldo más reciente o local vacío
+      S->>L: restoreState(snapshot completo)
+    else Datos locales más recientes
+      S->>DB: Programar copia por cuenta
+    end
+    UI->>L: Registrar cobro o encargo
+    L->>S: Evento de cambio
+    S->>DB: Upsert del State después de 1500 ms
+```
+
+El respaldo se identifica por `user_id`, tiene una columna `data JSONB` y conserva también productos y precios. Su **objetivo** es recuperación de estado, no servir de API pública del catálogo. `bajarRespaldo()` compara fechas y puede sustituir **todo el estado local**; no fusiona transacciones ni campos. Si una persona edita en varios dispositivos, uno de esos cambios puede perderse.
 
 ```mermaid
 stateDiagram-v2
-  [*] --> SoloLocal: Sin sesion
-  SoloLocal --> Comparando: Inicio de sesion
-  Comparando --> Descarga: Nube mas reciente o local vacio
-  Comparando --> Subida: Local mas reciente o no hay nube
-  Descarga --> Sincronizado: Restaurar State
-  Subida --> Sincronizado: Upsert correcto
-  Sincronizado --> Subida: Cambio local y temporizador
-  Subida --> Riesgo: Error de red sin reintento persistente
-  Riesgo --> Comparando: Nueva sesion o comprobacion
-  Sincronizado --> SoloLocal: Cerrar sesion
+    [*] --> SoloLocal
+    SoloLocal --> Consultando: sesion con cuenta
+    Consultando --> Recuperando: respaldo remoto preferido
+    Consultando --> Guardando: estado local preferido o sin nube
+    Recuperando --> Sincronizado: reemplazo local
+    Guardando --> Sincronizado: upsert correcto
+    Guardando --> Error: fallo de red
+    Sincronizado --> Guardando: nueva modificación local
+    Error --> Consultando: nuevo intento al recuperar/sesion
+    Sincronizado --> SoloLocal: cierre de sesion
 ```
 
-La sincronización reemplaza el estado completo y carece de fusión entre dispositivos o reintentos persistentes. **Un snapshot puede reemplazar cambios hechos en otro equipo**; conviene terminar el respaldo antes de cambiar de dispositivo.
+Los errores de red no tienen aquí una cola persistente de reintentos garantizada.
 
-## Recuperación responsable
+## 3. Reglas de acceso relevantes
 
-1. Guardar una copia de prueba con datos sintéticos y anotar fecha y cuenta.
-2. Modificar un registro en otro perfil/dispositivo de prueba y comparar resultado.
-3. Verificar explícitamente qué versión prevalece después de iniciar sesión.
-4. No limpiar los datos del navegador original hasta comprobar que la copia esté disponible.
+| Tabla | Lectura | Escritura |
+| --- | --- | --- |
+| `backups` | Cuenta propietaria mediante RLS | Cuenta propietaria mediante RLS |
+| `push_tokens` | Cuenta propietaria mediante RLS | Cuenta propietaria mediante RLS |
+| `user_roles` | Usuario autenticado puede leer su rol | Servicio privilegiado / trigger de primer administrador |
+| `productos` | Visitante: filas `en_boutique`; admin: todas | Rol `admin` según RLS |
+| `ajustes_tienda` | Lectura pública de precios | Rol `admin` según RLS |
 
-[Seguridad y boutique](05-boutique-y-seguridad.md) · [Migración SQL](../../drizzle/migrations/0000_create_backups_and_push_tokens.sql) · [Referencia de RLS en Supabase](https://supabase.com/docs/guides/database/postgres/row-level-security)
+**Primer administrador:** `primera_admin()` se ejecuta al crear un usuario si todavía no existe ningún rol administrador. La identidad y el momento del primer registro deben controlarse al inicializar una instalación. No se ha comprobado aquí el estado real del proveedor alojado.
+
+## Precaución con datos personales
+
+`backups.data` puede contener nombres, deudas, cuotas y teléfonos. Evita publicarlo en ejemplos o issues. Usa cuentas de prueba y datos sintéticos para validar recuperación. No borres el dispositivo original hasta comprobar qué datos llegaron a la nube.
+
+[DDL de respaldos](../../drizzle/migrations/0000_create_backups_and_push_tokens.sql) · [DDL de productos y roles](../../drizzle/migrations/0001_productos_y_admin.sql) · [Sincronización de productos](../../src/lib/productosSync.ts) · [Sincronización de estado](../../src/lib/cloudSync.ts).
