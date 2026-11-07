@@ -10,7 +10,8 @@
 <!-- LOVABLE:END -->
 
 ## Project rules
-- Business data (deudas, encargos, productos, teléfonos) lives in device localStorage via `src/lib/store.ts` and, when the owner signs in with Google, syncs as a full JSON snapshot to the `backups` table via `src/lib/cloudSync.ts` (localStorage stays the local cache; cloud row wins when newer). Why: single-owner app; snapshot sync is simpler than normalized tables and enough for backup + push.
+- Products and sale prices live in Cloud tables `productos` (one jsonb row per code) and `ajustes_tienda`, synced by `src/lib/productosSync.ts` for admin accounts; deudas/encargos/teléfonos stay in localStorage + `backups` snapshot via `src/lib/cloudSync.ts`. Why: the public Boutique must read real stock from any device.
+- Vault access = Google sign-in + `admin` row in `user_roles` (first account to sign in becomes admin by trigger), checked in `AdminGate`. Why: a device PIN was not real protection.
 - Push notifications: FCM via connector gateway in `src/routes/api/public/jobs/recordatorios.ts` (daily managed HTTP schedule 13:00 UTC), tokens in `push_tokens`, client registration in `src/lib/push.ts` + `public/firebase-messaging-sw.js`. Why: avisos must arrive with the app closed.
 - AI uses direct Groq calls only inside server functions in `src/lib/ai.functions.ts`; response schemas are validated before previewing a record. Why: keep provider credentials private and prevent malformed data from reaching registration.
 - Voice captures native recognition alongside recorded audio; `vozNativa.ts` returns available transcripts with a short native-ready grace period, and Groq interpretation reconciles them as alternate versions, never additive inventory. Why: retain native speech when Whisper is slow without late duplicate registrations.

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { getState, restoreState, subscribe, type State } from "./store";
+import { detenerProductos, iniciarProductos } from "./productosSync";
 
 let userId: string | null = null;
 let timer: ReturnType<typeof setTimeout> | undefined;
@@ -32,15 +33,16 @@ export function initCloudSync() {
   void supabase.auth.getSession().then(({ data }) => {
     if (data.session?.user) {
       userId = data.session.user.id;
-      void bajarRespaldo();
+      void bajarRespaldo().then(iniciarProductos);
     }
   });
   supabase.auth.onAuthStateChange((event, session) => {
     if (event === "SIGNED_IN" && session?.user) {
       userId = session.user.id;
-      void bajarRespaldo();
+      void bajarRespaldo().then(iniciarProductos);
     } else if (event === "SIGNED_OUT") {
       userId = null;
+      detenerProductos();
     }
   });
   subscribe(() => {

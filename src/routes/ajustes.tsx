@@ -2,7 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { NubeCard } from "@/components/NubeCard";
 import { InstalarCard } from "@/components/InstalarCard";
-import { CambiarClaveCard } from "@/components/AdminGate";
 import { PreciosCard } from "@/components/PreciosCard";
 
 export const Route = createFileRoute("/ajustes")({
@@ -29,7 +28,6 @@ function Ajustes() {
       <PreciosCard />
       <NubeCard />
       <InstalarCard />
-      <CambiarClaveCard />
     </div>
   );
 }
