@@ -4,7 +4,7 @@
 
 ## Dos ámbitos que no deben confundirse
 
-**PaMaRa AyN** es el emprendimiento familiar al que sirve el sistema. **PaMaRa Bodega** es el software desarrollado para apoyar su operación. Que el código sea visible en GitHub no concede por ello derechos sobre el nombre comercial, los logotipos, las fotografías de los productos ni los datos del negocio.
+**PaMaRa AyN** es el emprendimiento familiar al que sirve el sistema. **PaMaRa Bodega** es el software desarrollado para apoyar su operación. La **Boutique pública oficial** puede mostrar legítimamente la identidad del negocio y los productos publicados, pero sus visitantes **no obtienen permiso para reutilizar la marca, clonar la web ni distribuir el software**. La administración, los cobros, teléfonos y respaldos se mantienen restringidos. Que el código sea visible en GitHub no concede derechos adicionales sobre el nombre comercial, las fotografías ni los datos del negocio.
 
 `LICENSE` contiene ahora el aviso de **derechos reservados** propuesto para la versión que lo acompaña, porque la intención expresada es que el software original y la identidad sirvan exclusivamente al negocio familiar. `LICENSING.md` explica ese alcance. **La publicación anterior bajo PolyForm Noncommercial 1.0.0 no se borra ni se revoca retroactivamente**: sus permisos sobre copias obtenidas válidamente permanecen sujetos a aquellas condiciones.
 
@@ -31,4 +31,4 @@ El [NOTICE](../../NOTICE) contiene dos líneas `Required Notice:` del proyecto. 
 4. Verificar las condiciones de los servicios externos; una clave API o un conector disponible **no** implica autorización ilimitada de reutilización.
 5. Mantener fuera de documentación pública los contactos de clientas, deudas, respaldos reales y otros datos sensibles.
 
-**Decisión solicitada:** reservar el uso de software e identidad al negocio familiar para la versión propuesta, sin pretender retirar permisos concedidos en versiones anteriores ni atribuirse materiales de terceros. Se modifica `LICENSE` y se conserva `NOTICE` tal como estaba. El repositorio y el sitio público **no se vuelven privados** por este cambio documental.
+**Decisión acordada:** Boutique pública y consultable sin cuenta; Bodega y datos administrativos restringidos a la familia. El código y los recursos originales no se ofrecen como plantilla reutilizable; la identidad se exhibe solo para identificar el negocio. Los permisos anteriores no se retiran retroactivamente. El repositorio **todavía es público**, aunque se desea hacerlo privado; la Boutique **debe seguir pública** cuando se cambie su visibilidad. Este cambio documental no modifica configuraciones de GitHub ni del alojamiento.

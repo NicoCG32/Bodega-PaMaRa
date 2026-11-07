@@ -1,6 +1,6 @@
 # Qué hace PaMaRa Bodega
 
-La aplicación se divide en **Boutique**, pública, y **Bodega/Vault**, que requiere Google y el rol `admin`. Las rutas antiguas (`/vault`, `/catalogo`, etc.) redirigen a `/bodega/*`.
+La aplicación se divide en **Boutique**, **pública sin registro para clientes**, y **Bodega/Vault**, **privada para la familia autorizada**, que requiere Google y el rol `admin`. Las rutas antiguas (`/vault`, `/catalogo`, etc.) redirigen a `/bodega/*`. Que el catálogo esté abierto al público no permite consultar cobros, contactos ni respaldos.
 
 | Área      | Funciones                                                                    | Condición o límite                                                               |
 | --------- | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |

@@ -20,7 +20,9 @@
 | **02 · Técnica** | Quien necesita comprender datos, reglas, seguridad e integraciones | [Arquitectura](tecnica/01-arquitectura.md) · [Persistencia](tecnica/03-persistencia-y-sincronizacion.md) |
 | **03 · Desarrollo** | Quien mantiene, prueba o distribuye el software | [Entorno](desarrollo/01-desarrollo-local.md) · [Pruebas](desarrollo/03-pruebas-y-limitaciones.md) |
 
-> **Lectura importante:** la Boutique obtiene productos y precios de tablas compartidas de Supabase. Los fiados, encargos y teléfonos viven en el estado local y pueden respaldarse como JSON por cuenta. Son caminos distintos; los diagramas no deben mezclarlos.
+> **Acceso acordado:** la **Boutique es pública** para consultar productos y abrir WhatsApp sin registrarse. La **Bodega es privada** para la administración familiar autorizada. El repositorio se pretende privado, pero actualmente sigue visible en GitHub; la licencia no cambia su visibilidad.
+
+> **Lectura técnica:** la Boutique obtiene productos y precios de tablas compartidas de Supabase. Los fiados, encargos y teléfonos viven en el estado local y pueden respaldarse como JSON por cuenta. Son caminos distintos; los diagramas no deben mezclarlos.
 
 ## 01 · General — por qué existe
 

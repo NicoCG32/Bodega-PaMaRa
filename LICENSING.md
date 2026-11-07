@@ -4,16 +4,16 @@
 
 Desarrollé **PaMaRa Bodega** para apoyar la gestión de **PaMaRa AyN**, el emprendimiento familiar de mi mamá. La finalidad de este código y de su identidad no es servir de plantilla pública para negocios ajenos ni autorizar su comercialización por terceros.
 
-Para la revisión actual, **el software original se reserva para el uso interno del emprendimiento familiar**. La autorización de copias, modificaciones, distribución, explotación comercial o despliegues derivados fuera de ese ámbito requiere un permiso expreso y escrito del titular correspondiente. Consulta el texto vigente en [LICENSE](LICENSE).
+Para esta revisión, **la administración del software se reserva para el negocio familiar y la Boutique se mantiene pública para sus clientes y visitantes**. Acceder a esa Boutique, consultar productos y preparar un mensaje de pedido no otorga permiso para explotar el código, reutilizar la identidad de PaMaRa AyN ni publicar una tienda derivada. La reutilización, modificación o distribución fuera de los permisos expresos requiere autorización escrita del titular correspondiente. Consulta el aviso en [LICENSE](LICENSE).
 
 ## Código, marca y datos no son lo mismo
 
 | Ámbito | Condición actual |
 | --- | --- |
-| **Código y documentación originales** | Derechos reservados; sin licencia general de reutilización en esta revisión |
-| **PaMaRa AyN: nombre e identidad comercial** | Uso reservado al negocio familiar; ninguna licencia del código autoriza el uso de la marca |
+| **Código y documentación originales** | Derechos reservados; acceso al catálogo no implica licencia general de reutilización |
+| **PaMaRa AyN: nombre e identidad comercial** | Puede mostrarse en la Boutique pública oficial; su reutilización por terceros sigue reservada al negocio familiar |
 | **Logos, monogramas, banners e iconos** | Uso reservado al negocio familiar, sujeto a verificar autoría y términos de los insumos de cada recurso |
-| **Datos reales de clientas, inventario, cobros y teléfonos** | No están autorizados para publicación ni reutilización mediante esta documentación |
+| **Datos del negocio** | La Boutique puede mostrar productos publicados, precios y disponibilidad; **nombres, teléfonos, fiados, abonos y respaldos** siguen siendo privados y no se autorizan para publicación |
 | **Dependencias, bibliotecas, fuentes y servicios externos** | Mantienen sus propias licencias y condiciones; no se reclaman como propiedad del proyecto |
 
 Los recursos visuales se encuentran catalogados en [branding/](branding/README.md). Su procedencia individual queda por documentar en [Licencias y recursos](docs/desarrollo/05-licencias-y-recursos.md).
@@ -26,7 +26,9 @@ Por eso, esta revisión propone el aviso de **derechos reservados** para version
 
 ## Lo público y lo privado
 
-La Boutique puede estar disponible como escaparate para clientes; eso **no** debe hacer públicas las pantallas administrativas, los respaldos ni los datos personales. El repositorio está actualmente publicado en GitHub y el sitio alojado se gestiona por separado: un archivo LICENSE o este README **no cambian** automáticamente su visibilidad.
+La **Boutique debe permanecer pública**, sin exigir una cuenta para explorar productos publicados, consultar precios o preparar pedidos por WhatsApp. La **Bodega debe permanecer restringida** a la administración familiar autorizada (sesión de Google, rol `admin` y RLS). No deben exponerse los respaldos, cobros, teléfonos ni datos personales.
+
+El **repositorio de código se quiere privado**, pero a la fecha de esta revisión sigue publicado en GitHub: un archivo `LICENSE` o este documento **no cambia** automáticamente su visibilidad. El sitio alojado es independiente del repositorio, y la parte de código enviada al navegador puede ser inspeccionada por visitantes aunque GitHub sea privado. Los secretos y la lógica privilegiada deben permanecer del lado del servidor.
 
 Antes de compartir un enlace o APK hay que comprobar qué pantallas se exponen, quién tiene acceso a la administración y qué información devuelve el backend.
 

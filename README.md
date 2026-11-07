@@ -9,7 +9,7 @@
 
 **Un lugar para ordenar lo que ocurre detrás del mostrador.**
 
-*PaMaRa AyN es el negocio de mi mamá. PaMaRa Bodega es la aplicación que desarrollé para acompañar su trabajo.*
+*PaMaRa AyN es el negocio de mi mamá. PaMaRa Bodega es la aplicación que desarrollé para acompañar su trabajo: Boutique pública para clientes y gestión privada para la familia.*
 
 [![Estado](https://img.shields.io/badge/Estado-Web%20funcional%20%7C%20Android%20beta-79526F?style=flat-square)](docs/general/02-alcance-y-funciones.md)
 [![Datos](https://img.shields.io/badge/Datos-Local%20%2B%20Supabase-48637D?style=flat-square)](docs/tecnica/03-persistencia-y-sincronizacion.md)
@@ -150,4 +150,4 @@ La ejecución local requiere configurar el proveedor de autenticación y Supabas
 
 PaMaRa Bodega es el **software que desarrollé para apoyar el negocio familiar**. **PaMaRa AyN** es el nombre y la identidad del emprendimiento de mi mamá; no debe confundirse el software con la titularidad comercial de esa marca.
 
-**Uso reservado al negocio familiar:** el software original y la identidad visual de PaMaRa AyN no se ofrecen para reutilización por terceros en esta versión. Consulta el aviso de [derechos reservados](LICENSE), [LICENSING.md](LICENSING.md) y [NOTICE](NOTICE). Los permisos otorgados válidamente en versiones anteriores bajo PolyForm Noncommercial no se retiran retroactivamente. **El repositorio sigue siendo público** hasta que se cambie su visibilidad en GitHub.
+**Boutique pública y derechos reservados:** cualquier cliente puede consultar el catálogo oficial; la administración del negocio y la reutilización del software o identidad de PaMaRa AyN permanecen restringidas. Consulta el aviso de [derechos reservados](LICENSE), [LICENSING.md](LICENSING.md) y [NOTICE](NOTICE). Los permisos otorgados válidamente en versiones anteriores bajo PolyForm Noncommercial no se retiran retroactivamente. **El repositorio sigue siendo público** hasta que se cambie su visibilidad en GitHub; el objetivo acordado es mantenerlo privado sin dejar de ofrecer la Boutique públicamente.

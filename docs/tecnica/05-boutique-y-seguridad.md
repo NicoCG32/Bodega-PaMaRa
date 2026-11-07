@@ -2,7 +2,7 @@
 
 [← Técnica](../README.md) · [Arquitectura](01-arquitectura.md) · [Persistencia](03-persistencia-y-sincronizacion.md)
 
-La **Boutique** es pública. La **Bodega** administra inventario y cobros con una sesión autorizada. La separación actual se basa en **Supabase Auth + rol `admin` + políticas RLS**, no en una contraseña fija de la interfaz.
+La **Boutique** es pública **para cualquier visitante sin cuenta**, mientras que la **Bodega** administra inventario y cobros exclusivamente con una sesión familiar autorizada. La separación actual se basa en **Supabase Auth + rol `admin` + políticas RLS**, no en una contraseña fija de la interfaz. Un repositorio GitHub privado no reemplaza esos controles: el sitio público sigue entregando JavaScript al navegador.
 
 ## Qué ocurre al consultar un producto
 
