@@ -8,6 +8,13 @@
       "when": 1792634785310,
       "tag": "0000_create_backups_and_push_tokens",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794071738628,
+      "tag": "0001_productos_y_admin",
+      "breakpoints": true
     }
   ]
 }
