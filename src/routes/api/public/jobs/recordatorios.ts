@@ -42,7 +42,7 @@ async function enviarPush(token: string, titulo: string, cuerpo: string) {
       message: {
         token,
         notification: { title: titulo, body: cuerpo },
-        data: { path: "/cobros" },
+        data: { path: "/bodega/cobros" },
       },
     }),
   });

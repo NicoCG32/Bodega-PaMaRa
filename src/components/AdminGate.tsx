@@ -36,7 +36,7 @@ export function AdminGate({ children }: { children: ReactNode }) {
   const entrar = async () => {
     setOcupado(true);
     const r = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin + "/vault",
+      redirect_uri: window.location.origin + "/bodega",
       extraParams: { prompt: "select_account" },
     });
     setOcupado(false);

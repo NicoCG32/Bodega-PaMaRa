@@ -1,9 +1,9 @@
 {
-  "name": "PaMaRa AyN",
+  "name": "PaMaRa Bodega",
   "short_name": "PaMaRa",
   "description": "Cobros, fiados, encargos y stock por voz",
   "id": "/",
-  "start_url": "/vault",
+  "start_url": "/bodega",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",

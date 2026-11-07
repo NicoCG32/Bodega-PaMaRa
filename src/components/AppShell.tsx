@@ -5,10 +5,10 @@ import logo from "@/assets/pamara-monograma.webp";
 import { useStore, saldo, proximaCuota, diasHasta, hoy, clp } from "@/lib/store";
 
 const tabs = [
-  { to: "/vault", label: "Anotar", icon: Mic },
-  { to: "/cobros", label: "Cobros", icon: Wallet },
-  { to: "/encargos", label: "Encargos", icon: ClipboardList },
-  { to: "/catalogo", label: "Bodega", icon: Package },
+  { to: "/bodega", label: "Anotar", icon: Mic },
+  { to: "/bodega/cobros", label: "Cobros", icon: Wallet },
+  { to: "/bodega/encargos", label: "Encargos", icon: ClipboardList },
+  { to: "/bodega/stock", label: "Stock", icon: Package },
 ] as const;
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -52,7 +52,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
         </div>
         <Link
-          to="/ajustes"
+          to="/bodega/ajustes"
           aria-label="Ajustes"
           className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary-foreground/10"
         >
@@ -71,7 +71,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               >
                 <Icon className="size-7" />
                 {label}
-                {to === "/cobros" && urgentes > 0 && (
+                {to === "/bodega/cobros" && urgentes > 0 && (
                   <span className="absolute right-5 top-1.5 flex size-6 items-center justify-center rounded-full bg-destructive text-xs text-destructive-foreground">
                     {urgentes}
                   </span>

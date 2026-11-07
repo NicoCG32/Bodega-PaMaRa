@@ -15,6 +15,11 @@ import { Route as CatalogoRouteImport } from './routes/catalogo'
 import { Route as CobrosRouteImport } from './routes/cobros'
 import { Route as EncargosRouteImport } from './routes/encargos'
 import { Route as VaultRouteImport } from './routes/vault'
+import { Route as BodegaIndexRouteImport } from './routes/bodega.index'
+import { Route as BodegaAjustesRouteImport } from './routes/bodega.ajustes'
+import { Route as BodegaCobrosRouteImport } from './routes/bodega.cobros'
+import { Route as BodegaEncargosRouteImport } from './routes/bodega.encargos'
+import { Route as BodegaStockRouteImport } from './routes/bodega.stock'
 import { Route as ApiPublicJobsRecordatoriosRouteImport } from './routes/api/public/jobs/recordatorios'
 
 const IndexRoute = IndexRouteImport.update({
@@ -47,6 +52,31 @@ const VaultRoute = VaultRouteImport.update({
   path: '/vault',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BodegaIndexRoute = BodegaIndexRouteImport.update({
+  id: '/bodega/',
+  path: '/bodega/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BodegaAjustesRoute = BodegaAjustesRouteImport.update({
+  id: '/bodega/ajustes',
+  path: '/bodega/ajustes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BodegaCobrosRoute = BodegaCobrosRouteImport.update({
+  id: '/bodega/cobros',
+  path: '/bodega/cobros',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BodegaEncargosRoute = BodegaEncargosRouteImport.update({
+  id: '/bodega/encargos',
+  path: '/bodega/encargos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BodegaStockRoute = BodegaStockRouteImport.update({
+  id: '/bodega/stock',
+  path: '/bodega/stock',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicJobsRecordatoriosRoute =
   ApiPublicJobsRecordatoriosRouteImport.update({
     id: '/api/public/jobs/recordatorios',
@@ -61,6 +91,11 @@ export interface FileRoutesByFullPath {
   '/cobros': typeof CobrosRoute
   '/encargos': typeof EncargosRoute
   '/vault': typeof VaultRoute
+  '/bodega/ajustes': typeof BodegaAjustesRoute
+  '/bodega/cobros': typeof BodegaCobrosRoute
+  '/bodega/encargos': typeof BodegaEncargosRoute
+  '/bodega/stock': typeof BodegaStockRoute
+  '/bodega/': typeof BodegaIndexRoute
   '/api/public/jobs/recordatorios': typeof ApiPublicJobsRecordatoriosRoute
 }
 export interface FileRoutesByTo {
@@ -70,6 +105,11 @@ export interface FileRoutesByTo {
   '/cobros': typeof CobrosRoute
   '/encargos': typeof EncargosRoute
   '/vault': typeof VaultRoute
+  '/bodega/ajustes': typeof BodegaAjustesRoute
+  '/bodega/cobros': typeof BodegaCobrosRoute
+  '/bodega/encargos': typeof BodegaEncargosRoute
+  '/bodega/stock': typeof BodegaStockRoute
+  '/bodega': typeof BodegaIndexRoute
   '/api/public/jobs/recordatorios': typeof ApiPublicJobsRecordatoriosRoute
 }
 export interface FileRoutesById {
@@ -80,6 +120,11 @@ export interface FileRoutesById {
   '/cobros': typeof CobrosRoute
   '/encargos': typeof EncargosRoute
   '/vault': typeof VaultRoute
+  '/bodega/ajustes': typeof BodegaAjustesRoute
+  '/bodega/cobros': typeof BodegaCobrosRoute
+  '/bodega/encargos': typeof BodegaEncargosRoute
+  '/bodega/stock': typeof BodegaStockRoute
+  '/bodega/': typeof BodegaIndexRoute
   '/api/public/jobs/recordatorios': typeof ApiPublicJobsRecordatoriosRoute
 }
 export interface FileRouteTypes {
@@ -91,6 +136,11 @@ export interface FileRouteTypes {
     | '/cobros'
     | '/encargos'
     | '/vault'
+    | '/bodega/ajustes'
+    | '/bodega/cobros'
+    | '/bodega/encargos'
+    | '/bodega/stock'
+    | '/bodega/'
     | '/api/public/jobs/recordatorios'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -100,6 +150,11 @@ export interface FileRouteTypes {
     | '/cobros'
     | '/encargos'
     | '/vault'
+    | '/bodega/ajustes'
+    | '/bodega/cobros'
+    | '/bodega/encargos'
+    | '/bodega/stock'
+    | '/bodega'
     | '/api/public/jobs/recordatorios'
   id:
     | '__root__'
@@ -109,6 +164,11 @@ export interface FileRouteTypes {
     | '/cobros'
     | '/encargos'
     | '/vault'
+    | '/bodega/ajustes'
+    | '/bodega/cobros'
+    | '/bodega/encargos'
+    | '/bodega/stock'
+    | '/bodega/'
     | '/api/public/jobs/recordatorios'
   fileRoutesById: FileRoutesById
 }
@@ -119,6 +179,11 @@ export interface RootRouteChildren {
   CobrosRoute: typeof CobrosRoute
   EncargosRoute: typeof EncargosRoute
   VaultRoute: typeof VaultRoute
+  BodegaAjustesRoute: typeof BodegaAjustesRoute
+  BodegaCobrosRoute: typeof BodegaCobrosRoute
+  BodegaEncargosRoute: typeof BodegaEncargosRoute
+  BodegaStockRoute: typeof BodegaStockRoute
+  BodegaIndexRoute: typeof BodegaIndexRoute
   ApiPublicJobsRecordatoriosRoute: typeof ApiPublicJobsRecordatoriosRoute
 }
 
@@ -166,6 +231,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VaultRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bodega/': {
+      id: '/bodega/'
+      path: '/bodega'
+      fullPath: '/bodega/'
+      preLoaderRoute: typeof BodegaIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bodega/ajustes': {
+      id: '/bodega/ajustes'
+      path: '/bodega/ajustes'
+      fullPath: '/bodega/ajustes'
+      preLoaderRoute: typeof BodegaAjustesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bodega/cobros': {
+      id: '/bodega/cobros'
+      path: '/bodega/cobros'
+      fullPath: '/bodega/cobros'
+      preLoaderRoute: typeof BodegaCobrosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bodega/encargos': {
+      id: '/bodega/encargos'
+      path: '/bodega/encargos'
+      fullPath: '/bodega/encargos'
+      preLoaderRoute: typeof BodegaEncargosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bodega/stock': {
+      id: '/bodega/stock'
+      path: '/bodega/stock'
+      fullPath: '/bodega/stock'
+      preLoaderRoute: typeof BodegaStockRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/jobs/recordatorios': {
       id: '/api/public/jobs/recordatorios'
       path: '/api/public/jobs/recordatorios'
@@ -183,6 +283,11 @@ const rootRouteChildren: RootRouteChildren = {
   CobrosRoute: CobrosRoute,
   EncargosRoute: EncargosRoute,
   VaultRoute: VaultRoute,
+  BodegaAjustesRoute: BodegaAjustesRoute,
+  BodegaCobrosRoute: BodegaCobrosRoute,
+  BodegaEncargosRoute: BodegaEncargosRoute,
+  BodegaStockRoute: BodegaStockRoute,
+  BodegaIndexRoute: BodegaIndexRoute,
   ApiPublicJobsRecordatoriosRoute: ApiPublicJobsRecordatoriosRoute,
 }
 export const routeTree = rootRouteImport
