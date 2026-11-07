@@ -1,35 +1,37 @@
-# Licencia, créditos y uso comercial — PaMaRa Bodega
+# Uso y derechos de PaMaRa Bodega
 
-## Alcance
+## Destino: el negocio familiar
 
-El código y la documentación originales sobre los que NicoCG32 puede conceder derechos se ofrecen bajo [PolyForm Noncommercial 1.0.0](LICENSE), con los avisos de [NOTICE](NOTICE). Se conserva el texto oficial sin modificaciones. No se presenta el proyecto como software de código abierto sin restricciones de uso comercial.
+Desarrollé **PaMaRa Bodega** para apoyar la gestión de **PaMaRa AyN**, el emprendimiento familiar de mi mamá. La finalidad de este código y de su identidad no es servir de plantilla pública para negocios ajenos ni autorizar su comercialización por terceros.
 
-Esta autorización no cambia licencias de dependencias, código ajeno, recursos visuales o sonoros, fuentes, datos, marcas ni materiales incorporados de terceros. Sus avisos y permisos se conservan. No concede derechos que correspondan a otros titulares ni retira permisos concedidos previamente mediante otros acuerdos.
+Para la revisión actual, **el software original se reserva para el uso interno del emprendimiento familiar**. La autorización de copias, modificaciones, distribución, explotación comercial o despliegues derivados fuera de ese ámbito requiere un permiso expreso y escrito del titular correspondiente. Consulta el texto vigente en [LICENSE](LICENSE).
 
-## Uso sin compensación económica
+## Código, marca y datos no son lo mismo
 
-Se permite usar, modificar y distribuir para los fines autorizados por LICENSE. Incluye usos no comerciales y los permisos específicos para usos personales y organizaciones que define ese texto. No se exige pago por esos usos.
+| Ámbito | Condición actual |
+| --- | --- |
+| **Código y documentación originales** | Derechos reservados; sin licencia general de reutilización en esta revisión |
+| **PaMaRa AyN: nombre e identidad comercial** | Uso reservado al negocio familiar; ninguna licencia del código autoriza el uso de la marca |
+| **Logos, monogramas, banners e iconos** | Uso reservado al negocio familiar, sujeto a verificar autoría y términos de los insumos de cada recurso |
+| **Datos reales de clientas, inventario, cobros y teléfonos** | No están autorizados para publicación ni reutilización mediante esta documentación |
+| **Dependencias, bibliotecas, fuentes y servicios externos** | Mantienen sus propias licencias y condiciones; no se reclaman como propiedad del proyecto |
 
-Al entregar copias, conserva la licencia y todas las líneas `Required Notice:` de NOTICE, incluidos los avisos de otros autores. El crédito identifica el proyecto original, a NicoCG32 y [el repositorio de origen](https://github.com/NicoCG32/Bodega-PaMaRa); indica también tus modificaciones. Una mención en el README, documentación o pantalla de créditos es una forma de presentar ese reconocimiento. Para esos usos, el reconocimiento no económico es suficiente; no se exige un pago simbólico.
+Los recursos visuales se encuentran catalogados en [branding/](branding/README.md). Su procedencia individual queda por documentar en [Licencias y recursos](docs/desarrollo/05-licencias-y-recursos.md).
 
-## Uso comercial mediante acuerdo separado
+## Cambio de licencia y versiones previas
 
-Para un uso comercial fuera de los permisos expresos de LICENSE, solicita una autorización escrita antes de comenzar. Esa autorización deberá acordar los créditos y una compensación económica proporcional al objetivo y alcance. No hay una tarifa, porcentaje ni autorización comercial automática establecidos en este repositorio.
+Este repositorio había publicado versiones bajo **PolyForm Noncommercial 1.0.0**. Esa licencia **sí concedía ciertos permisos de uso no comercial**. Sustituir el texto de licencia en una versión posterior **no retira retroactivamente** los permisos otorgados válidamente sobre copias anteriores.
 
-La solicitud debe indicar producto/servicio, finalidad, partes reutilizadas, distribución prevista y escala aproximada. El acuerdo puede establecer un pago único, regalías u otra modalidad, su moneda (CLP o USD), período, atribución, actualizaciones y soporte. Ninguna modalidad se considera aceptada hasta que ambas partes la acuerden. Contacto: [perfil de NicoCG32](https://github.com/NicoCG32); no publiques información confidencial en issues.
+Por eso, esta revisión propone el aviso de **derechos reservados** para versiones futuras del proyecto; no promete volver privadas copias, bifurcaciones o distribuciones que hayan sido públicas antes. La privacidad efectiva del código requiere también restringir la visibilidad del repositorio y revisar las publicaciones existentes.
 
-Que una aplicación sea gratuita para su usuario no determina por sí solo que la reutilización del código sea no comercial. La licencia del código tampoco concede acceso a los servicios alojados, a sus cuentas o a datos reales. El uso de una instancia o APK distribuida por el titular sigue las condiciones que este haya autorizado para esa entrega.
+## Lo público y lo privado
 
-## Identidad comercial y materiales de terceros
+La Boutique puede estar disponible como escaparate para clientes; eso **no** debe hacer públicas las pantallas administrativas, los respaldos ni los datos personales. El repositorio está actualmente publicado en GitHub y el sitio alojado se gestiona por separado: un archivo LICENSE o este README **no cambian** automáticamente su visibilidad.
 
-**PaMaRa AyN** es el emprendimiento familiar de la madre del desarrollador; **PaMaRa Bodega** es la aplicación creada para apoyarlo. La licencia del software no concede automáticamente derechos sobre la marca, los logotipos, fotografías ni otros elementos de identidad del negocio.
+Antes de compartir un enlace o APK hay que comprobar qué pantallas se exponen, quién tiene acceso a la administración y qué información devuelve el backend.
 
-Los recursos en `branding/`, las dependencias web y el envoltorio Android deben revisarse por separado. No se presume que PolyForm Noncommercial permita reutilizarlos sin autorización ni que su procedencia esté completamente acreditada. Consulta el [inventario de licencias y recursos](docs/desarrollo/05-licencias-y-recursos.md).
+## Avisos y distribución
 
-**Esta explicación no modifica el texto de `LICENSE` ni los avisos de `NOTICE`.**
+El [NOTICE](NOTICE) conserva los créditos y la URL de origen. No es todavía un inventario completo de avisos de terceros. Una distribución autorizada deberá respetar los avisos de todas las dependencias y elementos externos incluidos.
 
-## Versiones y distribución
-
-Consulta los avisos incluidos en cada APK o ZIP para conocer las condiciones de esa versión. Al redistribuir el proyecto, incluye LICENSE, NOTICE y este documento, además de los avisos de terceros aplicables.
-
-Texto oficial: [PolyForm Noncommercial 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0). El texto de LICENSE prevalece para su autorización gratuita; el uso comercial adicional requiere el acuerdo separado descrito arriba.
+Para permisos excepcionales, contacta al titular a través de [NicoCG32](https://github.com/NicoCG32), sin publicar datos confidenciales en issues.

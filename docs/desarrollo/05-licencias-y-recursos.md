@@ -6,15 +6,15 @@
 
 **PaMaRa AyN** es el emprendimiento familiar al que sirve el sistema. **PaMaRa Bodega** es el software desarrollado para apoyar su operación. Que el código sea visible en GitHub no concede por ello derechos sobre el nombre comercial, los logotipos, las fotografías de los productos ni los datos del negocio.
 
-`LICENSE` contiene **PolyForm Noncommercial 1.0.0**. El texto se mantiene sin cambios. `LICENSING.md` explica cómo plantear un acuerdo escrito para usos comerciales que no estén autorizados por esa licencia. No se ha autorizado un régimen más permisivo.
+`LICENSE` contiene ahora el aviso de **derechos reservados** propuesto para la versión que lo acompaña, porque la intención expresada es que el software original y la identidad sirvan exclusivamente al negocio familiar. `LICENSING.md` explica ese alcance. **La publicación anterior bajo PolyForm Noncommercial 1.0.0 no se borra ni se revoca retroactivamente**: sus permisos sobre copias obtenidas válidamente permanecen sujetos a aquellas condiciones.
 
 ## Inventario de procedencia y comprobación
 
 | Elemento | Fuente comprobable | Estado documental |
 | --- | --- | --- |
-| Código y documentación propios | [Repositorio](../../README.md), [LICENSE](../../LICENSE) | PolyForm Noncommercial; conservar avisos exigidos |
-| Marca PaMaRa AyN | [Catálogo visual](../../branding/README.md) | **Titularidad y permisos de reutilización por confirmar**; no confundir con la licencia del código |
-| Logos, monogramas, banners e iconos | [`branding/`](../../branding/README.md) | Archivos presentes; **proceso de creación, fuentes de partida y condiciones aún por confirmar** |
+| Código y documentación originales | [Repositorio](../../README.md), [LICENSE](../../LICENSE) | Derechos reservados para esta versión; anteriores bajo PolyForm conservan las licencias concedidas |
+| Marca PaMaRa AyN | [Catálogo visual](../../branding/README.md) | **Uso reservado al negocio familiar**; titularidad formal e insumos externos por verificar |
+| Logos, monogramas, banners e iconos | [`branding/`](../../branding/README.md) | **No licenciados para reutilización por terceros**; proceso de creación, fuentes de partida y eventuales terceros aún por verificar |
 | Dependencias web | [`package.json`](../../package.json), `bun.lock` | Revisar avisos/condiciones de las dependencias incluidas en distribución |
 | Envoltorio Android | [`android/app/build.gradle`](../../android/app/build.gradle) | Incluye `androidbrowserhelper`; revisar licencia y avisos que apliquen a la APK |
 | Groq y modelos de IA | [`ai.functions.ts`](../../src/lib/ai.functions.ts) | Proveedor de servicios de captura e interpretación; revisar condiciones y tratamiento de información real |
@@ -31,4 +31,4 @@ El [NOTICE](../../NOTICE) contiene dos líneas `Required Notice:` del proyecto. 
 4. Verificar las condiciones de los servicios externos; una clave API o un conector disponible **no** implica autorización ilimitada de reutilización.
 5. Mantener fuera de documentación pública los contactos de clientas, deudas, respaldos reales y otros datos sensibles.
 
-**Decisión actual:** conservar PolyForm Noncommercial para el código tal como está publicado, sin modificar `LICENSE` ni `NOTICE` en esta ronda. Los derechos sobre marca y recursos externos requieren revisión independiente.
+**Decisión solicitada:** reservar el uso de software e identidad al negocio familiar para la versión propuesta, sin pretender retirar permisos concedidos en versiones anteriores ni atribuirse materiales de terceros. Se modifica `LICENSE` y se conserva `NOTICE` tal como estaba. El repositorio y el sitio público **no se vuelven privados** por este cambio documental.

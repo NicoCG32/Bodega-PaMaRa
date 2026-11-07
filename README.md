@@ -13,7 +13,7 @@
 
 [![Estado](https://img.shields.io/badge/Estado-Web%20funcional%20%7C%20Android%20beta-79526F?style=flat-square)](docs/general/02-alcance-y-funciones.md)
 [![Datos](https://img.shields.io/badge/Datos-Local%20%2B%20Supabase-48637D?style=flat-square)](docs/tecnica/03-persistencia-y-sincronizacion.md)
-[![Licencia](https://img.shields.io/badge/C%C3%B3digo-PolyForm%20NC-596273?style=flat-square)](LICENSING.md)
+[![Uso](https://img.shields.io/badge/Uso-reservado%20al%20negocio%20familiar-596273?style=flat-square)](LICENSING.md)
 [![Calidad](https://github.com/NicoCG32/Bodega-PaMaRa/actions/workflows/calidad.yml/badge.svg)](https://github.com/NicoCG32/Bodega-PaMaRa/actions/workflows/calidad.yml)
 
 [**Ver la Boutique**](https://pamara-bodega.lovable.app/) · [**Entrar a Bodega**](https://pamara-bodega.lovable.app/bodega) · [**Documentación**](docs/README.md) · [**Versiones Android**](https://github.com/NicoCG32/Bodega-PaMaRa/releases)
@@ -150,4 +150,4 @@ La ejecución local requiere configurar el proveedor de autenticación y Supabas
 
 PaMaRa Bodega es el **software que desarrollé para apoyar el negocio familiar**. **PaMaRa AyN** es el nombre y la identidad del emprendimiento de mi mamá; no debe confundirse el software con la titularidad comercial de esa marca.
 
-El código y la documentación sobre los que se pueden conceder derechos usan [PolyForm Noncommercial 1.0.0](LICENSE). Consulta [LICENSING.md](LICENSING.md), [NOTICE](NOTICE) y el [inventario de recursos pendientes de atribución](docs/desarrollo/05-licencias-y-recursos.md) antes de reutilizar o distribuir materiales. Esta documentación no modifica los permisos vigentes.
+**Uso reservado al negocio familiar:** el software original y la identidad visual de PaMaRa AyN no se ofrecen para reutilización por terceros en esta versión. Consulta el aviso de [derechos reservados](LICENSE), [LICENSING.md](LICENSING.md) y [NOTICE](NOTICE). Los permisos otorgados válidamente en versiones anteriores bajo PolyForm Noncommercial no se retiran retroactivamente. **El repositorio sigue siendo público** hasta que se cambie su visibilidad en GitHub.
