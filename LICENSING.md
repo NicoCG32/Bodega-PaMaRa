@@ -10,7 +10,7 @@ Esta autorización no cambia licencias de dependencias, código ajeno, recursos 
 
 Se permite usar, modificar y distribuir para los fines autorizados por LICENSE. Incluye usos no comerciales y los permisos específicos para usos personales y organizaciones que define ese texto. No se exige pago por esos usos.
 
-Al entregar copias, conserva la licencia y todas las líneas `Required Notice:` de NOTICE, incluidos los avisos de otros autores. El crédito identifica el proyecto original, a NicoCG32 y [el repositorio de origen](https://github.com/NicoCG32/pamara-bodega); indica también tus modificaciones. Una mención en el README, documentación o pantalla de créditos es una forma de presentar ese reconocimiento. Para esos usos, el reconocimiento no económico es suficiente; no se exige un pago simbólico.
+Al entregar copias, conserva la licencia y todas las líneas `Required Notice:` de NOTICE, incluidos los avisos de otros autores. El crédito identifica el proyecto original, a NicoCG32 y [el repositorio de origen](https://github.com/NicoCG32/Bodega-PaMaRa); indica también tus modificaciones. Una mención en el README, documentación o pantalla de créditos es una forma de presentar ese reconocimiento. Para esos usos, el reconocimiento no económico es suficiente; no se exige un pago simbólico.
 
 ## Uso comercial mediante acuerdo separado
 
