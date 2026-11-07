@@ -4,11 +4,13 @@ PaMaRa Bodega surgió de una necesidad que conozco de cerca: ayudar a mi mamá a
 
 Quiero **ordenar el trabajo cotidiano** con una herramienta cómoda desde el celular, respetando la manera en que mi mamá atiende a sus clientes.
 
+**PaMaRa AyN** es el emprendimiento de mi mamá; **PaMaRa Bodega** es el software que desarrollé para apoyarlo. El negocio, su marca y la aplicación no deben confundirse en los créditos ni en las licencias.
+
 ## Personas que intervienen
 
 | Persona                          | Necesidad                                                        | Interfaz prevista                              |
 | -------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------- |
-| Administradora del negocio       | Anotar operaciones, revisar cuentas, controlar productos         | PaMaRa Vault (rutas privadas de la aplicación) |
+| Administradora del negocio       | Anotar operaciones, revisar cuentas, controlar productos         | Bodega (`/bodega/*`), con Google y rol `admin` |
 | Cliente o visitante              | Saber qué está disponible, precio y forma de consultar un pedido | Boutique pública (`/`)                         |
 | Persona que mantiene el software | Verificar reglas, cuidar datos, distribuir versiones             | Código, pruebas y documentación                |
 
@@ -17,7 +19,7 @@ Quiero **ordenar el trabajo cotidiano** con una herramienta cómoda desde el cel
 - **Primero revisar, luego guardar.** Una transcripción o un resultado de IA es una sugerencia, no un asiento definitivo.
 - **El teléfono es la herramienta principal.** Se priorizan pasos cortos, controles grandes y lenguaje cotidiano.
 - **La información sensible no se mezcla con el catálogo.** Deudas, abonos y teléfonos pertenecen a la gestión, no al escaparate público.
-- **La continuidad importa.** Los datos se guardan en el navegador y pueden respaldarse con una cuenta, pero restaurar datos completos entre dispositivos requiere precauciones.
+- **La continuidad importa.** Cobros y encargos forman parte del estado local y su respaldo por cuenta; productos y precios se sincronizan también con tablas compartidas. Los cambios entre dispositivos todavía requieren comprobación.
 
 ## Cómo sabré si ayuda
 

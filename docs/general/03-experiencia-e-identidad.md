@@ -1,6 +1,8 @@
 # Experiencia e identidad
 
-PaMaRa AyN tiene una identidad inspirada en un acabado metálico y en el mundo de la perfumería. La palabra **PaMaRa** conserva el protagonismo; **AyN** aparece como parte del nombre y del monograma.
+PaMaRa AyN tiene una identidad inspirada en un acabado metálico y en el mundo de la perfumería. La palabra **PaMaRa** conserva el protagonismo; **AyN** forma parte del nombre y del monograma (no es «&»).
+
+Esta identidad corresponde al **negocio familiar**. La licencia del código de PaMaRa Bodega no concede por sí sola derechos sobre la marca, los logos o las fotografías comerciales.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../../branding/banners/PaMaRa_AyN_banner_oscuro.png" />
