@@ -1,158 +1,77 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { Lock, ShieldCheck } from "lucide-react";
+import { Lock, LogOut } from "lucide-react";
 import { toast } from "sonner";
+import { lovable } from "@/integrations/lovable";
+import { supabase } from "@/integrations/supabase/client";
+import { esAdmin } from "@/lib/productosSync";
 
-const PIN_KEY = "pamara-admin-pin";
-const SES_KEY = "pamara-admin-ok";
-export const PIN_INICIAL = "1111";
+type Estado = "cargando" | "fuera" | "sin-permiso" | "admin";
 
-export const leerPin = () => localStorage.getItem(PIN_KEY) || PIN_INICIAL;
-export const pinValido = (p: string) => /^\d{4}$/.test(p);
+const G = (
+  <svg aria-hidden="true" width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.49 12.27c0-.79-.07-1.54-.19-2.27H12v4.51h6.47c-.29 1.48-1.14 2.73-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96H1.29v3.09C3.26 21.3 7.31 24 12 24z"/><path fill="#FBBC05" d="M5.27 14.29c-.25-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.98-3.09z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.98 3.09c.95-2.85 3.6-4.96 6.73-4.96z"/></svg>
+);
 
-function Teclado({ onPin, error }: { onPin: (p: string) => void; error?: boolean }) {
-  const [v, setV] = useState("");
-  useEffect(() => {
-    if (v.length === 4) {
-      onPin(v);
-      setV("");
-    }
-  }, [v, onPin]);
-  const tecla = "h-16 rounded-2xl bg-card text-2xl font-bold shadow-soft active:bg-secondary";
-  return (
-    <div className="space-y-4">
-      <div className="flex justify-center gap-4">
-        {[0, 1, 2, 3].map((i) => (
-          <span
-            key={i}
-            className={`size-5 rounded-full border-2 border-primary ${i < v.length ? "bg-primary" : ""}`}
-          />
-        ))}
-      </div>
-      {error && (
-        <p className="text-center font-bold text-destructive">Clave incorrecta, intenta otra vez</p>
-      )}
-      <div className="grid grid-cols-3 gap-3">
-        {["1", "2", "3", "4", "5", "6", "7", "8", "9"].map((n) => (
-          <button key={n} className={tecla} onClick={() => setV((x) => (x + n).slice(0, 4))}>
-            {n}
-          </button>
-        ))}
-        <span />
-        <button className={tecla} onClick={() => setV((x) => (x + "0").slice(0, 4))}>
-          0
-        </button>
-        <button className={tecla} onClick={() => setV((x) => x.slice(0, -1))}>
-          ⌫
-        </button>
-      </div>
-    </div>
-  );
-}
-
+/** El Vault solo abre con la cuenta Google de la Administradora (verificada en la nube). */
 export function AdminGate({ children }: { children: ReactNode }) {
-  const [ok, setOk] = useState<boolean | null>(null);
-  const [error, setError] = useState(false);
-  useEffect(() => setOk(sessionStorage.getItem(SES_KEY) === "1"), []);
-  if (ok === null) return null;
-  if (ok)
-    return (
-      <div className="space-y-4">
-        <div className="flex items-center justify-between rounded-2xl bg-secondary px-4 py-2">
-          <span className="flex items-center gap-2 font-bold">
-            <ShieldCheck className="size-5 text-primary" /> Administrador
-          </span>
-          <button
-            className="flex h-10 items-center gap-1 rounded-xl px-3 font-bold text-primary"
-            onClick={() => {
-              sessionStorage.removeItem(SES_KEY);
-              setOk(false);
-            }}
-          >
-            <Lock className="size-4" /> Bloquear
-          </button>
-        </div>
-        {children}
-      </div>
-    );
-  return (
-    <div className="mx-auto max-w-xs space-y-5 pt-4">
-      <div className="text-center">
-        <Lock className="mx-auto size-10 text-primary" />
-        <h2 className="mt-2 text-3xl font-semibold">PaMaRa Vault</h2>
-        <p className="text-muted-foreground">Ingresa la clave de Administrador</p>
-      </div>
-      <Teclado
-        error={error}
-        onPin={(p) => {
-          if (p === leerPin()) {
-            sessionStorage.setItem(SES_KEY, "1");
-            setError(false);
-            setOk(true);
-          } else setError(true);
-        }}
-      />
-    </div>
-  );
-}
+  const [estado, setEstado] = useState<Estado>("cargando");
+  const [ocupado, setOcupado] = useState(false);
 
-export function CambiarClaveCard() {
-  const [actual, setActual] = useState("");
-  const [nueva, setNueva] = useState("");
-  const [rep, setRep] = useState("");
-  const campo =
-    "h-14 w-full rounded-2xl border border-input bg-background px-4 text-center text-2xl tracking-[0.5em]";
-  const guardar = (): void => {
-    if (actual !== leerPin()) {
-      toast.error("La clave actual no es correcta");
-      return;
-    }
-    if (!pinValido(nueva)) {
-      toast.error("La nueva clave debe tener 4 números");
-      return;
-    }
-    if (nueva !== rep) {
-      toast.error("Las claves nuevas no coinciden");
-      return;
-    }
-    localStorage.setItem(PIN_KEY, nueva);
-    setActual("");
-    setNueva("");
-    setRep("");
-    toast.success("Clave de Administrador cambiada");
+  useEffect(() => {
+    const revisar = async () => {
+      const { data } = await supabase.auth.getUser();
+      if (!data.user) return setEstado("fuera");
+      setEstado((await esAdmin()) ? "admin" : "sin-permiso");
+    };
+    void revisar();
+    const { data: sub } = supabase.auth.onAuthStateChange((e) => {
+      if (e === "SIGNED_IN" || e === "SIGNED_OUT") void revisar();
+    });
+    return () => sub.subscription.unsubscribe();
+  }, []);
+
+  if (estado === "cargando")
+    return <p className="pt-10 text-center text-muted-foreground">Abriendo…</p>;
+  if (estado === "admin") return <>{children}</>;
+
+  const entrar = async () => {
+    setOcupado(true);
+    const r = await lovable.auth.signInWithOAuth("google", {
+      redirect_uri: window.location.origin + "/vault",
+      extraParams: { prompt: "select_account" },
+    });
+    setOcupado(false);
+    if (r.error) toast.error("No se pudo entrar. Intenta de nuevo.");
   };
-  const props = { type: "password", inputMode: "numeric" as const, maxLength: 4, className: campo };
+
   return (
-    <section className="space-y-3 rounded-3xl bg-card p-5 shadow-soft">
-      <h3 className="flex items-center gap-2 text-xl font-bold">
-        <ShieldCheck className="size-6 text-primary" /> Clave de Administrador
-      </h3>
-      <p className="text-muted-foreground">
-        Protege la Bodega. Cambia la clave cuando lo necesites.
-      </p>
-      <input
-        {...props}
-        placeholder="Actual"
-        value={actual}
-        onChange={(e) => setActual(e.target.value.replace(/\D/g, ""))}
-      />
-      <input
-        {...props}
-        placeholder="Nueva"
-        value={nueva}
-        onChange={(e) => setNueva(e.target.value.replace(/\D/g, ""))}
-      />
-      <input
-        {...props}
-        placeholder="Repetir"
-        value={rep}
-        onChange={(e) => setRep(e.target.value.replace(/\D/g, ""))}
-      />
-      <button
-        onClick={guardar}
-        className="h-14 w-full rounded-2xl bg-primary text-lg font-bold text-primary-foreground"
-      >
-        Cambiar clave
-      </button>
-    </section>
+    <div className="mx-auto max-w-xs space-y-5 pt-6 text-center">
+      <Lock className="mx-auto size-10 text-primary" />
+      <h2 className="text-3xl font-semibold">PaMaRa Vault</h2>
+      {estado === "fuera" ? (
+        <>
+          <p className="text-lg text-muted-foreground">Entra con tu cuenta Google para abrir la Bodega.</p>
+          <button
+            onClick={entrar}
+            disabled={ocupado}
+            style={{ background: "#FFFFFF", color: "#1F1F1F", border: "1px solid #747775" }}
+            className="flex h-14 w-full items-center justify-center gap-[10px] rounded-full px-3 text-base font-medium"
+          >
+            {G} Continuar con Google
+          </button>
+        </>
+      ) : (
+        <>
+          <p className="text-lg text-muted-foreground">
+            Esta cuenta no tiene permiso de Administradora.
+          </p>
+          <button
+            onClick={() => void supabase.auth.signOut()}
+            className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-secondary text-lg font-bold"
+          >
+            <LogOut className="size-5" /> Usar otra cuenta
+          </button>
+        </>
+      )}
+    </div>
   );
 }
