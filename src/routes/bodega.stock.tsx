@@ -12,31 +12,10 @@ import {
   normCodigo,
   precioVenta,
   reposicion,
-  resumenBodega,
   uid,
   useStore,
   type Producto,
 } from "@/lib/store";
-
-function Resumen() {
-  const { productos } = useStore();
-  const r = resumenBodega(productos);
-  const caja = "rounded-3xl bg-card p-3 text-center shadow-soft";
-  return (
-    <div className="space-y-1">
-      <div className="grid grid-cols-2 gap-2">
-        <div className={caja}>
-          <p className="text-2xl font-extrabold">{r.unidades}</p>
-          <p className="text-sm text-muted-foreground">unidades</p>
-        </div>
-        <div className={`${caja} ${r.remate ? "bg-accent text-accent-foreground" : ""}`}>
-          <p className="text-2xl font-extrabold">{r.remate}</p>
-          <p className="text-sm">para rematar</p>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function Reposicion() {
   const { productos, encargos } = useStore();
