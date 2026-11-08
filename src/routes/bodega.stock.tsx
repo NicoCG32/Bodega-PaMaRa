@@ -12,31 +12,10 @@ import {
   normCodigo,
   precioVenta,
   reposicion,
-  resumenBodega,
   uid,
   useStore,
   type Producto,
 } from "@/lib/store";
-
-function Resumen() {
-  const { productos } = useStore();
-  const r = resumenBodega(productos);
-  const caja = "rounded-3xl bg-card p-3 text-center shadow-soft";
-  return (
-    <div className="space-y-1">
-      <div className="grid grid-cols-2 gap-2">
-        <div className={caja}>
-          <p className="text-2xl font-extrabold">{r.unidades}</p>
-          <p className="text-sm text-muted-foreground">unidades</p>
-        </div>
-        <div className={`${caja} ${r.remate ? "bg-accent text-accent-foreground" : ""}`}>
-          <p className="text-2xl font-extrabold">{r.remate}</p>
-          <p className="text-sm">para rematar</p>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function Reposicion() {
   const { productos, encargos } = useStore();
@@ -107,7 +86,7 @@ const SECCIONES: { id: Seccion; label: string }[] = [
 function Catalogo() {
   const { productos } = useStore();
   const [seccion, setSeccion] = useState<Seccion>("repisas");
-  const [verTodo, setVerTodo] = useState(false);
+  const [vista, setVista] = useState<"casa" | "acabo">("casa");
   const [tipo, setTipo] = useState<"perfume" | "otro">("perfume");
   const [f, setF] = useState("");
   const [buscar, setBuscar] = useState("");
@@ -117,7 +96,7 @@ function Catalogo() {
   const lista = productos
     .filter((p) => (tipo === "otro" ? esOtro(p) : !esOtro(p)))
     .filter((p) => tipo === "otro" || !f || p.codigo.startsWith(f + "-"))
-    .filter((p) => verTodo || p.stock > 0)
+    .filter((p) => !!buscar.trim() || (vista === "casa" ? p.stock > 0 : p.stock <= 0))
     .filter(
       (p) =>
         !q ||
@@ -174,7 +153,24 @@ function Catalogo() {
 
       {seccion === "repisas" && (
         <>
-          <Resumen />
+          <div className="grid grid-cols-2 gap-2">
+            {(
+              [
+                ["casa", "🏠 Tengo en la casa", productos.filter((x) => x.stock > 0).length],
+                ["acabo", "📋 Se me acabó", productos.filter((x) => x.stock <= 0).length],
+              ] as const
+            ).map(([k, label, n]) => (
+              <button
+                key={k}
+                onClick={() => setVista(k)}
+                aria-pressed={vista === k}
+                className={`min-h-20 rounded-3xl px-2 text-lg font-extrabold leading-tight shadow-soft ${vista === k ? "bg-primary text-primary-foreground" : "bg-card"}`}
+              >
+                {label}
+                <span className="block text-base font-bold opacity-80">{n}</span>
+              </button>
+            ))}
+          </div>
           <Reposicion />
           <input
             value={buscar}
@@ -206,15 +202,6 @@ function Catalogo() {
               ))}
             </div>
           )}
-          <button
-            onClick={() => setVerTodo(!verTodo)}
-            className="flex min-h-12 w-full items-center justify-between rounded-2xl bg-secondary px-4 font-bold"
-          >
-            <span>
-              {verTodo ? "Mostrando todo el catálogo" : "Mostrando solo lo que hay en repisa"}
-            </span>
-            <span className="text-primary">{verTodo ? "Ver solo repisa" : "Ver todo"}</span>
-          </button>
 
           {nuevo ? (
             <Editor tipo={tipo} onClose={() => setNuevo(false)} />
@@ -229,7 +216,11 @@ function Catalogo() {
 
           {lista.length === 0 && (
             <p className="py-6 text-center text-lg text-muted-foreground">
-              {verTodo ? "No encontré nada." : "No hay nada en la repisa aquí. Toca «Ver todo»."}
+              {buscar.trim()
+                ? "No encontré nada con ese nombre."
+                : vista === "casa"
+                  ? "No tienes nada aquí en la casa."
+                  : "¡No se te ha acabado nada!"}
             </p>
           )}
           <ul className="space-y-3">
@@ -259,33 +250,47 @@ function Tarjeta({ p }: { p: Producto }) {
     );
   return (
     <li className={`rounded-3xl bg-card p-4 shadow-soft ${remate ? "ring-2 ring-accent" : ""}`}>
-      <div className="flex items-center gap-3">
-        <button onClick={() => setAbierta(!abierta)} className="min-w-0 flex-1 text-left">
-          <p className="truncate text-2xl font-extrabold">{titulo(p)}</p>
-          {detalle(p) && <p className="truncate text-muted-foreground">{detalle(p)}</p>}
-          <p className="mt-1 text-base font-bold">
-            <span className={p.stock > 0 ? "text-success" : "text-muted-foreground"}>
-              {p.stock > 0 ? `${p.stock} en repisa` : "A pedido"}
-            </span>
-            <span className="text-primary"> · {clp(v.precio)}</span>
-            {remate && <span> · 🔥</span>}
-          </p>
-        </button>
+      <button onClick={() => setAbierta(!abierta)} className="w-full text-left">
+        <div className="flex items-start justify-between gap-2">
+          <p className="min-w-0 truncate text-3xl font-extrabold">{titulo(p)}</p>
+          <span
+            className={`shrink-0 rounded-full px-3 py-1 text-sm font-bold ${remate ? "bg-accent text-accent-foreground" : p.stock > 0 ? "bg-success text-success-foreground" : "bg-secondary text-muted-foreground"}`}
+          >
+            {remate ? "🔥 Rematar" : p.stock > 0 ? "En la casa" : "Para encargar"}
+          </span>
+        </div>
+        {detalle(p) && <p className="truncate text-lg text-muted-foreground">{detalle(p)}</p>}
+        <p className="mt-1 text-2xl font-extrabold text-primary">{clp(v.precio)}</p>
+      </button>
+      <div className="mt-3 flex items-center gap-3">
         <button
           onClick={() => actions.ajustarStock(p.codigo, -1)}
-          aria-label="Quitar uno"
-          className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-secondary"
+          disabled={p.stock <= 0}
+          aria-label="Vendí uno (quitar uno)"
+          className="flex h-16 w-20 shrink-0 items-center justify-center rounded-2xl bg-secondary disabled:opacity-40"
         >
-          <Minus />
+          <Minus className="size-8" />
         </button>
+        <div className="flex-1 text-center">
+          <p className="text-3xl font-extrabold leading-none">{p.stock > 0 ? p.stock : 0}</p>
+          <p className="text-base font-bold text-muted-foreground">
+            {p.stock === 1 ? "te queda" : p.stock > 0 ? "te quedan" : "se acabó"}
+          </p>
+        </div>
         <button
           onClick={() => actions.ajustarStock(p.codigo, 1)}
-          aria-label="Sumar uno"
-          className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground"
+          aria-label="Llegó uno (sumar uno)"
+          className="flex h-16 w-20 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground"
         >
-          <Plus />
+          <Plus className="size-8" />
         </button>
       </div>
+      <button
+        onClick={() => setAbierta(!abierta)}
+        className="mt-2 min-h-11 w-full rounded-2xl text-base font-bold text-muted-foreground"
+      >
+        {abierta ? "▲ Cerrar" : "▼ Más opciones (precio, anuncio)"}
+      </button>
       {abierta && (
         <div className="mt-3 space-y-2 border-t border-border pt-3">
           {p.stock > 0 && (

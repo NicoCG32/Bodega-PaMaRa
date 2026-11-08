@@ -4,19 +4,19 @@ Esta guía está dirigida a quien deba ejecutar, comprobar o modificar PaMaRa Bo
 
 ## Puntos de entrada
 
-| Ruta o archivo            | Responsabilidad                                     |
-| ------------------------- | --------------------------------------------------- |
-| `src/routes/index.tsx`    | Boutique pública (`/`).                             |
-| `src/routes/bodega.index.tsx` | Captura principal de Bodega (`/bodega`).           |
-| `src/routes/bodega.cobros.tsx` | Cuentas por cobrar (`/bodega/cobros`).           |
-| `src/routes/bodega.encargos.tsx` | Encargos y entrega (`/bodega/encargos`).       |
-| `src/routes/bodega.stock.tsx` | Inventario y captura (`/bodega/stock`).           |
-| `src/routes/bodega.ajustes.tsx` | Precios, nube y avisos (`/bodega/ajustes`).      |
-| `src/routes/__root.tsx`   | Estructura de aplicación y envoltorio de rutas.     |
-| `src/lib/store.ts`        | Estado local, reglas de precio y operaciones.       |
-| `src/lib/*.functions.ts`  | Funciones de servidor: IA, catálogo y token push.   |
-| `drizzle/migrations/`     | SQL de respaldos, roles, productos, precios y tokens. |
-| `android/`                | Envoltorio TWA y compilación Gradle.                |
+| Ruta o archivo                   | Responsabilidad                                       |
+| -------------------------------- | ----------------------------------------------------- |
+| `src/routes/index.tsx`           | Boutique pública (`/`).                               |
+| `src/routes/bodega.index.tsx`    | Captura principal de Bodega (`/bodega`).              |
+| `src/routes/bodega.cobros.tsx`   | Cuentas por cobrar (`/bodega/cobros`).                |
+| `src/routes/bodega.encargos.tsx` | Encargos y entrega (`/bodega/encargos`).              |
+| `src/routes/bodega.stock.tsx`    | Inventario y captura (`/bodega/stock`).               |
+| `src/routes/bodega.ajustes.tsx`  | Precios, nube y avisos (`/bodega/ajustes`).           |
+| `src/routes/__root.tsx`          | Estructura de aplicación y envoltorio de rutas.       |
+| `src/lib/store.ts`               | Estado local, reglas de precio y operaciones.         |
+| `src/lib/*.functions.ts`         | Funciones de servidor: IA, catálogo y token push.     |
+| `drizzle/migrations/`            | SQL de respaldos, roles, productos, precios y tokens. |
+| `android/`                       | Envoltorio TWA y compilación Gradle.                  |
 
 Los archivos en `src/components/ui/` contienen componentes visuales reutilizables; la lógica del producto vive en rutas, componentes específicos y `src/lib/`. Además, `productosSync.ts` administra la sincronización del inventario compartido y `cloudSync.ts` mantiene el respaldo JSON completo por cuenta. Las rutas antiguas `/vault`, `/cobros`, `/encargos`, `/catalogo` y `/ajustes` redirigen a `/bodega/*`.
 

@@ -30,12 +30,12 @@ sequenceDiagram
 
 ### Lo visible y lo privado
 
-| Información | Boutique | Bodega / respaldo |
-| --- | --- | --- |
-| Código, nombre, categoría, inspiración, precio derivado, stock | Visible para productos publicados | Editable por administradora |
-| Precio general de la tienda | Usado en cálculo público | Editable por administradora |
-| Nombre de cliente, deuda, abono, cuota, teléfono | **No aparece en `ItemPublico`** | Forma parte de `State` y de `backups` |
-| Pedidos enviados por WhatsApp | Mensaje fuera de la web | Se registran manualmente como encargo o venta |
+| Información                                                    | Boutique                          | Bodega / respaldo                             |
+| -------------------------------------------------------------- | --------------------------------- | --------------------------------------------- |
+| Código, nombre, categoría, inspiración, precio derivado, stock | Visible para productos publicados | Editable por administradora                   |
+| Precio general de la tienda                                    | Usado en cálculo público          | Editable por administradora                   |
+| Nombre de cliente, deuda, abono, cuota, teléfono               | **No aparece en `ItemPublico`**   | Forma parte de `State` y de `backups`         |
+| Pedidos enviados por WhatsApp                                  | Mensaje fuera de la web           | Se registran manualmente como encargo o venta |
 
 Los productos se publican por defecto si no están marcados `enBoutique === false` y cumplen el filtro de `aPublico()`. El control de visibilidad existe en la pantalla de stock; conviene comprobarlo antes de agregar un artículo nuevo.
 
@@ -66,6 +66,6 @@ La protección de la interfaz no es suficiente por sí sola: los permisos del se
 - **Asistencia Groq:** las funciones de `ai.functions.ts` validan entradas, pero no se observa un middleware de sesión en esas rutas. Revisar autorización, cuotas y exposición de datos antes de publicar un servicio abierto.
 - **Multidispositivo:** validar que una edición no sobrescriba otra al recibir Realtime o restaurar el snapshot.
 
-**No se afirma haber resuelto estas cuestiones en este PR**: son riesgos identificados para comprobación técnica con un entorno de prueba.
+Estas comprobaciones se realizan en un entorno de prueba con cuentas y datos ficticios.
 
 [Datos y RLS](03-persistencia-y-sincronizacion.md) · [Pruebas pendientes](../desarrollo/03-pruebas-y-limitaciones.md) · [Migración de roles](../../drizzle/migrations/0001_productos_y_admin.sql).

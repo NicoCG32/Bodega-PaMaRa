@@ -4,13 +4,13 @@ He ido acercando PaMaRa Bodega a las tareas que se repiten en el negocio de mi m
 
 ## Etapas del proyecto
 
-| Etapa        | Alcance                                                              |
-| ------------ | -------------------------------------------------------------------- |
-| Registro     | Captura por texto y voz, fiados, abonos, cuotas y encargos.          |
-| Bodega       | Productos por código, conteo por voz o foto y precios configurables. |
+| Etapa        | Alcance                                                                      |
+| ------------ | ---------------------------------------------------------------------------- |
+| Registro     | Captura por texto y voz, fiados, abonos, cuotas y encargos.                  |
+| Bodega       | Productos por código, conteo por voz o foto y precios configurables.         |
 | Continuidad  | Respaldo JSON por cuenta y sincronización compartida de productos y precios. |
-| Boutique     | Consulta pública de productos y preparación de pedidos por WhatsApp. |
-| Distribución | Aplicación web y APK Android beta.                                   |
+| Boutique     | Consulta pública de productos y preparación de pedidos por WhatsApp.         |
+| Distribución | Aplicación web y APK Android beta.                                           |
 
 ## Cómo trabajo los cambios
 

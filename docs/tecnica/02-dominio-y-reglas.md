@@ -65,7 +65,7 @@ erDiagram
 | Existencias        | `ajustarStock()` aplica `max(0, stock + delta)`. Una entrada registra `fechaIngreso` en ciertos casos; una salida registra `ultimaVenta`. |
 | Reposición         | Producto sin stock con encargo pendiente o venta registrada dentro de los 30 días previos.                                                |
 | Liquidación        | Stock positivo y 30 días o más sin movimiento según fechas disponibles.                                                                   |
-| Precio propio      | `p.precio || cfg.base`; si el precio del producto es 0 se aplica el precio base. |
+| Precio propio      | `p.precio                                                                                                                                 |     | cfg.base`; si el precio del producto es 0 se aplica el precio base. |
 | Estado sin stock   | Precio base + recargo por encargo.                                                                                                        |
 | Estado liquidación | `max(0, base - cfg.descuentoRemate)`.                                                                                                     |
 | Estado normal      | Precio base sin ajuste.                                                                                                                   |

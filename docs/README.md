@@ -12,17 +12,17 @@
 
 ---
 
-## Tres áreas, sin documentos de relleno
+## Áreas de documentación
 
-| Recorrido | Para quién | Por dónde empezar |
-| --- | --- | --- |
-| **01 · General** | Quien quiere comprender el negocio y las dos experiencias | [Origen](general/01-origen-y-proposito.md) · [Funciones](general/02-alcance-y-funciones.md) |
-| **02 · Técnica** | Quien necesita comprender datos, reglas, seguridad e integraciones | [Arquitectura](tecnica/01-arquitectura.md) · [Persistencia](tecnica/03-persistencia-y-sincronizacion.md) |
-| **03 · Desarrollo** | Quien mantiene, prueba o distribuye el software | [Entorno](desarrollo/01-desarrollo-local.md) · [Pruebas](desarrollo/03-pruebas-y-limitaciones.md) |
+| Recorrido           | Para quién                                                         | Por dónde empezar                                                                                        |
+| ------------------- | ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------- |
+| **01 · General**    | Quien quiere comprender el negocio y las dos experiencias          | [Origen](general/01-origen-y-proposito.md) · [Funciones](general/02-alcance-y-funciones.md)              |
+| **02 · Técnica**    | Quien necesita comprender datos, reglas, seguridad e integraciones | [Arquitectura](tecnica/01-arquitectura.md) · [Persistencia](tecnica/03-persistencia-y-sincronizacion.md) |
+| **03 · Desarrollo** | Quien mantiene, prueba o distribuye el software                    | [Entorno](desarrollo/01-desarrollo-local.md) · [Pruebas](desarrollo/03-pruebas-y-limitaciones.md)        |
 
 > **Acceso acordado:** la **Boutique es pública** para consultar productos y abrir WhatsApp sin registrarse. La **Bodega es privada** para la administración familiar autorizada. El repositorio se pretende privado, pero actualmente sigue visible en GitHub; la licencia no cambia su visibilidad.
 
-> **Lectura técnica:** la Boutique obtiene productos y precios de tablas compartidas de Supabase. Los fiados, encargos y teléfonos viven en el estado local y pueden respaldarse como JSON por cuenta. Son caminos distintos; los diagramas no deben mezclarlos.
+> **Lectura técnica:** la Boutique obtiene productos y precios de tablas compartidas de Supabase. Los fiados, encargos y teléfonos viven en el estado local y pueden respaldarse como JSON por cuenta.
 
 ## 01 · General — por qué existe
 
@@ -32,14 +32,14 @@
 
 ## 02 · Técnica — de la interfaz a la persistencia
 
-| Capítulo | Qué comprueba |
-| --- | --- |
-| [Arquitectura por niveles](tecnica/01-arquitectura.md) | Contexto, contenedores, componentes, despliegue y fronteras de confianza |
-| [Dominio y reglas](tecnica/02-dominio-y-reglas.md) | Fiados, stock, encargos, precios y máquinas de estados |
-| [Persistencia y sincronización](tecnica/03-persistencia-y-sincronizacion.md) | Tablas físicas reales, RLS, JSONB y Realtime frente a respaldo completo |
-| [Captura de voz, texto y fotografías](tecnica/04-captura-e-ia.md) | Modelos Groq realmente integrados, secuencias y revisión humana |
-| [Boutique, visibilidad y seguridad](tecnica/05-boutique-y-seguridad.md) | Productos públicos, rol administrador, exposición de datos y puntos críticos |
-| [Notificaciones](tecnica/06-notificaciones.md) | Avisos locales, FCM, cron y qué debe comprobarse en dispositivo |
+| Capítulo                                                                     | Qué comprueba                                                                |
+| ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| [Arquitectura por niveles](tecnica/01-arquitectura.md)                       | Contexto, contenedores, componentes, despliegue y fronteras de confianza     |
+| [Dominio y reglas](tecnica/02-dominio-y-reglas.md)                           | Fiados, stock, encargos, precios y máquinas de estados                       |
+| [Persistencia y sincronización](tecnica/03-persistencia-y-sincronizacion.md) | Tablas físicas reales, RLS, JSONB y Realtime frente a respaldo completo      |
+| [Captura de voz, texto y fotografías](tecnica/04-captura-e-ia.md)            | Modelos Groq realmente integrados, secuencias y revisión humana              |
+| [Boutique, visibilidad y seguridad](tecnica/05-boutique-y-seguridad.md)      | Productos públicos, rol administrador, exposición de datos y puntos críticos |
+| [Notificaciones](tecnica/06-notificaciones.md)                               | Avisos locales, FCM, cron y qué debe comprobarse en dispositivo              |
 
 <details>
 <summary><strong>Ver el flujo esencial del catálogo</strong></summary>

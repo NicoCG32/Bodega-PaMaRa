@@ -2,16 +2,16 @@
 
 [← Técnica](../README.md) · [Arquitectura](01-arquitectura.md) · [Boutique y seguridad](05-boutique-y-seguridad.md)
 
-El modelo actual tiene **tres responsabilidades distintas**. Separarlas evita explicar erróneamente la Boutique como una copia del último respaldo global.
+El modelo combina un estado de trabajo local, un inventario compartido y respaldos por cuenta. La Boutique consulta el inventario publicado.
 
 ## Qué vive dónde
 
-| Almacenamiento | Contenido | A quién sirve |
-| --- | --- | --- |
-| **`localStorage`** (`pamara-ayn-v1`) | `State` con deudas, abonos, cuotas, encargos, teléfonos, productos, precios y `actualizado` | Estado de trabajo del dispositivo |
-| **`productos` y `ajustes_tienda`** (PostgreSQL) | Productos en JSONB, marca `en_boutique`, precios compartidos | Administración autorizada y catálogo público |
-| **`backups`** (PostgreSQL) | Snapshot JSONB del estado completo, ligado a `user_id` | Recuperación de cobros, encargos, teléfonos y otros campos |
-| **`push_tokens` y `user_roles`** (PostgreSQL) | Tokens de dispositivo y rol `admin` | Avisos, control de acceso e inicialización |
+| Almacenamiento                                  | Contenido                                                                                   | A quién sirve                                              |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| **`localStorage`** (`pamara-ayn-v1`)            | `State` con deudas, abonos, cuotas, encargos, teléfonos, productos, precios y `actualizado` | Estado de trabajo del dispositivo                          |
+| **`productos` y `ajustes_tienda`** (PostgreSQL) | Productos en JSONB, marca `en_boutique`, precios compartidos                                | Administración autorizada y catálogo público               |
+| **`backups`** (PostgreSQL)                      | Snapshot JSONB del estado completo, ligado a `user_id`                                      | Recuperación de cobros, encargos, teléfonos y otros campos |
+| **`push_tokens` y `user_roles`** (PostgreSQL)   | Tokens de dispositivo y rol `admin`                                                         | Avisos, control de acceso e inicialización                 |
 
 Las migraciones `0000` y `0001` son la fuente del esquema físico. `drizzle/schema.ts` no sustituye estas migraciones como referencia de todas las tablas, roles y políticas.
 
@@ -129,15 +129,15 @@ Los errores de red no tienen aquí una cola persistente de reintentos garantizad
 
 ## 3. Reglas de acceso relevantes
 
-| Tabla | Lectura | Escritura |
-| --- | --- | --- |
-| `backups` | Cuenta propietaria mediante RLS | Cuenta propietaria mediante RLS |
-| `push_tokens` | Cuenta propietaria mediante RLS | Cuenta propietaria mediante RLS |
-| `user_roles` | Usuario autenticado puede leer su rol | Servicio privilegiado / trigger de primer administrador |
-| `productos` | Visitante: filas `en_boutique`; admin: todas | Rol `admin` según RLS |
-| `ajustes_tienda` | Lectura pública de precios | Rol `admin` según RLS |
+| Tabla            | Lectura                                      | Escritura                                               |
+| ---------------- | -------------------------------------------- | ------------------------------------------------------- |
+| `backups`        | Cuenta propietaria mediante RLS              | Cuenta propietaria mediante RLS                         |
+| `push_tokens`    | Cuenta propietaria mediante RLS              | Cuenta propietaria mediante RLS                         |
+| `user_roles`     | Usuario autenticado puede leer su rol        | Servicio privilegiado / trigger de primer administrador |
+| `productos`      | Visitante: filas `en_boutique`; admin: todas | Rol `admin` según RLS                                   |
+| `ajustes_tienda` | Lectura pública de precios                   | Rol `admin` según RLS                                   |
 
-**Primer administrador:** `primera_admin()` se ejecuta al crear un usuario si todavía no existe ningún rol administrador. La identidad y el momento del primer registro deben controlarse al inicializar una instalación. No se ha comprobado aquí el estado real del proveedor alojado.
+**Primer administrador:** `primera_admin()` se ejecuta al crear un usuario si todavía no existe ningún rol administrador. La identidad y el momento del primer registro deben controlarse al inicializar una instalación.
 
 ## Precaución con datos personales
 

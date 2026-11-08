@@ -28,18 +28,18 @@ bun run build
 
 Usa una cuenta de prueba y datos ficticios.
 
-| Escenario                     | Qué comprobar                                                                                   |
-| ----------------------------- | ----------------------------------------------------------------------------------------------- |
-| Fiado, abono inicial y cuotas | Total, saldo y próxima cuota después de guardar y reabrir.                                      |
-| Abono posterior               | Importe positivo, deuda correcta y saldo resultante; incluir importes mayores al saldo.         |
-| Voz nativa y Groq             | Una sola propuesta aunque una transcripción llegue tarde; conservación del texto ante fallos.   |
-| Conteo por foto               | Corrección de cantidades y suma al stock una sola vez.                                          |
+| Escenario                     | Qué comprobar                                                                                    |
+| ----------------------------- | ------------------------------------------------------------------------------------------------ |
+| Fiado, abono inicial y cuotas | Total, saldo y próxima cuota después de guardar y reabrir.                                       |
+| Abono posterior               | Importe positivo, deuda correcta y saldo resultante; incluir importes mayores al saldo.          |
+| Voz nativa y Groq             | Una sola propuesta aunque una transcripción llegue tarde; conservación del texto ante fallos.    |
+| Conteo por foto               | Corrección de cantidades y suma al stock una sola vez.                                           |
 | Edición de producto           | Conservación de stock, precio y visibilidad en Boutique; comprobar Realtime desde otro teléfono. |
-| Respaldo                      | Recuperación en otro perfil, cierre de sesión, pérdida de red y cambios desde dos dispositivos. |
+| Respaldo                      | Recuperación en otro perfil, cierre de sesión, pérdida de red y cambios desde dos dispositivos.  |
 | Boutique                      | Lectura pública de `productos` y `ajustes_tienda`, visibilidad y mensaje de WhatsApp.            |
-| Notificaciones                | Permisos, recepción con la aplicación cerrada y fecha de cobro en Chile.                        |
-| Android TWA                   | Instalación, asociación del dominio, reapertura y actualización conservando los datos.          |
-| Accesibilidad                 | Teclado, foco, lector de pantalla, zoom y contraste.                                            |
+| Notificaciones                | Permisos, recepción con la aplicación cerrada y fecha de cobro en Chile.                         |
+| Android TWA                   | Instalación, asociación del dominio, reapertura y actualización conservando los datos.           |
+| Accesibilidad                 | Teclado, foco, lector de pantalla, zoom y contraste.                                             |
 
 Para Android, utiliza también la [lista de aceptación en dispositivo](../android-acceptance.md).
 
@@ -56,13 +56,13 @@ Para Android, utiliza también la [lista de aceptación en dispositivo](../andro
 
 ## Validaciones adicionales prioritarias
 
-| Comprobación | Evidencia necesaria |
-| --- | --- |
-| **Primer rol administrador** | Crear cuentas en un entorno aislado y confirmar quién recibe `admin` |
-| **RLS de inventario** | Leer productos publicados como visitante; verificar que sólo admin puede editar y leer ocultos |
-| **Realtime y respaldo** | Cambios simultáneos de stock y cobros, incluyendo reconexión y restauración en otro dispositivo |
-| **Privacidad de Boutique** | Inspeccionar respuestas y confirmar que no se filtran deudas, teléfonos ni datos personales |
-| **IA con servidor público** | Probar autorización, cuotas y errores sin exponer datos reales |
+| Comprobación                 | Evidencia necesaria                                                                             |
+| ---------------------------- | ----------------------------------------------------------------------------------------------- |
+| **Primer rol administrador** | Crear cuentas en un entorno aislado y confirmar quién recibe `admin`                            |
+| **RLS de inventario**        | Leer productos publicados como visitante; verificar que sólo admin puede editar y leer ocultos  |
+| **Realtime y respaldo**      | Cambios simultáneos de stock y cobros, incluyendo reconexión y restauración en otro dispositivo |
+| **Privacidad de Boutique**   | Inspeccionar respuestas y confirmar que no se filtran deudas, teléfonos ni datos personales     |
+| **IA con servidor público**  | Probar autorización, cuotas y errores sin exponer datos reales                                  |
 
 ## Registrar una prueba
 

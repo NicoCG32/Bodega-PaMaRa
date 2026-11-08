@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { DeudaCard } from "@/components/DeudaCard";
-import { clp, fechaBonita, proximaCuota, saldo, useStore } from "@/lib/store";
+import { clp, diasHasta, fechaBonita, proximaCuota, saldo, useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/bodega/cobros")({
   head: () => ({
@@ -27,6 +27,12 @@ function Cobros() {
   const pend = deudas
     .filter((d) => saldo(d) > 0)
     .sort((a, b) => orden(proximaCuota(a)?.fecha).localeCompare(orden(proximaCuota(b)?.fecha)));
+  const urgente = (d: (typeof deudas)[number]) => {
+    const f = proximaCuota(d)?.fecha;
+    return !f || diasHasta(f) <= 0;
+  };
+  const hoy = pend.filter(urgente);
+  const luego = pend.filter((d) => !urgente(d));
   const pagados = deudas.filter((d) => saldo(d) === 0);
   const total = pend.reduce((a, d) => a + saldo(d), 0);
   const mes = new Date().toISOString().slice(0, 7);
@@ -60,9 +66,26 @@ function Cobros() {
           Nadie te debe 🎉 Cuando fíes algo, anótalo con el micrófono.
         </p>
       )}
-      {pend.map((d) => (
-        <DeudaCard key={d.id} d={d} />
-      ))}
+      {hoy.length > 0 && (
+        <section className="space-y-3">
+          <h3 className="rounded-2xl bg-destructive/10 px-4 py-3 text-xl font-bold text-destructive">
+            🔴 Cobrar hoy ({hoy.length})
+          </h3>
+          {hoy.map((d) => (
+            <DeudaCard key={d.id} d={d} />
+          ))}
+        </section>
+      )}
+      {luego.length > 0 && (
+        <section className="space-y-3">
+          <h3 className="rounded-2xl bg-secondary px-4 py-3 text-xl font-bold">
+            🗓️ Más adelante ({luego.length})
+          </h3>
+          {luego.map((d) => (
+            <DeudaCard key={d.id} d={d} />
+          ))}
+        </section>
+      )}
       {pagados.length > 0 && (
         <button
           onClick={() => setVerPagados((v) => !v)}

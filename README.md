@@ -9,7 +9,7 @@
 
 **Un lugar para ordenar lo que ocurre detrás del mostrador.**
 
-*PaMaRa AyN es el negocio de mi mamá. PaMaRa Bodega es la aplicación que desarrollé para acompañar su trabajo: Boutique pública para clientes y gestión privada para la familia.*
+_PaMaRa AyN es el negocio de mi mamá. PaMaRa Bodega es la aplicación que desarrollé para acompañar su trabajo: Boutique pública para clientes y gestión privada para la familia._
 
 [![Estado](https://img.shields.io/badge/Estado-Web%20funcional%20%7C%20Android%20beta-79526F?style=flat-square)](docs/general/02-alcance-y-funciones.md)
 [![Datos](https://img.shields.io/badge/Datos-Local%20%2B%20Supabase-48637D?style=flat-square)](docs/tecnica/03-persistencia-y-sincronizacion.md)
@@ -30,11 +30,11 @@ Por eso separé dos experiencias: **Bodega**, donde la administradora registra y
 
 ## Dos experiencias, un mismo inventario
 
-| **Bodega · administración** | **Boutique · consulta pública** |
-| --- | --- |
-| Registrar fiados, abonos, cuotas y encargos | Explorar perfumes y otros productos publicados |
-| Contar y ajustar existencias, por formulario o captura asistida | Revisar precio calculado, stock y disponibilidad |
-| Definir precios y decidir qué producto se muestra | Preparar una bolsa con productos y cantidades |
+| **Bodega · administración**                                           | **Boutique · consulta pública**                      |
+| --------------------------------------------------------------------- | ---------------------------------------------------- |
+| Registrar fiados, abonos, cuotas y encargos                           | Explorar perfumes y otros productos publicados       |
+| Contar y ajustar existencias, por formulario o captura asistida       | Revisar precio calculado, stock y disponibilidad     |
+| Definir precios y decidir qué producto se muestra                     | Preparar una bolsa con productos y cantidades        |
 | Utilizar una sesión autorizada para sincronizar productos y respaldos | Abrir WhatsApp con un mensaje de pedido ya redactado |
 
 La **Boutique no procesa pagos ni confirma ventas**. La comuna se incluye en la consulta, pero el costo de entrega se acuerda fuera de la aplicación: **no existe un cotizador de despacho implementado**.
@@ -64,10 +64,10 @@ Los pedidos que llegan por WhatsApp se atienden fuera del sistema y se registran
 
 ## Estado real del proyecto
 
-| Estado | Qué representa actualmente |
-| --- | --- |
-| **Implementado en código** | Web con Bodega protegida por sesión y rol, inventario y precios en tablas Supabase, respaldos JSON por cuenta, Boutique pública, WhatsApp y captura asistida por Groq |
-| **En validación** | Operación diaria en teléfonos, conflictos de sincronización, seguridad del alta de administrador, permisos de notificaciones y funcionamiento de APK Android beta |
+| Estado                        | Qué representa actualmente                                                                                                                                               |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Implementado en código**    | Web con Bodega protegida por sesión y rol, inventario y precios en tablas Supabase, respaldos JSON por cuenta, Boutique pública, WhatsApp y captura asistida por Groq    |
+| **En validación**             | Operación diaria en teléfonos, conflictos de sincronización, seguridad del alta de administrador, permisos de notificaciones y funcionamiento de APK Android beta        |
 | **Propuesto o no acreditado** | Cálculo de tarifas de entrega, pedidos confirmados dentro de la web, sincronización sin conflictos entre varios administradores y funcionamiento independiente de la red |
 
 **Implementado** significa que existe una ruta o función comprobable en el repositorio; **no implica** que todas las integraciones estén configuradas ni que se hayan validado en condiciones reales.
@@ -87,14 +87,14 @@ Los pedidos que llegan por WhatsApp se atienden fuera del sistema y se registran
 
 ## Tecnología y estructura
 
-| Pieza | Implementación |
-| --- | --- |
-| Interfaz | React 19, TypeScript, TanStack Start, Vite y Tailwind CSS |
-| Reglas | `src/lib/store.ts`, proyección de Boutique y lógica de movimientos |
-| Estado local | `localStorage` para el trabajo de la administradora |
-| Nube | Supabase Auth/PostgreSQL: `productos`, `ajustes_tienda`, `backups`, `push_tokens` y `user_roles` |
-| Captura asistida | Groq con transcripción, interpretación y análisis de fotografías; confirmación humana |
-| Distribución | Web con servidor y Android **beta** mediante Trusted Web Activity |
+| Pieza            | Implementación                                                                                   |
+| ---------------- | ------------------------------------------------------------------------------------------------ |
+| Interfaz         | React 19, TypeScript, TanStack Start, Vite y Tailwind CSS                                        |
+| Reglas           | `src/lib/store.ts`, proyección de Boutique y lógica de movimientos                               |
+| Estado local     | `localStorage` para el trabajo de la administradora                                              |
+| Nube             | Supabase Auth/PostgreSQL: `productos`, `ajustes_tienda`, `backups`, `push_tokens` y `user_roles` |
+| Captura asistida | Groq con transcripción, interpretación y análisis de fotografías; confirmación humana            |
+| Distribución     | Web con servidor y Android **beta** mediante Trusted Web Activity                                |
 
 <details>
 <summary><strong>Explorar el mapa de arquitectura</strong></summary>
@@ -137,12 +137,12 @@ La ejecución local requiere configurar el proveedor de autenticación y Supabas
 
 ## Para seguir leyendo
 
-| Si buscas… | Comienza aquí |
-| --- | --- |
-| **Conocer la idea y cómo usarla** | [General](docs/general/01-origen-y-proposito.md) → [Funciones y límites](docs/general/02-alcance-y-funciones.md) |
-| **Entender cómo está construida** | [Arquitectura](docs/tecnica/01-arquitectura.md) → [Persistencia](docs/tecnica/03-persistencia-y-sincronizacion.md) |
-| **Revisar o continuar el desarrollo** | [Pruebas](docs/desarrollo/03-pruebas-y-limitaciones.md) → [Evolución](docs/desarrollo/04-evolucion.md) |
-| **Revisar autoría y permisos** | [Licencias y recursos](docs/desarrollo/05-licencias-y-recursos.md) · [LICENSING.md](LICENSING.md) |
+| Si buscas…                            | Comienza aquí                                                                                                      |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| **Conocer la idea y cómo usarla**     | [General](docs/general/01-origen-y-proposito.md) → [Funciones y límites](docs/general/02-alcance-y-funciones.md)   |
+| **Entender cómo está construida**     | [Arquitectura](docs/tecnica/01-arquitectura.md) → [Persistencia](docs/tecnica/03-persistencia-y-sincronizacion.md) |
+| **Revisar o continuar el desarrollo** | [Pruebas](docs/desarrollo/03-pruebas-y-limitaciones.md) → [Evolución](docs/desarrollo/04-evolucion.md)             |
+| **Revisar autoría y permisos**        | [Licencias y recursos](docs/desarrollo/05-licencias-y-recursos.md) · [LICENSING.md](LICENSING.md)                  |
 
 [**Índice completo y rutas de lectura**](docs/README.md) · [**Identidad de PaMaRa AyN**](branding/README.md)
 

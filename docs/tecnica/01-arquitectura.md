@@ -4,7 +4,7 @@
 
 PaMaRa Bodega combina **administración privada y catálogo público**, pero no los guarda de la misma forma. El modelo técnico actual tiene **tablas compartidas de productos y precios**, un **respaldo JSON por cuenta** para el resto del estado y una **copia local** para la experiencia en el dispositivo.
 
-> **Alcance de esta auditoría:** los diagramas representan código y migraciones del repositorio. No prueban por sí solos que los permisos, credenciales y proveedores estén configurados del mismo modo en un entorno publicado.
+Los diagramas describen el código y las migraciones del repositorio. La puesta en marcha requiere configurar autenticación, permisos y servicios en el entorno de despliegue.
 
 ## C1 · Contexto del sistema
 
@@ -62,7 +62,7 @@ flowchart TB
     class PD,BK,ROLES,CAT,IA,CRON backend;
 ```
 
-**No confundir:**
+**Distribución de responsabilidades:**
 
 - La Boutique pública obtiene `data` de **`productos`**, restringidos por `en_boutique = true` y la política RLS; también lee `ajustes_tienda`. **No consulta el respaldo global más reciente.**
 - Bodega solicita sesión Google y rol **`admin`** a través de `AdminGate.tsx` y `has_role`. No usa un PIN local como autorización principal.
@@ -90,15 +90,15 @@ flowchart LR
     class ROOT,B,VOZ,SHOP module;
 ```
 
-| Componente | Código | Responsabilidad |
-| --- | --- | --- |
-| Entrada y autorización | [`__root.tsx`](../../src/routes/__root.tsx), [`AdminGate.tsx`](../../src/components/AdminGate.tsx) | Composición de rutas, sesión y rol administrador |
-| Estado operativo | [`store.ts`](../../src/lib/store.ts) | Fiados, abonos, stock, encargos y reglas de precios |
-| Inventario compartido | [`productosSync.ts`](../../src/lib/productosSync.ts) | Sincronizar productos/precios y recibir eventos Realtime |
-| Respaldo por cuenta | [`cloudSync.ts`](../../src/lib/cloudSync.ts) | Subir o restaurar snapshot JSON completo |
-| Boutique | [`boutique.functions.ts`](../../src/lib/boutique.functions.ts), [`boutique.ts`](../../src/lib/boutique.ts) | Lectura pública controlada, precio, filtros y mensaje de pedido |
-| Asistencia | [`ai.functions.ts`](../../src/lib/ai.functions.ts) | Audio, interpretación y visión mediante Groq |
-| Notificaciones | [`recordatorios.ts`](../../src/routes/api/public/jobs/recordatorios.ts) | Procesamiento programado y envío condicionado a FCM |
+| Componente             | Código                                                                                                     | Responsabilidad                                                 |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| Entrada y autorización | [`__root.tsx`](../../src/routes/__root.tsx), [`AdminGate.tsx`](../../src/components/AdminGate.tsx)         | Composición de rutas, sesión y rol administrador                |
+| Estado operativo       | [`store.ts`](../../src/lib/store.ts)                                                                       | Fiados, abonos, stock, encargos y reglas de precios             |
+| Inventario compartido  | [`productosSync.ts`](../../src/lib/productosSync.ts)                                                       | Sincronizar productos/precios y recibir eventos Realtime        |
+| Respaldo por cuenta    | [`cloudSync.ts`](../../src/lib/cloudSync.ts)                                                               | Subir o restaurar snapshot JSON completo                        |
+| Boutique               | [`boutique.functions.ts`](../../src/lib/boutique.functions.ts), [`boutique.ts`](../../src/lib/boutique.ts) | Lectura pública controlada, precio, filtros y mensaje de pedido |
+| Asistencia             | [`ai.functions.ts`](../../src/lib/ai.functions.ts)                                                         | Audio, interpretación y visión mediante Groq                    |
+| Notificaciones         | [`recordatorios.ts`](../../src/routes/api/public/jobs/recordatorios.ts)                                    | Procesamiento programado y envío condicionado a FCM             |
 
 ## C4 · Despliegue y distribución
 

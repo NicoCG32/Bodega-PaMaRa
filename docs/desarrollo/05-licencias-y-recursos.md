@@ -6,22 +6,22 @@
 
 **PaMaRa AyN** es el emprendimiento familiar al que sirve el sistema. **PaMaRa Bodega** es el software desarrollado para apoyar su operación. La **Boutique pública oficial** puede mostrar legítimamente la identidad del negocio y los productos publicados, pero sus visitantes **no obtienen permiso para reutilizar la marca, clonar la web ni distribuir el software**. La administración, los cobros, teléfonos y respaldos se mantienen restringidos. Que el código sea visible en GitHub no concede derechos adicionales sobre el nombre comercial, las fotografías ni los datos del negocio.
 
-`LICENSE` contiene ahora el aviso de **derechos reservados** propuesto para la versión que lo acompaña, porque la intención expresada es que el software original y la identidad sirvan exclusivamente al negocio familiar. `LICENSING.md` explica ese alcance. **La publicación anterior bajo PolyForm Noncommercial 1.0.0 no se borra ni se revoca retroactivamente**: sus permisos sobre copias obtenidas válidamente permanecen sujetos a aquellas condiciones.
+`LICENSE` contiene el aviso de **derechos reservados** para la versión que lo acompaña. `LICENSING.md` explica su alcance para el software y la identidad del negocio familiar. Las copias obtenidas válidamente de versiones anteriores bajo PolyForm Noncommercial 1.0.0 conservan los permisos de aquella licencia.
 
 ## Inventario de procedencia y comprobación
 
-| Elemento | Fuente comprobable | Estado documental |
-| --- | --- | --- |
-| Código y documentación originales | [Repositorio](../../README.md), [LICENSE](../../LICENSE) | Derechos reservados para esta versión; anteriores bajo PolyForm conservan las licencias concedidas |
-| Marca PaMaRa AyN | [Catálogo visual](../../branding/README.md) | **Uso reservado al negocio familiar**; titularidad formal e insumos externos por verificar |
-| Logos, monogramas, banners e iconos | [`branding/`](../../branding/README.md) | **No licenciados para reutilización por terceros**; proceso de creación, fuentes de partida y eventuales terceros aún por verificar |
-| Dependencias web | [`package.json`](../../package.json), `bun.lock` | Revisar avisos/condiciones de las dependencias incluidas en distribución |
-| Envoltorio Android | [`android/app/build.gradle`](../../android/app/build.gradle) | Incluye `androidbrowserhelper`; revisar licencia y avisos que apliquen a la APK |
-| Groq y modelos de IA | [`ai.functions.ts`](../../src/lib/ai.functions.ts) | Proveedor de servicios de captura e interpretación; revisar condiciones y tratamiento de información real |
-| Supabase, Google y Firebase | Código de auth, persistencia y push | Servicios externos: configuración, términos y permisos independientes |
-| Datos de productos y clientas | [`store.ts`](../../src/lib/store.ts), `backups` | No deben publicarse datos personales ni confundirse con código reutilizable |
+| Elemento                            | Fuente comprobable                                           | Estado documental                                                                                                                   |
+| ----------------------------------- | ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Código y documentación originales   | [Repositorio](../../README.md), [LICENSE](../../LICENSE)     | Derechos reservados para esta versión; anteriores bajo PolyForm conservan las licencias concedidas                                  |
+| Marca PaMaRa AyN                    | [Catálogo visual](../../branding/README.md)                  | **Uso reservado al negocio familiar**; titularidad formal e insumos externos por verificar                                          |
+| Logos, monogramas, banners e iconos | [`branding/`](../../branding/README.md)                      | **No licenciados para reutilización por terceros**; proceso de creación, fuentes de partida y eventuales terceros aún por verificar |
+| Dependencias web                    | [`package.json`](../../package.json), `bun.lock`             | Revisar avisos/condiciones de las dependencias incluidas en distribución                                                            |
+| Envoltorio Android                  | [`android/app/build.gradle`](../../android/app/build.gradle) | Incluye `androidbrowserhelper`; revisar licencia y avisos que apliquen a la APK                                                     |
+| Groq y modelos de IA                | [`ai.functions.ts`](../../src/lib/ai.functions.ts)           | Proveedor de servicios de captura e interpretación; revisar condiciones y tratamiento de información real                           |
+| Supabase, Google y Firebase         | Código de auth, persistencia y push                          | Servicios externos: configuración, términos y permisos independientes                                                               |
+| Datos de productos y clientas       | [`store.ts`](../../src/lib/store.ts), `backups`              | No deben publicarse datos personales ni confundirse con código reutilizable                                                         |
 
-El [NOTICE](../../NOTICE) contiene dos líneas `Required Notice:` del proyecto. **No demuestra que las atribuciones de terceros estén completas**. Añadir una lista inventada sería menos fiable que registrar lo que aún falta comprobar.
+El [NOTICE](../../NOTICE) contiene dos líneas `Required Notice:` del proyecto. El inventario de atribuciones debe completarse con los avisos de los componentes de terceros efectivamente distribuidos.
 
 ## Pendientes para cerrar la atribución
 
