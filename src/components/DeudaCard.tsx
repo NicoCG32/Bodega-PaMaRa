@@ -92,18 +92,18 @@ export function DeudaCard({ d }: { d: Deuda }) {
         </div>
       )}
       {s > 0 && (
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3">
           <button
             onClick={wsp}
             className="flex h-14 items-center justify-center gap-2 rounded-2xl bg-whatsapp text-lg font-bold text-success-foreground"
           >
-            <MessageCircle /> Recordar
+            <MessageCircle /> Cobrar por WhatsApp
           </button>
           <button
             onClick={() => setAbrir((v) => !v)}
             className="h-14 rounded-2xl bg-primary text-lg font-bold text-primary-foreground"
           >
-            Me pagó
+            💵 Me pagó
           </button>
         </div>
       )}
