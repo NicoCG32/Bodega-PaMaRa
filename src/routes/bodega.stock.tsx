@@ -154,10 +154,12 @@ function Catalogo() {
       {seccion === "repisas" && (
         <>
           <div className="grid grid-cols-2 gap-2">
-            {([
-              ["casa", "🏠 Tengo en la casa", productos.filter((x) => x.stock > 0).length],
-              ["acabo", "📋 Se me acabó", productos.filter((x) => x.stock <= 0).length],
-            ] as const).map(([k, label, n]) => (
+            {(
+              [
+                ["casa", "🏠 Tengo en la casa", productos.filter((x) => x.stock > 0).length],
+                ["acabo", "📋 Se me acabó", productos.filter((x) => x.stock <= 0).length],
+              ] as const
+            ).map(([k, label, n]) => (
               <button
                 key={k}
                 onClick={() => setVista(k)}
@@ -201,7 +203,6 @@ function Catalogo() {
             </div>
           )}
 
-
           {nuevo ? (
             <Editor tipo={tipo} onClose={() => setNuevo(false)} />
           ) : (
@@ -215,7 +216,11 @@ function Catalogo() {
 
           {lista.length === 0 && (
             <p className="py-6 text-center text-lg text-muted-foreground">
-              {buscar.trim() ? "No encontré nada con ese nombre." : vista === "casa" ? "No tienes nada aquí en la casa." : "¡No se te ha acabado nada!"}
+              {buscar.trim()
+                ? "No encontré nada con ese nombre."
+                : vista === "casa"
+                  ? "No tienes nada aquí en la casa."
+                  : "¡No se te ha acabado nada!"}
             </p>
           )}
           <ul className="space-y-3">
@@ -248,7 +253,9 @@ function Tarjeta({ p }: { p: Producto }) {
       <button onClick={() => setAbierta(!abierta)} className="w-full text-left">
         <div className="flex items-start justify-between gap-2">
           <p className="min-w-0 truncate text-3xl font-extrabold">{titulo(p)}</p>
-          <span className={`shrink-0 rounded-full px-3 py-1 text-sm font-bold ${remate ? "bg-accent text-accent-foreground" : p.stock > 0 ? "bg-success text-success-foreground" : "bg-secondary text-muted-foreground"}`}>
+          <span
+            className={`shrink-0 rounded-full px-3 py-1 text-sm font-bold ${remate ? "bg-accent text-accent-foreground" : p.stock > 0 ? "bg-success text-success-foreground" : "bg-secondary text-muted-foreground"}`}
+          >
             {remate ? "🔥 Rematar" : p.stock > 0 ? "En la casa" : "Para encargar"}
           </span>
         </div>
@@ -266,7 +273,9 @@ function Tarjeta({ p }: { p: Producto }) {
         </button>
         <div className="flex-1 text-center">
           <p className="text-3xl font-extrabold leading-none">{p.stock > 0 ? p.stock : 0}</p>
-          <p className="text-base font-bold text-muted-foreground">{p.stock === 1 ? "te queda" : p.stock > 0 ? "te quedan" : "se acabó"}</p>
+          <p className="text-base font-bold text-muted-foreground">
+            {p.stock === 1 ? "te queda" : p.stock > 0 ? "te quedan" : "se acabó"}
+          </p>
         </div>
         <button
           onClick={() => actions.ajustarStock(p.codigo, 1)}
@@ -276,13 +285,18 @@ function Tarjeta({ p }: { p: Producto }) {
           <Plus className="size-8" />
         </button>
       </div>
-      <button onClick={() => setAbierta(!abierta)} className="mt-2 min-h-11 w-full rounded-2xl text-base font-bold text-muted-foreground">
+      <button
+        onClick={() => setAbierta(!abierta)}
+        className="mt-2 min-h-11 w-full rounded-2xl text-base font-bold text-muted-foreground"
+      >
         {abierta ? "▲ Cerrar" : "▼ Más opciones (precio, anuncio)"}
       </button>
       {abierta && (
         <div className="mt-3 space-y-2 border-t border-border pt-3">
           {p.stock > 0 && (
-            <p className={`rounded-2xl px-3 py-2 font-bold ${remate ? "bg-accent text-accent-foreground" : "bg-secondary"}`}>
+            <p
+              className={`rounded-2xl px-3 py-2 font-bold ${remate ? "bg-accent text-accent-foreground" : "bg-secondary"}`}
+            >
               {remate
                 ? `${dias} días sin venderse: se ofrece en liquidación`
                 : `${dias === 0 ? "Llegó hoy" : `${dias} días en repisa`}`}
@@ -314,7 +328,9 @@ function Tarjeta({ p }: { p: Producto }) {
               📣 Crear anuncio de Facebook
             </button>
           )}
-          {anuncio && <PanelAnuncio texto={anuncioIndividual(p)} onClose={() => setAnuncio(false)} />}
+          {anuncio && (
+            <PanelAnuncio texto={anuncioIndividual(p)} onClose={() => setAnuncio(false)} />
+          )}
         </div>
       )}
     </li>

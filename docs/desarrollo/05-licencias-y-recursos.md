@@ -1,0 +1,34 @@
+# Licencias y recursos · PaMaRa Bodega
+
+[← Documentación](../README.md) · [Licensing](../../LICENSING.md) · [LICENSE](../../LICENSE) · [NOTICE](../../NOTICE)
+
+## Dos ámbitos que no deben confundirse
+
+**PaMaRa AyN** es el emprendimiento familiar al que sirve el sistema. **PaMaRa Bodega** es el software desarrollado para apoyar su operación. La **Boutique pública oficial** puede mostrar legítimamente la identidad del negocio y los productos publicados, pero sus visitantes **no obtienen permiso para reutilizar la marca, clonar la web ni distribuir el software**. La administración, los cobros, teléfonos y respaldos se mantienen restringidos. Que el código sea visible en GitHub no concede derechos adicionales sobre el nombre comercial, las fotografías ni los datos del negocio.
+
+`LICENSE` contiene el aviso de **derechos reservados** para la versión que lo acompaña. `LICENSING.md` explica su alcance para el software y la identidad del negocio familiar. Las copias obtenidas válidamente de versiones anteriores bajo PolyForm Noncommercial 1.0.0 conservan los permisos de aquella licencia.
+
+## Inventario de procedencia y comprobación
+
+| Elemento                            | Fuente comprobable                                           | Estado documental                                                                                                                   |
+| ----------------------------------- | ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Código y documentación originales   | [Repositorio](../../README.md), [LICENSE](../../LICENSE)     | Derechos reservados para esta versión; anteriores bajo PolyForm conservan las licencias concedidas                                  |
+| Marca PaMaRa AyN                    | [Catálogo visual](../../branding/README.md)                  | **Uso reservado al negocio familiar**; titularidad formal e insumos externos por verificar                                          |
+| Logos, monogramas, banners e iconos | [`branding/`](../../branding/README.md)                      | **No licenciados para reutilización por terceros**; proceso de creación, fuentes de partida y eventuales terceros aún por verificar |
+| Dependencias web                    | [`package.json`](../../package.json), `bun.lock`             | Revisar avisos/condiciones de las dependencias incluidas en distribución                                                            |
+| Envoltorio Android                  | [`android/app/build.gradle`](../../android/app/build.gradle) | Incluye `androidbrowserhelper`; revisar licencia y avisos que apliquen a la APK                                                     |
+| Groq y modelos de IA                | [`ai.functions.ts`](../../src/lib/ai.functions.ts)           | Proveedor de servicios de captura e interpretación; revisar condiciones y tratamiento de información real                           |
+| Supabase, Google y Firebase         | Código de auth, persistencia y push                          | Servicios externos: configuración, términos y permisos independientes                                                               |
+| Datos de productos y clientas       | [`store.ts`](../../src/lib/store.ts), `backups`              | No deben publicarse datos personales ni confundirse con código reutilizable                                                         |
+
+El [NOTICE](../../NOTICE) contiene dos líneas `Required Notice:` del proyecto. El inventario de atribuciones debe completarse con los avisos de los componentes de terceros efectivamente distribuidos.
+
+## Pendientes para cerrar la atribución
+
+1. Confirmar quién es titular de la identidad **PaMaRa AyN** y qué permisos se permiten sobre el logo y la marca en proyectos derivados.
+2. Registrar el origen de cada familia visual (creación propia, generación con IA dirigida, adaptación de un recurso previo u otro caso), sin presuponer que todas las imágenes tienen el mismo origen.
+3. Inspeccionar las dependencias efectivamente distribuidas en el bundle web y la APK y conservar sus avisos cuando sea obligatorio.
+4. Verificar las condiciones de los servicios externos; una clave API o un conector disponible **no** implica autorización ilimitada de reutilización.
+5. Mantener fuera de documentación pública los contactos de clientas, deudas, respaldos reales y otros datos sensibles.
+
+**Decisión acordada:** Boutique pública y consultable sin cuenta; Bodega y datos administrativos restringidos a la familia. El código y los recursos originales no se ofrecen como plantilla reutilizable; la identidad se exhibe solo para identificar el negocio. Los permisos anteriores no se retiran retroactivamente. El repositorio **todavía es público**, aunque se desea hacerlo privado; la Boutique **debe seguir pública** cuando se cambie su visibilidad. Este cambio documental no modifica configuraciones de GitHub ni del alojamiento.

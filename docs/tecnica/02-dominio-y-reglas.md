@@ -1,6 +1,6 @@
 # Dominio y reglas de negocio
 
-El núcleo de PaMaRa Bodega es el `State` de [`src/lib/store.ts`](../../src/lib/store.ts). Las entidades de este capítulo son **objetos del estado local**, no tablas PostgreSQL individuales. El dominio nace de operaciones concretas: recibir mercadería, vender fiado, abonar, entregar un encargo y consultar disponibilidad.
+El núcleo de PaMaRa Bodega es el `State` de [`src/lib/store.ts`](../../src/lib/store.ts). Las entidades de este capítulo son **objetos del estado local**, no un esquema SQL físico. Sin embargo, productos y precios **también** existen en las tablas reales `productos` y `ajustes_tienda`; cobros, encargos y teléfonos se respaldan en `backups.data`. El dominio nace de operaciones concretas: recibir mercadería, vender fiado, abonar, entregar un encargo y consultar disponibilidad.
 
 ## Modelo de dominio
 
@@ -65,12 +65,12 @@ erDiagram
 | Existencias        | `ajustarStock()` aplica `max(0, stock + delta)`. Una entrada registra `fechaIngreso` en ciertos casos; una salida registra `ultimaVenta`. |
 | Reposición         | Producto sin stock con encargo pendiente o venta registrada dentro de los 30 días previos.                                                |
 | Liquidación        | Stock positivo y 30 días o más sin movimiento según fechas disponibles.                                                                   |
-| Precio propio      | `p.precio                                                                                                                                 |     | precioGeneral`; un valor 0 entra al precio general. |
+| Precio propio      | `p.precio                                                                                                                                 |     | cfg.base`; si el precio del producto es 0 se aplica el precio base. |
 | Estado sin stock   | Precio base + recargo por encargo.                                                                                                        |
 | Estado liquidación | `max(0, base - cfg.descuentoRemate)`.                                                                                                     |
 | Estado normal      | Precio base sin ajuste.                                                                                                                   |
 
-Los valores iniciales son **$15.000 CLP** (base), **+$2.000** (encargo) y **−$3.000** (liquidación). Se pueden cambiar desde Ajustes.
+Los valores iniciales son **$15.000 CLP** (base), **+$2.000** (encargo) y **−$3.000** (liquidación). Se pueden cambiar desde Ajustes y, con sesión de administradora, sincronizar en `ajustes_tienda`.
 
 ## Estado calculado de un producto
 
@@ -117,5 +117,7 @@ El saldo determina si una deuda está pendiente o saldada. El encargo conserva e
 - `upsertProducto()` reemplaza el objeto completo que coincide en código; un formulario debe preservar campos opcionales para no perder opciones como `enBoutique`.
 - `uid()` genera identificadores locales con `Math.random()`.
 - Los días se calculan usando `hoy()` con fecha derivada de `toISOString()` (UTC); probar el límite de día según hora de Chile.
+
+Los productos y precios se sincronizan desde `productosSync.ts` a tablas SQL; la representación de `State` no debe confundirse con la persistencia física.
 
 [IA y confirmación](04-captura-e-ia.md) · [Persistencia real](03-persistencia-y-sincronizacion.md)

@@ -1,6 +1,12 @@
 # Identidad visual de PaMaRa Bodega
 
-Este catálogo reúne los originales y variantes de la identidad. Las dimensiones indican el lienzo del archivo: en SVG son unidades vectoriales; en PNG, WebP y JPG son píxeles.
+Este catálogo reúne originales y variantes de la **identidad de PaMaRa AyN**, el negocio familiar al que sirve PaMaRa Bodega. **PaMaRa** es el nombre principal y **AyN** debe conservarse escrito así, sin sustituirlo por «&».
+
+**Identidad reservada para el negocio familiar.** El nombre, los logotipos, monogramas, banners e iconografía de **PaMaRa AyN** pueden aparecer en la **Boutique pública oficial** para que los clientes reconozcan el negocio, pero no se ofrecen como recursos gráficos de uso libre ni como marca que otros puedan reutilizar. Su inclusión en el repositorio sirve para documentar la aplicación y el negocio. Cualquier uso ajeno requiere autorización de los titulares pertinentes, y los insumos de terceros conservan sus condiciones.
+
+La identidad de la marca y el código del software tienen ámbitos distintos. La procedencia de los gráficos se registra con las limitaciones conocidas en [Licencias y recursos](../docs/desarrollo/05-licencias-y-recursos.md).
+
+Las dimensiones indican el lienzo del archivo: en SVG son unidades vectoriales; en PNG, WebP y JPG son píxeles.
 
 - [Banner claro](banners/PaMaRa_AyN_banner_claro.png) · [Banner oscuro](banners/PaMaRa_AyN_banner_oscuro.png).
 - Utiliza logos horizontales en cabeceras, isotipos en espacios compactos y banners en presentaciones. Conserva la proporción y deja espacio alrededor de la marca.

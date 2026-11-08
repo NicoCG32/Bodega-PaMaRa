@@ -9,7 +9,10 @@ export const Route = createFileRoute("/bodega/")({
   head: () => ({
     meta: [
       { title: "PaMaRa Vault · ¿Qué pasó recién?" },
-      { name: "description", content: "Anota ventas, fiados y mercadería de PaMaRa AyN en un toque." },
+      {
+        name: "description",
+        content: "Anota ventas, fiados y mercadería de PaMaRa AyN en un toque.",
+      },
       { property: "og:title", content: "PaMaRa Vault · ¿Qué pasó recién?" },
       { property: "og:description", content: "Anota ventas, fiados y mercadería en un toque." },
       { property: "og:type", content: "website" },
@@ -22,9 +25,24 @@ export const Route = createFileRoute("/bodega/")({
 type Paso = null | "venta" | "fiado" | "mercaderia";
 
 const ACCIONES = [
-  { id: "venta", icon: ShoppingBag, titulo: "Hice una venta", ayuda: "Ej: “Vendí H-17 a María, pagó todo”" },
-  { id: "fiado", icon: HandCoins, titulo: "Fiado o abono", ayuda: "Ej: “Ana llevó M-02, abonó 5 mil”" },
-  { id: "mercaderia", icon: PackagePlus, titulo: "Llegó mercadería", ayuda: "Ej: “H-15, H-15, M-02”" },
+  {
+    id: "venta",
+    icon: ShoppingBag,
+    titulo: "Hice una venta",
+    ayuda: "Ej: “Vendí H-17 a María, pagó todo”",
+  },
+  {
+    id: "fiado",
+    icon: HandCoins,
+    titulo: "Fiado o abono",
+    ayuda: "Ej: “Ana llevó M-02, abonó 5 mil”",
+  },
+  {
+    id: "mercaderia",
+    icon: PackagePlus,
+    titulo: "Llegó mercadería",
+    ayuda: "Ej: “H-15, H-15, M-02”",
+  },
 ] as const;
 
 function Index() {

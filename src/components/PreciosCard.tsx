@@ -4,14 +4,24 @@ import { actions, clp, PRECIOS_INICIALES, useStore, type Precios } from "@/lib/s
 
 const CAMPOS: { k: keyof Precios; label: string; ayuda: string }[] = [
   { k: "base", label: "Precio general", ayuda: "Para productos sin precio propio" },
-  { k: "recargoEncargo", label: "Recargo por encargo (+)", ayuda: "Se suma cuando no hay en repisa" },
-  { k: "descuentoRemate", label: "Descuento de liquidación (−)", ayuda: "Se resta tras 30 días sin venderse" },
+  {
+    k: "recargoEncargo",
+    label: "Recargo por encargo (+)",
+    ayuda: "Se suma cuando no hay en repisa",
+  },
+  {
+    k: "descuentoRemate",
+    label: "Descuento de liquidación (−)",
+    ayuda: "Se resta tras 30 días sin venderse",
+  },
 ];
 
 export function PreciosCard() {
   const { precios } = useStore();
   const actual = precios ?? PRECIOS_INICIALES;
-  const [v, setV] = useState(() => Object.fromEntries(CAMPOS.map((c) => [c.k, String(actual[c.k])])));
+  const [v, setV] = useState(() =>
+    Object.fromEntries(CAMPOS.map((c) => [c.k, String(actual[c.k])])),
+  );
   const num = (k: keyof Precios) => parseInt((v[k] ?? "").replace(/\D/g, "")) || 0;
   const base = num("base");
   return (
@@ -45,7 +55,11 @@ export function PreciosCard() {
       </div>
       <button
         onClick={() => {
-          actions.setPrecios({ base, recargoEncargo: num("recargoEncargo"), descuentoRemate: num("descuentoRemate") });
+          actions.setPrecios({
+            base,
+            recargoEncargo: num("recargoEncargo"),
+            descuentoRemate: num("descuentoRemate"),
+          });
           toast.success("Precios guardados 💛");
         }}
         className="h-14 w-full rounded-2xl bg-primary text-lg font-bold text-primary-foreground"

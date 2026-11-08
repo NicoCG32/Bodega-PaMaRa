@@ -1,53 +1,71 @@
-# Boutique y acceso a datos
+# Boutique · visibilidad, roles y límites de seguridad
 
-La ruta `/` muestra la Boutique pública. Las pantallas de gestión se agrupan en Vault mediante `AppShell` y `AdminGate`, definidos en [`__root.tsx`](../../src/routes/__root.tsx). La aplicación instalada abre `/vault`.
+[← Técnica](../README.md) · [Arquitectura](01-arquitectura.md) · [Persistencia](03-persistencia-y-sincronizacion.md)
 
-## Consulta del catálogo
+La **Boutique** es pública **para cualquier visitante sin cuenta**, mientras que la **Bodega** administra inventario y cobros exclusivamente con una sesión familiar autorizada. La separación actual se basa en **Supabase Auth + rol `admin` + políticas RLS**, no en una contraseña fija de la interfaz. Un repositorio GitHub privado no reemplaza esos controles: el sitio público sigue entregando JavaScript al navegador.
 
-[`catalogoPublico`](../../src/lib/boutique.functions.ts) se ejecuta en el servidor con `supabaseAdmin`. Lee la fila de `backups` con la fecha `updated_at` más reciente y pasa sus productos y precios a [`aPublico()`](../../src/lib/boutique.ts).
+## Qué ocurre al consultar un producto
 
 ```mermaid
 sequenceDiagram
-  participant V as Visitante
-  participant W as Boutique web
-  participant F as catalogoPublico servidor
-  participant DB as Supabase backups
-  V->>W: Abrir /
-  W->>F: Solicitar catalogo GET
-  F->>DB: SELECT data ORDER BY updated_at DESC LIMIT 1
-  DB-->>F: Snapshot mas reciente
-  F->>F: Filtrar productos visibles y calcular precios
-  F-->>W: Items publicos sin deudas ni telefonos
-  W-->>V: Catalogo y bolsa
-  V->>W: Elegir comuna y enviar pedido
-  W-->>V: Abrir WhatsApp con mensaje preparado
+    autonumber
+    actor C as Persona visitante
+    participant UI as Boutique /
+    participant API as catalogoPublico()
+    participant DB as Supabase productos
+    participant PRICE as ajustes_tienda
+    C->>UI: Visita la Boutique
+    UI->>API: GET catálogo
+    API->>DB: SELECT data WHERE en_boutique = true
+    API->>PRICE: SELECT precios
+    DB-->>API: Filas públicas permitidas por RLS
+    PRICE-->>API: Montos generales
+    API->>API: aPublico(): datos y precio derivado
+    API-->>UI: Código, nombre, stock, precio y descripción
+    UI-->>C: Mostrar catálogo y bolsa
+    C->>UI: Abrir WhatsApp
 ```
 
-La consulta actual selecciona el último respaldo global, sin filtrar por propietario. El uso con varias cuentas requiere vincular el catálogo a la cuenta del negocio; las consultas del cliente privilegiado omiten las políticas RLS.
+[`catalogoPublico()`](../../src/lib/boutique.functions.ts) usa una **clave publicable de Supabase** en una función de servidor, no `supabaseAdmin`. Esto hace relevantes las políticas RLS de `productos` y `ajustes_tienda`.
 
-## Información visible
+### Lo visible y lo privado
 
-`ItemPublico` contiene código, nombre, inspiración, versión, categoría, precio calculado, cantidad de stock, tipo y estado. La respuesta excluye deudas, cuotas, abonos y teléfonos.
+| Información                                                    | Boutique                          | Bodega / respaldo                             |
+| -------------------------------------------------------------- | --------------------------------- | --------------------------------------------- |
+| Código, nombre, categoría, inspiración, precio derivado, stock | Visible para productos publicados | Editable por administradora                   |
+| Precio general de la tienda                                    | Usado en cálculo público          | Editable por administradora                   |
+| Nombre de cliente, deuda, abono, cuota, teléfono               | **No aparece en `ItemPublico`**   | Forma parte de `State` y de `backups`         |
+| Pedidos enviados por WhatsApp                                  | Mensaje fuera de la web           | Se registran manualmente como encargo o venta |
 
-Un producto aparece salvo que `enBoutique === false`, siempre que tenga stock o datos descriptivos. Los productos nuevos pueden mostrarse por defecto después del respaldo; la administradora puede cambiar su visibilidad desde Bodega.
+Los productos se publican por defecto si no están marcados `enBoutique === false` y cumplen el filtro de `aPublico()`. El control de visibilidad existe en la pantalla de stock; conviene comprobarlo antes de agregar un artículo nuevo.
 
-La bolsa prepara un mensaje de WhatsApp con los productos, el total y la comuna. Las comunas disponibles son La Serena, Coquimbo, Calama y Otra. La consulta se coordina con la tienda y se registra por separado en Vault.
+## Administración y primera cuenta
 
-## Controles de acceso
+1. La ruta `/bodega/*` usa `AdminGate`, que solicita iniciar sesión con Google y consulta `esAdmin()`.
+2. `esAdmin()` llama a `has_role` con el usuario autenticado. Las operaciones de escritura en `productos` y `ajustes_tienda` se restringen además mediante RLS.
+3. La migración `0001_productos_y_admin.sql` instala `primera_admin()`, que asigna el rol al **primer usuario creado cuando aún no existe un admin**. La instalación debe verificar que esa primera cuenta sea la prevista antes de habilitar registros.
+4. Los respaldos y tokens push tienen RLS ligado a `auth.uid() = user_id`.
 
-| Capa                    | Responsabilidad                                                                                                                     |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| PIN de Vault            | Control local de acceso a las pantallas; se guarda en `localStorage`.                                                               |
-| Google y Supabase Auth  | Sesión de la cuenta utilizada para respaldos y tokens push.                                                                         |
-| Políticas RLS           | Restringen las filas de `backups` y `push_tokens` al usuario autenticado.                                                           |
-| Proyección `aPublico()` | Selecciona los campos de producto que devuelve el catálogo.                                                                         |
-| Cliente `supabaseAdmin` | Acceso privilegiado exclusivo del servidor para catálogo y recordatorios.                                                           |
-| Funciones de IA         | Mantienen la clave de Groq en el servidor y validan el formato de entrada y respuesta; actualmente no aplican middleware de sesión. |
+```mermaid
+flowchart TD
+    A["Abrir /bodega"] --> B{"¿Sesión Google?"}
+    B -->|No| C["Solicitar ingreso"]
+    B -->|Sí| D{"¿Rol admin en Supabase?"}
+    D -->|No| E["Acceso no autorizado"]
+    D -->|Sí| F["Mostrar gestión"]
+    F --> G["Operaciones en tablas<br/>también protegidas con RLS"]
+```
 
-El PIN controla la interfaz del dispositivo y no sustituye la autorización del servidor. El soporte de varios usuarios requiere definir permisos para cada función, propietario del catálogo y límites de consumo de IA.
+La protección de la interfaz no es suficiente por sí sola: los permisos del servidor y la base deben comprobarse con distintos roles y peticiones directas.
 
-## Manejo de datos privados
+## Seguridad pendiente de validar
 
-Los respaldos incluyen nombres, cobros y teléfonos. Usa datos ficticios en pruebas y ejemplos; mantén las copias reales y las credenciales fuera del repositorio. Revisa el contenido de las notificaciones que pueda aparecer en la pantalla bloqueada.
+- **Bootstrap de admin:** comprobar que la cuenta propietaria sea asignada de forma deliberada y revisar cómo se recupera o revoca su rol. No se presume verificado el estado de la instancia desplegada.
+- **Datos públicos:** inspeccionar la respuesta real de `catalogoPublico()` y las reglas de `productos.data` con un usuario sin sesión.
+- **Privacidad:** evitar que un respaldo completo con nombres o teléfonos se registre en logs, notificaciones o datos de ejemplo.
+- **Asistencia Groq:** las funciones de `ai.functions.ts` validan entradas, pero no se observa un middleware de sesión en esas rutas. Revisar autorización, cuotas y exposición de datos antes de publicar un servicio abierto.
+- **Multidispositivo:** validar que una edición no sobrescriba otra al recibir Realtime o restaurar el snapshot.
 
-[Persistencia y RLS](03-persistencia-y-sincronizacion.md) · [Próximos pasos](../desarrollo/04-evolucion.md)
+Estas comprobaciones se realizan en un entorno de prueba con cuentas y datos ficticios.
+
+[Datos y RLS](03-persistencia-y-sincronizacion.md) · [Pruebas pendientes](../desarrollo/03-pruebas-y-limitaciones.md) · [Migración de roles](../../drizzle/migrations/0001_productos_y_admin.sql).

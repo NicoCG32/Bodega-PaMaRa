@@ -4,13 +4,13 @@ He ido acercando PaMaRa Bodega a las tareas que se repiten en el negocio de mi m
 
 ## Etapas del proyecto
 
-| Etapa        | Alcance                                                              |
-| ------------ | -------------------------------------------------------------------- |
-| Registro     | Captura por texto y voz, fiados, abonos, cuotas y encargos.          |
-| Bodega       | Productos por código, conteo por voz o foto y precios configurables. |
-| Continuidad  | Respaldo por cuenta y recuperación del estado.                       |
-| Boutique     | Consulta pública de productos y preparación de pedidos por WhatsApp. |
-| Distribución | Aplicación web y APK Android beta.                                   |
+| Etapa        | Alcance                                                                      |
+| ------------ | ---------------------------------------------------------------------------- |
+| Registro     | Captura por texto y voz, fiados, abonos, cuotas y encargos.                  |
+| Bodega       | Productos por código, conteo por voz o foto y precios configurables.         |
+| Continuidad  | Respaldo JSON por cuenta y sincronización compartida de productos y precios. |
+| Boutique     | Consulta pública de productos y preparación de pedidos por WhatsApp.         |
+| Distribución | Aplicación web y APK Android beta.                                           |
 
 ## Cómo trabajo los cambios
 
@@ -22,8 +22,9 @@ He ido acercando PaMaRa Bodega a las tareas que se repiten en el negocio de mi m
 ## Prioridades
 
 - **Uso diario:** revisar con la administradora la captura, los abonos y las cantidades para reducir pasos y errores.
-- **Continuidad:** mejorar la recuperación y el manejo de cambios entre dispositivos.
-- **Catálogo:** conservar la visibilidad al editar productos y vincular la boutique a la cuenta del negocio.
+- **Continuidad:** validar conflictos entre respaldo JSON y tablas compartidas cuando se edita desde varios dispositivos.
+- **Catálogo:** comprobar reglas RLS y visibilidad de cada producto. La Boutique ya consulta las tablas `productos` y `ajustes_tienda`.
+- **Autorización:** revisar la inicialización del primer administrador y la recuperación de acceso antes de habilitar cuentas adicionales.
 - **Avisos y Android:** completar la configuración de web push y probar permisos, recepción y actualización en el teléfono.
 
 Después me interesa evaluar tarifas de entrega, pedidos estructurados o estadísticas según lo que necesite el negocio. El uso por varias tiendas requiere primero un modelo de cuentas, permisos y persistencia que lo soporte.
