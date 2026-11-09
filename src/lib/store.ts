@@ -17,6 +17,8 @@ export type Encargo = {
   codigo: string;
   nota: string;
   entregado: boolean;
+  /** Ya llegó a la casa y espera ser entregado. */
+  llego?: boolean;
   creada: string;
   /** Precio acordado (dictado o calculado). */
   precio?: number | undefined;
@@ -259,6 +261,12 @@ export const actions = {
       encargos: s.encargos.map((e) => (e.id === id ? { ...e, entregado: !e.entregado } : e)),
     }));
   },
+  marcarLlego(id: string, llego = true) {
+    set((s) => ({
+      ...s,
+      encargos: s.encargos.map((e) => (e.id === id ? { ...e, llego } : e)),
+    }));
+  },
   borrarEncargo(id: string) {
     set((s) => ({ ...s, encargos: s.encargos.filter((e) => e.id !== id) }));
   },
@@ -323,6 +331,12 @@ export function whatsappLink(
   const msg = `Hola ${cliente} 🌸, te saluda PaMaRa AyN. Te recuerdo con cariño tu pago de ${clp(monto)}${
     fecha ? ` comprometido para el ${fechaBonita(fecha)}` : ""
   }. ¡Muchas gracias por tu confianza! 💛`;
+  const num = (tel ?? "").replace(/\D/g, "");
+  return `https://wa.me/${num}?text=${encodeURIComponent(msg)}`;
+}
+
+export function avisoEncargoLink(tel: string | undefined, cliente: string, producto: string) {
+  const msg = `¡Hola ${cliente}! 🌸 Te aviso que ya me llegó tu encargo${producto ? ` del ${producto}` : ""} en PaMaRa AyN ✨ ¿Cuándo te lo entrego?`;
   const num = (tel ?? "").replace(/\D/g, "");
   return `https://wa.me/${num}?text=${encodeURIComponent(msg)}`;
 }
