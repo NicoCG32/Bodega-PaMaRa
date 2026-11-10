@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { DeudaCard } from "@/components/DeudaCard";
+import { AvisosCobro } from "@/components/AvisosCobro";
 import { clp, diasHasta, fechaBonita, proximaCuota, saldo, useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/bodega/cobros")({
@@ -51,6 +52,7 @@ function Cobros() {
   return (
     <div className="space-y-4">
       <h2 className="text-3xl font-semibold">Cobros</h2>
+      <AvisosCobro />
       <div className="grid grid-cols-2 gap-3">
         <div className="rounded-3xl bg-card p-4 shadow-soft">
           <p className="text-sm font-bold text-muted-foreground">🟢 Cobrado este mes</p>
