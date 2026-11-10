@@ -15,6 +15,13 @@
       "when": 1794071738628,
       "tag": "0001_productos_y_admin",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794276365561,
+      "tag": "0002_explicit_google_admin_access",
+      "breakpoints": true
     }
   ]
 }
