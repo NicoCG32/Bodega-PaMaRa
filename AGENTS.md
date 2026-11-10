@@ -11,7 +11,7 @@
 
 ## Project rules
 - Products and sale prices live in Cloud tables `productos` (one jsonb row per code) and `ajustes_tienda`, synced by `src/lib/productosSync.ts` for admin accounts; deudas/encargos/teléfonos stay in localStorage + `backups` snapshot via `src/lib/cloudSync.ts`. Why: the public Boutique must read real stock from any device.
-- Vault access = Google sign-in + `admin` row in `user_roles` (first account to sign in becomes admin by trigger), checked in `AdminGate`. Why: a device PIN was not real protection.
+- Vault access = Google sign-in + `admin` row in `user_roles`, checked in `AdminGate`; signup grants admin only to verified Google emails in the privileged `admin_access_emails` allowlist. Why: the first arbitrary visitor must never become admin, and approved testers can later coexist with the owner.
 - Push notifications: FCM via connector gateway in `src/routes/api/public/jobs/recordatorios.ts` (daily managed HTTP schedule 13:00 UTC), tokens in `push_tokens`, client registration in `src/lib/push.ts` + `public/firebase-messaging-sw.js`. Why: avisos must arrive with the app closed.
 - AI uses direct Groq calls only inside server functions in `src/lib/ai.functions.ts`; response schemas are validated before previewing a record. Why: keep provider credentials private and prevent malformed data from reaching registration.
 - Voice captures native recognition alongside recorded audio; `vozNativa.ts` returns available transcripts with a short native-ready grace period, and Groq interpretation reconciles them as alternate versions, never additive inventory. Why: retain native speech when Whisper is slow without late duplicate registrations.
