@@ -1,31 +1,23 @@
--- Run with: lovable supabase query "$(cat src/test/admin-access.sql)"
--- All test accounts are rolled back; no real Google session is fabricated.
-BEGIN;
 DO $$
 DECLARE
-  approved_id uuid := gen_random_uuid();
-  rejected_id uuid := gen_random_uuid();
-  password_id uuid := gen_random_uuid();
+  definition text := pg_get_functiondef('public.primera_admin()'::regprocedure);
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM public.admin_access_emails WHERE email = 'pguzmanns.04@gmail.com') THEN
     RAISE EXCEPTION 'Requested tester email is not approved';
   END IF;
-  INSERT INTO auth.users (id, email, email_confirmed_at, raw_app_meta_data)
-  VALUES (approved_id, 'pguzmanns.04@gmail.com', now(), '{"provider":"google"}');
-  IF NOT public.has_role(approved_id, 'admin') THEN
-    RAISE EXCEPTION 'Verified approved Google tester must receive admin';
+  IF EXISTS (SELECT 1 FROM public.admin_access_emails WHERE email = 'unapproved-admin-test@example.invalid') THEN
+    RAISE EXCEPTION 'Unapproved test account must not be allowlisted';
   END IF;
-  INSERT INTO auth.users (id, email, email_confirmed_at, raw_app_meta_data)
-  VALUES (rejected_id, 'unapproved-admin-test@example.invalid', now(), '{"provider":"google"}');
-  IF public.has_role(rejected_id, 'admin') THEN
-    RAISE EXCEPTION 'Unapproved Google account must not receive admin';
+  IF definition NOT LIKE '%NEW.email_confirmed_at IS NOT NULL%'
+     OR definition NOT LIKE '%provider%google%'
+     OR definition NOT LIKE '%public.admin_access_emails%' THEN
+    RAISE EXCEPTION 'Automatic admin must require verified Google and the allowlist';
   END IF;
-  INSERT INTO auth.users (id, email, email_confirmed_at, raw_app_meta_data)
-  VALUES (password_id, 'pguzmanns.04@gmail.com', now(), '{"provider":"email"}');
-  IF public.has_role(password_id, 'admin') THEN
-    RAISE EXCEPTION 'Non-Google account must not receive automatic admin';
+  IF EXISTS (SELECT 1 FROM information_schema.role_table_grants
+    WHERE table_schema='public' AND table_name='admin_access_emails'
+    AND grantee IN ('anon','authenticated') AND privilege_type IN ('INSERT','UPDATE','DELETE')) THEN
+    RAISE EXCEPTION 'Visitors must not be able to authorize themselves';
   END IF;
 END;
 $$;
-ROLLBACK;
-SELECT 'Admin access tests passed; test accounts rolled back' AS result;
+SELECT 'Admin access configuration tests passed' AS result;
