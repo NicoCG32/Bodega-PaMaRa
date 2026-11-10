@@ -300,8 +300,6 @@ function Boutique() {
           <p className="mt-2 text-center text-xs text-muted-foreground">
             Se abre WhatsApp con tu pedido listo. Solo tienes que enviarlo.
           </p>
-          <a hidden>
-          </a>
         </Hoja>
       )}
     </div>
