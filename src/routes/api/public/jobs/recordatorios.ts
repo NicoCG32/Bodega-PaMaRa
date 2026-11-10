@@ -70,17 +70,21 @@ export const Route = createFileRoute("/api/public/jobs/recordatorios")({
         ]);
 
         const hoy = hoyChile();
+        const manana = new Date(Date.parse(hoy + "T12:00:00Z") + 86400000).toISOString().slice(0, 10);
         const porUsuario = new Map<string, string[]>();
         for (const b of backups ?? []) {
           const deudas = ((b.data as BackupData) ?? {}).deudas ?? [];
           const pendientes = deudas
             .filter((d) => saldo(d) > 0)
             .map((d) => ({ d, c: proximaCuota(d) }))
-            .filter((x): x is { d: Deuda; c: Cuota } => !!x.c && x.c.fecha <= hoy);
+            .filter((x): x is { d: Deuda; c: Cuota } => !!x.c && x.c.fecha <= manana);
           if (pendientes.length) {
             porUsuario.set(
               b.user_id,
-              pendientes.map(({ d, c }) => `${d.cliente}: ${clp(Math.min(c.monto, saldo(d)))}`),
+              pendientes.map(({ d, c }) => {
+                const cuando = c.fecha < hoy ? "atrasada" : c.fecha === hoy ? "hoy" : "mañana";
+                return `${d.cliente} (${cuando}): ${clp(Math.min(c.monto, saldo(d)))}`;
+              }),
             );
           }
         }
