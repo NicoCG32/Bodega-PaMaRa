@@ -213,9 +213,11 @@ export function VoiceCapture() {
 
       {res && (
         <div className="space-y-4 rounded-3xl border-2 border-accent bg-card p-5 shadow-soft">
+          <p className="text-base font-bold uppercase tracking-wide text-primary">
+            {tipoLabel[res.tipo]}
+          </p>
+          <p className="text-3xl font-bold leading-tight">{frase(res)}</p>
           <p className="text-sm text-muted-foreground">Escuché: “{texto}”</p>
-          <h2 className="text-2xl font-semibold text-primary">{tipoLabel[res.tipo]}</h2>
-          <p className="text-lg">{res.resumen}</p>
           <dl className="grid grid-cols-2 gap-3 text-base">
             {res.cliente && <Dato k="Clienta/e" v={res.cliente} />}
             {res.codigo && <Dato k="Código" v={normCodigo(res.codigo)} />}
@@ -238,24 +240,46 @@ export function VoiceCapture() {
               ))}
             </ul>
           )}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid gap-3">
+            <button
+              onClick={guardar}
+              className="flex h-20 items-center justify-center gap-2 rounded-2xl bg-success text-2xl font-bold text-success-foreground"
+            >
+              <Check className="size-7" /> Sí, guardar
+            </button>
             <button
               onClick={() => setRes(null)}
               className="flex h-16 items-center justify-center gap-2 rounded-2xl border-2 border-border text-lg font-bold"
             >
               <X /> Corregir
             </button>
-            <button
-              onClick={guardar}
-              className="flex h-16 items-center justify-center gap-2 rounded-2xl bg-success text-lg font-bold text-success-foreground"
-            >
-              <Check /> Guardar
-            </button>
           </div>
         </div>
       )}
     </section>
   );
+}
+
+function frase(r: Interpretacion) {
+  const quien = r.cliente?.trim() || "Alguien";
+  const cod = r.codigo ? normCodigo(r.codigo) : "";
+  const monto = r.total != null ? clp(r.total) : "";
+  switch (r.tipo) {
+    case "abono":
+      return `${quien} te abonó ${monto || "dinero"}`;
+    case "fiado":
+      return `${quien} llevó ${cod || "un producto"} fiado${monto ? ` en ${monto}` : ""}`;
+    case "encargo":
+      return `${quien} te encargó ${cod || "un producto"}${monto ? ` en ${monto}` : ""}`;
+    case "stock": {
+      const n = r.cantidad ?? 1;
+      return n < 0
+        ? `Vendiste ${-n} ${-n === 1 ? "unidad" : "unidades"} de ${cod}`
+        : `Llegaron ${n} ${n === 1 ? "unidad" : "unidades"} de ${cod}`;
+    }
+    default:
+      return r.resumen;
+  }
 }
 
 function Dato({ k, v }: { k: string; v: string }) {

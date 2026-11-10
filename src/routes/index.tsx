@@ -105,6 +105,8 @@ function Boutique() {
             alt="PaMaRa AyN"
             width={1442}
             height={1442}
+            fetchPriority="high"
+            decoding="async"
             className="size-24 shrink-0 object-contain"
           />
           <span className="size-10" />
@@ -175,7 +177,7 @@ function Boutique() {
                     {i.inspiracion || i.nombre}
                   </h3>
                   {i.version && <p className="text-sm italic text-muted-foreground">{i.version}</p>}
-                  <p className="mt-2 font-bold text-primary">
+                  <p className="mt-2 text-xl font-extrabold text-primary">
                     {i.precio ? clp(i.precio) : "Consultar precio"}
                   </p>
                 </button>
@@ -291,10 +293,13 @@ function Boutique() {
             href={linkPedido(bolsa, comuna)}
             target="_blank"
             rel="noreferrer"
-            className="mt-4 block w-full rounded-full bg-primary py-4 text-center text-lg font-bold text-primary-foreground"
+            className="mt-4 block w-full rounded-full bg-success py-5 text-center text-xl font-bold text-success-foreground shadow-lg"
           >
             Pedir por WhatsApp
           </a>
+          <p className="mt-2 text-center text-xs text-muted-foreground">
+            Se abre WhatsApp con tu pedido listo. Solo tienes que enviarlo.
+          </p>
         </Hoja>
       )}
     </div>
