@@ -108,3 +108,15 @@ export function mensajePedido(b: Linea[], comuna: string) {
 export function linkPedido(b: Linea[], comuna: string) {
   return `https://wa.me/${TIENDA_WHATSAPP}?text=${encodeURIComponent(mensajePedido(b, comuna))}`;
 }
+
+export function mensajeConsulta(i: ItemPublico) {
+  const nombre = i.perfume
+    ? `el ${i.codigo}${i.inspiracion ? ` (Inspirado en ${i.inspiracion})` : ""}`
+    : i.nombre;
+  const disp = i.estado === "encargo" ? "¿Se puede encargar?" : "¿Lo tienes disponible para coordinar?";
+  return `Hola! Vi en tu vitrina ${nombre}. ${disp}`;
+}
+
+export function linkConsulta(i: ItemPublico) {
+  return `https://wa.me/${TIENDA_WHATSAPP}?text=${encodeURIComponent(mensajeConsulta(i))}`;
+}

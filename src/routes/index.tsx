@@ -1,20 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { Minus, Plus, ShoppingBag, X } from "lucide-react";
+import { X } from "lucide-react";
 import logo from "@/assets/pamara-logo.webp";
 import { catalogoPublico } from "@/lib/boutique.functions";
 import {
   badge,
-  COMUNAS,
   enColeccion,
-  linkPedido,
-  totalBolsa,
+  linkConsulta,
   type Coleccion,
   type Disponibilidad,
   ETIQUETA,
   type ItemPublico,
-  type Linea,
 } from "@/lib/boutique";
 import { clp } from "@/lib/store";
 
@@ -43,7 +40,7 @@ export const Route = createFileRoute("/")({
           "Perfumes de inspiración, cosmética y accesorios con entrega en La Serena, Coquimbo y Calama. Pide por WhatsApp.",
       },
       { property: "og:title", content: "PaMaRa Boutique" },
-      { property: "og:description", content: "Arma tu pedido y envíalo por WhatsApp en un toque." },
+      { property: "og:description", content: "Mira la vitrina y consulta por WhatsApp en un toque." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -59,9 +56,6 @@ const DISPONIBLE: { id: Disponibilidad; label: string }[] = [
   { id: "remate", label: "🔥 Liquidación" },
 ];
 
-const accion = (i: ItemPublico) =>
-  i.estado === "encargo" ? "Encargar" : i.estado === "remate" ? "Aprovechar" : "Agregar";
-
 const COLECCIONES: { id: Coleccion; label: string }[] = [
   { id: "todo", label: "Todo" },
   { id: "mujer", label: "Mujer" },
@@ -74,27 +68,11 @@ function Boutique() {
   const { data: items } = useSuspenseQuery(catalogoQuery);
   const [col, setCol] = useState<Coleccion>("todo");
   const [disp, setDisp] = useState<Disponibilidad>("todo");
-  const [bolsa, setBolsa] = useState<Linea[]>([]);
   const [ficha, setFicha] = useState<ItemPublico | null>(null);
-  const [abierta, setAbierta] = useState(false);
-  const [comuna, setComuna] = useState<string>(COMUNAS[0]);
 
   const visibles = items.filter(
     (i) => enColeccion(i, col) && (disp === "todo" || i.estado === disp),
   );
-  const unidades = bolsa.reduce((a, l) => a + l.cantidad, 0);
-
-  const cambiar = (item: ItemPublico, d: number) =>
-    setBolsa((b) => {
-      const l = b.find((x) => x.item.codigo === item.codigo);
-      if (!l) return d > 0 ? [...b, { item, cantidad: 1 }] : b;
-      const tope = item.estado === "encargo" ? 20 : item.stock;
-      const cantidad = Math.min(tope, l.cantidad + d);
-      return cantidad <= 0
-        ? b.filter((x) => x !== l)
-        : b.map((x) => (x === l ? { ...x, cantidad } : x));
-    });
-
   return (
     <div className="min-h-screen bg-background">
       <header className="bg-hero px-5 pb-8 pt-6 text-center text-primary-foreground">
@@ -152,7 +130,7 @@ function Boutique() {
         </ul>
       </nav>
 
-      <main className="mx-auto max-w-5xl px-4 pb-32 pt-6">
+      <main className="mx-auto max-w-5xl px-4 pb-12 pt-6">
         {visibles.length === 0 ? (
           <p className="py-20 text-center font-display text-xl text-muted-foreground">
             Pronto nuevas piezas en esta colección.
@@ -181,29 +159,19 @@ function Boutique() {
                     {i.precio ? clp(i.precio) : "Consultar precio"}
                   </p>
                 </button>
-                <button
-                  onClick={() => cambiar(i, 1)}
-                  className="mt-3 min-h-12 rounded-full bg-primary text-sm font-bold text-primary-foreground"
+                <a
+                  href={linkConsulta(i)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-3 flex min-h-12 items-center justify-center rounded-full bg-success text-center text-sm font-bold text-success-foreground"
                 >
-                  + {accion(i)}
-                </button>
+                  Me interesa
+                </a>
               </li>
             ))}
           </ul>
         )}
       </main>
-
-      {unidades > 0 && !abierta && (
-        <button
-          onClick={() => setAbierta(true)}
-          className="fixed inset-x-4 bottom-4 z-30 mx-auto flex max-w-md items-center justify-between rounded-full bg-hero px-6 py-4 font-bold text-primary-foreground shadow-xl"
-        >
-          <span className="flex items-center gap-2">
-            <ShoppingBag className="size-5" /> Mi bolsa ({unidades})
-          </span>
-          <span>{clp(totalBolsa(bolsa))}</span>
-        </button>
-      )}
 
       {ficha && (
         <Hoja onClose={() => setFicha(null)}>
@@ -230,78 +198,20 @@ function Boutique() {
           <p className="mt-4 text-2xl font-bold text-primary">
             {ficha.precio ? clp(ficha.precio) : "Consultar precio"}
           </p>
-          <button
-            onClick={() => {
-              cambiar(ficha, 1);
-              setFicha(null);
-            }}
-            className="mt-5 w-full rounded-full bg-primary py-4 text-lg font-bold text-primary-foreground"
-          >
-            {accion(ficha)} · {ficha.precio ? clp(ficha.precio) : "precio a confirmar"}
-          </button>
-        </Hoja>
-      )}
-
-      {abierta && (
-        <Hoja onClose={() => setAbierta(false)}>
-          <h2 className="font-display text-3xl">Mi bolsa</h2>
-          <ul className="mt-4 divide-y divide-border">
-            {bolsa.map((l) => (
-              <li key={l.item.codigo} className="flex items-center gap-3 py-3">
-                <div className="flex-1">
-                  <p className="font-semibold">{l.item.inspiracion || l.item.nombre}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {badge(l.item)} ·{" "}
-                    {l.item.precio ? clp(l.item.precio * l.cantidad) : "Precio a confirmar"}
-                  </p>
-                </div>
-                <button
-                  aria-label="Quitar uno"
-                  onClick={() => cambiar(l.item, -1)}
-                  className="flex size-12 items-center justify-center rounded-full border border-border"
-                >
-                  <Minus className="size-4" />
-                </button>
-                <span className="w-6 text-center font-bold">{l.cantidad}</span>
-                <button
-                  aria-label="Agregar uno"
-                  onClick={() => cambiar(l.item, 1)}
-                  className="flex size-12 items-center justify-center rounded-full border border-border"
-                >
-                  <Plus className="size-4" />
-                </button>
-              </li>
-            ))}
-          </ul>
-          <label className="mt-4 block text-sm font-semibold">Comuna de entrega</label>
-          <div className="mt-2 grid grid-cols-2 gap-2">
-            {COMUNAS.map((c) => (
-              <button
-                key={c}
-                onClick={() => setComuna(c)}
-                className={`min-h-12 rounded-full border text-sm font-semibold ${comuna === c ? "border-primary bg-primary text-primary-foreground" : "border-border"}`}
-              >
-                {c}
-              </button>
-            ))}
-          </div>
-          <div className="mt-5 flex justify-between text-xl font-bold">
-            <span>Total</span>
-            <span className="text-primary">{clp(totalBolsa(bolsa))}</span>
-          </div>
           <a
-            href={linkPedido(bolsa, comuna)}
+            href={linkConsulta(ficha)}
             target="_blank"
             rel="noreferrer"
-            className="mt-4 block w-full rounded-full bg-success py-5 text-center text-xl font-bold text-success-foreground shadow-lg"
+            className="mt-5 block w-full rounded-full bg-success py-5 text-center text-xl font-bold text-success-foreground shadow-lg"
           >
-            Pedir por WhatsApp
+            Consultar por WhatsApp
           </a>
           <p className="mt-2 text-center text-xs text-muted-foreground">
-            Se abre WhatsApp con tu pedido listo. Solo tienes que enviarlo.
+            Se abre WhatsApp con tu consulta lista para conversar.
           </p>
         </Hoja>
       )}
+
     </div>
   );
 }
