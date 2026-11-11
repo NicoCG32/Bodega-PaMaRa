@@ -75,23 +75,23 @@ function Boutique() {
   );
   return (
     <div className="min-h-screen bg-background">
-      <header className="bg-hero px-5 pb-8 pt-6 text-center text-primary-foreground">
-        <div className="mx-auto flex max-w-5xl items-start justify-between">
-          <span className="size-10" />
-          <img
-            src={logo}
-            alt="PaMaRa AyN"
-            width={1442}
-            height={1442}
-            fetchPriority="high"
-            decoding="async"
-            className="size-24 shrink-0 object-contain"
-          />
-          <span className="size-10" />
-        </div>
-        <p className="mt-3 font-display text-2xl italic">Boutique</p>
-        <p className="mt-1 text-xs uppercase tracking-[0.35em] text-accent">
-          Perfumería · Cosmética · Accesorios
+      <header className="bg-hero px-6 pb-12 pt-10 text-center text-primary-foreground">
+        <img
+          src={logo}
+          alt="PaMaRa AyN"
+          width={1442}
+          height={1442}
+          fetchPriority="high"
+          decoding="async"
+          className="mx-auto size-28 object-contain drop-shadow-lg"
+        />
+        <div className="mx-auto mt-6 h-px w-16 bg-accent/60" />
+        <h1 className="mt-6 font-display text-3xl font-light italic leading-tight md:text-4xl">
+          Bienvenida a nuestra vitrina
+        </h1>
+        <p className="mx-auto mt-3 max-w-md text-base leading-relaxed text-primary-foreground/80">
+          Fragancias elegidas con cariño para ti. Mira con calma y, si algo te gusta,
+          escríbenos y lo conversamos.
         </p>
       </header>
 
@@ -140,7 +140,7 @@ function Boutique() {
             {visibles.map((i) => (
               <li
                 key={i.codigo}
-                className="flex flex-col rounded-2xl border border-border bg-card p-4"
+                className="flex flex-col rounded-2xl border border-border bg-card p-4 shadow-[var(--shadow-soft)] transition hover:-translate-y-0.5"
               >
                 <button onClick={() => setFicha(i)} className="flex-1 text-left">
                   <span
