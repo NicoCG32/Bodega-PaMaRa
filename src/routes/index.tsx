@@ -75,7 +75,7 @@ function Boutique() {
   );
   return (
     <div className="min-h-screen bg-background">
-      <header className="bg-hero px-6 pb-12 pt-10 text-center text-primary-foreground">
+      <header className="flex min-h-[60svh] flex-col items-center justify-center bg-hero px-6 py-12 text-center text-primary-foreground md:min-h-0 md:py-16">
         <img
           src={logo}
           alt="PaMaRa AyN"
@@ -83,7 +83,7 @@ function Boutique() {
           height={1442}
           fetchPriority="high"
           decoding="async"
-          className="mx-auto size-28 object-contain drop-shadow-lg"
+          className="mx-auto block size-44 object-contain drop-shadow-lg sm:size-52 md:size-56"
         />
         <div className="mx-auto mt-6 h-px w-16 bg-accent/60" />
         <h1 className="mt-6 font-display text-3xl font-light italic leading-tight md:text-4xl">
