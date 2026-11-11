@@ -1,20 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { Minus, Plus, ShoppingBag, X } from "lucide-react";
+import { X } from "lucide-react";
 import logo from "@/assets/pamara-logo.webp";
 import { catalogoPublico } from "@/lib/boutique.functions";
 import {
   badge,
-  COMUNAS,
   enColeccion,
-  linkPedido,
-  totalBolsa,
+  linkConsulta,
   type Coleccion,
   type Disponibilidad,
   ETIQUETA,
   type ItemPublico,
-  type Linea,
 } from "@/lib/boutique";
 import { clp } from "@/lib/store";
 
