@@ -211,7 +211,7 @@ function Catalogo() {
               onClick={() => setNuevo(true)}
               className="h-14 w-full rounded-2xl border-2 border-dashed border-primary text-lg font-bold text-primary"
             >
-              + Agregar {tipo === "perfume" ? "perfume" : "producto"}
+              + Agregar {tipo === "perfume" ? "perfume" : "ropa o cosmética"}
             </button>
           )}
 
