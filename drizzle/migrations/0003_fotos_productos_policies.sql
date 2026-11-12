@@ -1,0 +1,4 @@
+CREATE POLICY "Fotos vitrina visibles" ON storage.objects FOR SELECT TO anon, authenticated USING (bucket_id = 'fotos-productos');
+CREATE POLICY "Admin sube fotos" ON storage.objects FOR INSERT TO authenticated WITH CHECK (bucket_id = 'fotos-productos' AND public.has_role(auth.uid(), 'admin'));
+CREATE POLICY "Admin cambia fotos" ON storage.objects FOR UPDATE TO authenticated USING (bucket_id = 'fotos-productos' AND public.has_role(auth.uid(), 'admin'));
+CREATE POLICY "Admin borra fotos" ON storage.objects FOR DELETE TO authenticated USING (bucket_id = 'fotos-productos' AND public.has_role(auth.uid(), 'admin'));

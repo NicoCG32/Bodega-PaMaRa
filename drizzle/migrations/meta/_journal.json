@@ -22,6 +22,13 @@
       "when": 1794276365561,
       "tag": "0002_explicit_google_admin_access",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1794443621596,
+      "tag": "0003_fotos_productos_policies",
+      "breakpoints": true
     }
   ]
 }

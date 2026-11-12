@@ -17,6 +17,8 @@ export type ItemPublico = {
   stock: number;
   perfume: boolean;
   estado: EstadoVenta;
+  /** Ruta de la foto; el servidor la cambia por un enlace para ver. */
+  foto: string | null;
 };
 
 export type Disponibilidad = "todo" | EstadoVenta;
@@ -37,6 +39,7 @@ export function aPublico(productos: Producto[], cfg?: Precios): ItemPublico[] {
         stock: Math.max(0, p.stock),
         perfume: !esOtro(p),
         estado: v.estado,
+        foto: p.foto ?? null,
       };
     })
     .sort((a, b) => orden[a.estado] - orden[b.estado]);
