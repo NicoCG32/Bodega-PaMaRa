@@ -1,6 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowLeft, Check, MessageCircle, Mic, PackageCheck, Plus, Trash2, Undo2 } from "lucide-react";
+import {
+  ArrowLeft,
+  Check,
+  MessageCircle,
+  Mic,
+  PackageCheck,
+  Plus,
+  Trash2,
+  Undo2,
+} from "lucide-react";
 import { VoiceCapture } from "@/components/VoiceCapture";
 import {
   actions,
@@ -170,7 +179,9 @@ function Encargos() {
                 <span />
               )}
               <button
-                onClick={() => confirm(`¿Borrar el encargo de ${e.cliente}?`) && actions.borrarEncargo(e.id)}
+                onClick={() =>
+                  confirm(`¿Borrar el encargo de ${e.cliente}?`) && actions.borrarEncargo(e.id)
+                }
                 className="flex items-center gap-1 p-2 text-muted-foreground"
               >
                 <Trash2 className="size-5" /> Borrar

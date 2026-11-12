@@ -67,32 +67,24 @@ export function AdminGate({ children }: { children: ReactNode }) {
   };
 
   return (
-    <div className="mx-auto max-w-xs space-y-5 pt-6 text-center">
-      <Lock className="mx-auto size-10 text-primary" />
-      <h2 className="text-3xl font-semibold">PaMaRa Vault</h2>
+    <div className="login-card">
+      <div className="login-icon">
+        <Lock size={24} strokeWidth={1.3} />
+      </div>
+      <p className="eyebrow">Bodega · Acceso privado</p>
+      <h2>Tu espacio, en orden.</h2>
       {estado === "fuera" ? (
         <>
-          <p className="text-lg text-muted-foreground">
-            Entra con tu cuenta Google para abrir la Bodega.
-          </p>
-          <button
-            onClick={entrar}
-            disabled={ocupado}
-            style={{ background: "#FFFFFF", color: "#1F1F1F", border: "1px solid #747775" }}
-            className="flex h-14 w-full items-center justify-center gap-[10px] rounded-full px-3 text-base font-medium"
-          >
-            {G} Continuar con Google
+          <p className="login-description">Entra con tu cuenta Google para abrir la Bodega.</p>
+          <button onClick={entrar} disabled={ocupado} className="google-login">
+            {G} {ocupado ? "Entrando…" : "Continuar con Google"}
           </button>
+          <p className="login-note">La gestión de PaMaRa AyN, sólo para sus cuentas autorizadas.</p>
         </>
       ) : (
         <>
-          <p className="text-lg text-muted-foreground">
-            Esta cuenta no tiene permiso de Administradora.
-          </p>
-          <button
-            onClick={() => void supabase.auth.signOut()}
-            className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-secondary text-lg font-bold"
-          >
+          <p className="login-description">Esta cuenta no tiene permiso de Administradora.</p>
+          <button onClick={() => void supabase.auth.signOut()} className="google-login">
             <LogOut className="size-5" /> Usar otra cuenta
           </button>
         </>

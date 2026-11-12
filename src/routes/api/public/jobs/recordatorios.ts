@@ -70,7 +70,9 @@ export const Route = createFileRoute("/api/public/jobs/recordatorios")({
         ]);
 
         const hoy = hoyChile();
-        const manana = new Date(Date.parse(hoy + "T12:00:00Z") + 86400000).toISOString().slice(0, 10);
+        const manana = new Date(Date.parse(hoy + "T12:00:00Z") + 86400000)
+          .toISOString()
+          .slice(0, 10);
         const porUsuario = new Map<string, string[]>();
         for (const b of backups ?? []) {
           const deudas = ((b.data as BackupData) ?? {}).deudas ?? [];

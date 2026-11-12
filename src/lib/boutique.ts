@@ -5,7 +5,7 @@ export const TIENDA_WHATSAPP = "56935774427";
 export const COMUNAS = ["La Serena", "Coquimbo", "Calama", "Otra"] as const;
 export const ULTIMAS = 2;
 
-export type Coleccion = "todo" | "mujer" | "hombre" | "cosmetica" | "accesorios";
+export type Coleccion = "todo" | "mujer" | "hombre" | "juvenil" | "cosmetica" | "accesorios";
 
 export type ItemPublico = {
   codigo: string;
@@ -62,7 +62,8 @@ const esAccesorio = (i: ItemPublico) =>
 export function enColeccion(i: ItemPublico, c: Coleccion) {
   if (c === "todo") return true;
   if (c === "mujer") return i.perfume && i.codigo.startsWith("M-");
-  if (c === "hombre") return i.perfume && (i.codigo.startsWith("H-") || i.codigo.startsWith("T-"));
+  if (c === "hombre") return i.perfume && i.codigo.startsWith("H-");
+  if (c === "juvenil") return i.perfume && i.codigo.startsWith("T-");
   if (c === "accesorios") return !i.perfume && esAccesorio(i);
   return !i.perfume && !esAccesorio(i);
 }
@@ -122,7 +123,8 @@ export function mensajeConsulta(i: ItemPublico) {
   const nombre = i.perfume
     ? `el ${i.codigo}${i.inspiracion ? ` (Inspirado en ${i.inspiracion})` : ""}`
     : i.nombre;
-  const disp = i.estado === "encargo" ? "¿Se puede encargar?" : "¿Lo tienes disponible para coordinar?";
+  const disp =
+    i.estado === "encargo" ? "¿Se puede encargar?" : "¿Lo tienes disponible para coordinar?";
   return `Hola! Vi en tu vitrina ${nombre}. ${disp}`;
 }
 

@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowLeft, HandCoins, PackagePlus, ShoppingBag, Wallet } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, HandCoins, PackagePlus, ShoppingBag, Wallet } from "lucide-react";
 import { VoiceCapture } from "@/components/VoiceCapture";
 import { BodegaCapture } from "@/components/BodegaCapture";
 import { clp, diasHasta, proximaCuota, saldo, useStore } from "@/lib/store";
@@ -74,36 +74,35 @@ function Index() {
   }
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-3xl font-semibold">¿Qué pasó recién?</h2>
-      <div className="grid gap-4">
+    <div>
+      <div className="bodega-intro">
+        <p className="eyebrow">El día a día de tu negocio</p>
+        <h1>Hola, ¿qué pasó hoy?</h1>
+        <p>Tu negocio en orden, un movimiento a la vez.</p>
+      </div>
+      <div className="bodega-actions">
         {ACCIONES.map(({ id, icon: Icon, titulo, ayuda }) => (
-          <button
-            key={id}
-            onClick={() => setPaso(id)}
-            className="flex min-h-24 items-center gap-4 rounded-3xl bg-card p-5 text-left shadow-sm ring-1 ring-border active:scale-[0.98]"
-          >
-            <span className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
-              <Icon className="size-8" />
+          <button key={id} onClick={() => setPaso(id)} className="bodega-action">
+            <span className="bodega-action-icon">
+              <Icon />
             </span>
             <span>
-              <span className="block text-2xl font-bold">{titulo}</span>
-              <span className="block text-base text-muted-foreground">{ayuda}</span>
+              <strong>{titulo}</strong>
+              <small>{ayuda}</small>
             </span>
+            <ArrowUpRight className="action-arrow" aria-hidden="true" />
           </button>
         ))}
       </div>
-      <Link
-        to="/bodega/cobros"
-        className="flex min-h-20 items-center justify-between gap-3 rounded-3xl bg-secondary p-5"
-      >
-        <span className="flex items-center gap-3 text-xl font-bold">
-          <Wallet className="size-7 text-primary" />
-          {hoyToca.length > 0 ? `Cobrar hoy: ${hoyToca.length}` : "Ver cobros"}
+      <Link to="/bodega/cobros" className="bodega-balance">
+        <span className="balance-label">
+          <Wallet />
+          <span>
+            <span className="eyebrow block mb-2">Tus cuentas, a mano</span>
+            {hoyToca.length > 0 ? "Cobrar hoy: " + hoyToca.length : "Ver cobros pendientes"}
+          </span>
         </span>
-        <span className="text-2xl font-extrabold text-primary">
-          {clp(pend.reduce((s, d) => s + saldo(d), 0))}
-        </span>
+        <strong>{clp(pend.reduce((s, d) => s + saldo(d), 0))}</strong>
       </Link>
     </div>
   );

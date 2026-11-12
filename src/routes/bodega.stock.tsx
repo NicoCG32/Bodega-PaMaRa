@@ -444,8 +444,12 @@ function Editor({
                 <span className="text-lg font-bold">Sacar o elegir foto</span>
               </>
             )}
-            {subiendo && <span className="pb-2 text-sm font-bold text-muted-foreground">Subiendo foto…</span>}
-            {vista && !subiendo && <span className="pb-2 text-sm font-bold text-primary">Toca para cambiar la foto</span>}
+            {subiendo && (
+              <span className="pb-2 text-sm font-bold text-muted-foreground">Subiendo foto…</span>
+            )}
+            {vista && !subiendo && (
+              <span className="pb-2 text-sm font-bold text-primary">Toca para cambiar la foto</span>
+            )}
             <input
               type="file"
               accept="image/*"

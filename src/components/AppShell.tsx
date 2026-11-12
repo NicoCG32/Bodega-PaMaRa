@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Mic, Wallet, Package, ClipboardList, Settings } from "lucide-react";
+import { Mic, Wallet, Package, ClipboardList, Settings, ArrowUpRight } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
 import logo from "@/assets/pamara-monograma.webp";
 import { useStore, saldo, proximaCuota, diasHasta, hoy, clp } from "@/lib/store";
@@ -34,53 +34,45 @@ export function AppShell({ children }: { children: ReactNode }) {
   }, [urgentes, deudas]);
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-md flex-col bg-background">
-      <header className="flex items-center justify-between bg-hero px-5 pb-4 pt-5 text-primary-foreground">
-        <div className="flex min-w-0 flex-1 items-center gap-3">
-          <img
-            src={logo}
-            alt=""
-            width={760}
-            height={760}
-            className="size-14 shrink-0 object-contain"
-          />
-          <div className="min-w-0">
-            <p className="font-display text-lg leading-tight">PaMaRa AyN</p>
-            <p className="mt-1 text-[10px] uppercase tracking-widest text-accent">
-              Perfumes · Ropa · Cosmética
-            </p>
+    <div className="management-shell">
+      <header className="management-header">
+        <div className="page-width management-header-inner">
+          <Link to="/bodega" className="brand-lockup" aria-label="PaMaRa AyN, Bodega">
+            <img src={logo} alt="" width={760} height={760} />
+            <span>
+              <span className="brand-word">PaMaRa</span>
+              <span className="brand-caption">AyN · Mi Bodega</span>
+            </span>
+          </Link>
+          <div className="management-tools">
+            <Link to="/">
+              Ver Boutique <ArrowUpRight size={14} />
+            </Link>
+            <Link to="/bodega/ajustes" aria-label="Ajustes" className="settings-link">
+              <Settings size={19} strokeWidth={1.5} />
+            </Link>
           </div>
         </div>
-        <Link
-          to="/bodega/ajustes"
-          aria-label="Ajustes"
-          className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary-foreground/10"
-        >
-          <Settings className="size-6" />
-        </Link>
       </header>
-      <main className="flex-1 px-4 pb-32 pt-4">{children}</main>
-      <nav className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-md border-t border-border bg-card/95 pb-[env(safe-area-inset-bottom)] backdrop-blur">
-        <ul className="grid grid-cols-4">
-          {tabs.map(({ to, label, icon: Icon }) => (
-            <li key={to}>
-              <Link
-                to={to}
-                activeOptions={{ exact: true }}
-                className="relative flex flex-col items-center gap-1 py-3 text-sm font-bold text-muted-foreground data-[status=active]:text-primary"
-              >
-                <Icon className="size-7" />
-                {label}
-                {to === "/bodega/cobros" && urgentes > 0 && (
-                  <span className="absolute right-5 top-1.5 flex size-6 items-center justify-center rounded-full bg-destructive text-xs text-destructive-foreground">
-                    {urgentes}
-                  </span>
-                )}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
+      <div className="page-width management-workspace">
+        <nav className="management-nav" aria-label="Administrar Bodega">
+          <p className="eyebrow">Tu espacio de trabajo</p>
+          <ul>
+            {tabs.map(({ to, label, icon: Icon }) => (
+              <li key={to}>
+                <Link to={to} activeOptions={{ exact: true }}>
+                  <Icon />
+                  <span>{label}</span>
+                  {to === "/bodega/cobros" && urgentes > 0 && (
+                    <span className="urgent-count">{urgentes}</span>
+                  )}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <main className="management-main">{children}</main>
+      </div>
     </div>
   );
 }
