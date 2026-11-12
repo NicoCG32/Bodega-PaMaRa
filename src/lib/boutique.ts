@@ -23,10 +23,14 @@ export type ItemPublico = {
 
 export type Disponibilidad = "todo" | EstadoVenta;
 
-/** Lo visible al público: todo lo no marcado "Solo privado"; sin stock se ofrece a encargo. */
+/** Lo visible al público (no "Solo privado"): perfumes siempre (sin stock = a pedido); ropa y cosmética solo con stock. */
 export function aPublico(productos: Producto[], cfg?: Precios): ItemPublico[] {
   return productos
-    .filter((p) => p.enBoutique !== false && (p.stock > 0 || !!(p.inspiracion || p.nombre)))
+    .filter(
+      (p) =>
+        p.enBoutique !== false &&
+        (esOtro(p) ? p.stock > 0 : p.stock > 0 || !!(p.inspiracion || p.nombre)),
+    )
     .map((p) => {
       const v = precioVenta(p, cfg);
       return {

@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 import { aPublico, type ItemPublico } from "./boutique";
-import type { Precios, Producto } from "./store";
+import { conCatalogo, type Precios, type Producto } from "./store";
 
 /** Público: lee la vitrina compartida (solo productos marcados para la Boutique). */
 export const catalogoPublico = createServerFn({ method: "GET" }).handler(
@@ -24,10 +24,12 @@ export const catalogoPublico = createServerFn({ method: "GET" }).handler(
       sb.from("productos").select("data").eq("en_boutique", true),
       sb.from("ajustes_tienda").select("precios").maybeSingle(),
     ]);
-    if (error || !data) return [];
-    const productos = data
-      .map((f) => f.data as unknown as Producto)
-      .filter((p) => p && typeof p.codigo === "string");
+    // Siempre los perfumes oficiales (a pedido) + lo que la bodega tenga en la nube.
+    const productos = conCatalogo(
+      (error || !data ? [] : data)
+        .map((f) => f.data as unknown as Producto)
+        .filter((p) => p && typeof p.codigo === "string"),
+    );
     const items = aPublico(productos, (aj?.precios as unknown as Precios) ?? undefined);
     const rutas = items.map((i) => i.foto).filter((r): r is string => !!r);
     if (rutas.length) {
