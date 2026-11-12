@@ -11,6 +11,13 @@ const ps: Producto[] = [
 ];
 
 describe("Boutique", () => {
+  it("ropa y cosmética sin stock no aparece; perfume sin stock queda a pedido", () => {
+    const pub = aPublico([
+      { codigo: "O-x", nombre: "Blusa", stock: 0, tipo: "otro" },
+      { codigo: "M-04", nombre: "La Vie", stock: 0 },
+    ]);
+    expect(pub.map((i) => [i.codigo, i.estado])).toEqual([["M-04", "encargo"]]);
+  });
   it("oculta los marcados solo privado; agotados quedan a pedido al final", () => {
     expect(aPublico(ps).map((i) => i.codigo)).toEqual(["M-12", "H-05", "O-ab", "H-09"]);
   });
