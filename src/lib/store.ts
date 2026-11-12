@@ -33,6 +33,8 @@ export type Producto = {
   version?: string | undefined;
   categoria?: string | undefined;
   precio?: number | undefined;
+  /** Ruta de la foto en la nube (ropa/cosmética). */
+  foto?: string | undefined;
   fechaIngreso?: string | undefined;
   ultimaVenta?: string | undefined;
   /** Shown in the future public Boutique. Default true. */

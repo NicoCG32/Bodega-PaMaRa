@@ -28,6 +28,13 @@ export const catalogoPublico = createServerFn({ method: "GET" }).handler(
     const productos = data
       .map((f) => f.data as unknown as Producto)
       .filter((p) => p && typeof p.codigo === "string");
-    return aPublico(productos, (aj?.precios as unknown as Precios) ?? undefined);
+    const items = aPublico(productos, (aj?.precios as unknown as Precios) ?? undefined);
+    const rutas = items.map((i) => i.foto).filter((r): r is string => !!r);
+    if (rutas.length) {
+      const { data: urls } = await sb.storage.from("fotos-productos").createSignedUrls(rutas, 60 * 60 * 24);
+      const mapa = new Map((urls ?? []).map((u) => [u.path, u.signedUrl]));
+      for (const i of items) i.foto = i.foto ? (mapa.get(i.foto) ?? null) : null;
+    }
+    return items;
   },
 );

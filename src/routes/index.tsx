@@ -143,6 +143,14 @@ function Boutique() {
                 className="flex flex-col rounded-2xl border border-border bg-card p-4 shadow-[var(--shadow-soft)] transition hover:-translate-y-0.5"
               >
                 <button onClick={() => setFicha(i)} className="flex-1 text-left">
+                  {i.foto && (
+                    <img
+                      src={i.foto}
+                      alt={i.nombre}
+                      loading="lazy"
+                      className="mb-3 aspect-square w-full rounded-xl object-cover"
+                    />
+                  )}
                   <span
                     className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${i.estado === "remate" ? "bg-primary text-primary-foreground" : i.estado === "encargo" ? "bg-secondary text-muted-foreground" : "bg-accent/30 text-foreground"}`}
                   >
@@ -175,6 +183,9 @@ function Boutique() {
 
       {ficha && (
         <Hoja onClose={() => setFicha(null)}>
+          {ficha.foto && (
+            <img src={ficha.foto} alt={ficha.nombre} className="mb-4 w-full rounded-2xl object-cover" />
+          )}
           <span className="text-xs font-bold uppercase tracking-wider text-primary">
             {ETIQUETA[ficha.estado]}
           </span>

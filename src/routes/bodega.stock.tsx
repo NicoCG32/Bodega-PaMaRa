@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { Minus, Pencil, Plus, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Camera, Minus, Pencil, Plus, Trash2 } from "lucide-react";
+import { subirFoto, verFoto } from "@/lib/fotos";
 import { BodegaCapture } from "@/components/BodegaCapture";
 import { CrearTrend, PanelAnuncio, PublicarStock } from "@/components/Promocion";
 import { anuncioIndividual } from "@/lib/anuncios";
@@ -353,12 +354,32 @@ function Editor({
   const [categoria, setCategoria] = useState(p?.categoria ?? "");
   const [precio, setPrecio] = useState(p?.precio ? String(p.precio) : "");
   const [stock, setStock] = useState(p ? String(p.stock) : "0");
+  const [foto, setFoto] = useState(p?.foto);
+  const [vista, setVista] = useState<string | null>(null);
+  const [subiendo, setSubiendo] = useState(false);
+  useEffect(() => {
+    if (foto && !vista) void verFoto(foto).then(setVista);
+  }, [foto, vista]);
+  async function elegirFoto(f?: File) {
+    if (!f) return;
+    setSubiendo(true);
+    try {
+      setVista(URL.createObjectURL(f));
+      setFoto(await subirFoto(f, p?.codigo ?? "nuevo"));
+    } catch {
+      setVista(null);
+      alert("No se pudo subir la foto. Revisa la conexión e inténtalo otra vez.");
+    } finally {
+      setSubiendo(false);
+    }
+  }
   const campo = "h-12 w-full rounded-2xl border-2 border-input bg-background px-4 text-lg";
 
   function guardar() {
     const st = Math.max(0, parseInt(stock) || 0);
     const pr = parseInt(precio.replace(/\D/g, "")) || undefined;
     let key = p?.codigo ?? "";
+    if (subiendo) return alert("Espera un momento, la foto se está subiendo.");
     if (tipo === "perfume") {
       const c = normCodigo(codigo);
       if (!/^[HMT]-\d+$/.test(c)) return alert("Escribe un código como H-05, M-12 o T-03.");
@@ -377,6 +398,7 @@ function Editor({
       version: version.trim() || undefined,
       categoria: categoria.trim() || undefined,
       precio: pr,
+      foto,
       stock: st,
       fechaIngreso: st > 0 ? (p?.stock ? (p.fechaIngreso ?? hoyStr) : hoyStr) : p?.fechaIngreso,
       ultimaVenta: p?.ultimaVenta,
@@ -413,6 +435,24 @@ function Editor({
         </>
       ) : (
         <>
+          <label className="flex min-h-40 cursor-pointer flex-col items-center justify-center gap-2 overflow-hidden rounded-3xl border-2 border-dashed border-primary/40 bg-secondary text-center">
+            {vista ? (
+              <img src={vista} alt="Foto del producto" className="max-h-64 w-full object-cover" />
+            ) : (
+              <>
+                <Camera className="size-10 text-primary" />
+                <span className="text-lg font-bold">Sacar o elegir foto</span>
+              </>
+            )}
+            {subiendo && <span className="pb-2 text-sm font-bold text-muted-foreground">Subiendo foto…</span>}
+            {vista && !subiendo && <span className="pb-2 text-sm font-bold text-primary">Toca para cambiar la foto</span>}
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => void elegirFoto(e.target.files?.[0])}
+            />
+          </label>
           <input
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
