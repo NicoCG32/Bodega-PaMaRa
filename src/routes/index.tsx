@@ -1,8 +1,28 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import { Minus, Plus, ShoppingBag, X } from "lucide-react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  ArrowUpRight,
+  ChevronLeft,
+  ChevronRight,
+  Flower2,
+  Heart,
+  Layers3,
+  Leaf,
+  MapPin,
+  MessageCircle,
+  Minus,
+  Plus,
+  Search,
+  ShoppingBag,
+  SlidersHorizontal,
+  Sparkles,
+  Truck,
+  X,
+} from "lucide-react";
 import logo from "@/assets/pamara-logo.webp";
+import monograma from "@/assets/pamara-monograma.webp";
+import { ProductVisual } from "@/components/ProductVisual";
 import { catalogoPublico } from "@/lib/boutique.functions";
 import {
   badge,
@@ -19,7 +39,6 @@ import {
 } from "@/lib/boutique";
 import { clp } from "@/lib/store";
 
-// Never break the storefront on a network hiccup: show empty and retry soon.
 const catalogoQuery = queryOptions({
   queryKey: ["boutique"],
   queryFn: async (): Promise<ItemPublico[]> => {
@@ -37,14 +56,17 @@ const catalogoQuery = queryOptions({
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "PaMaRa Boutique · Perfumes, cosmética y accesorios" },
+      { title: "PaMaRa AyN · Tu esencia, tu sello" },
       {
         name: "description",
         content:
-          "Perfumes de inspiración, cosmética y accesorios con entrega en La Serena, Coquimbo y Calama. Pide por WhatsApp.",
+          "Descubre perfumes de inspiración, cosmética y accesorios de PaMaRa AyN. Prepara tu lista y conversemos por WhatsApp. La Serena, Coquimbo y Calama.",
       },
-      { property: "og:title", content: "PaMaRa Boutique" },
-      { property: "og:description", content: "Mira la vitrina y consulta por WhatsApp en un toque." },
+      { property: "og:title", content: "PaMaRa AyN · Tu esencia, tu sello" },
+      {
+        property: "og:description",
+        content: "Fragancias elegidas con cariño. Encuentra lo que va contigo.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -54,24 +76,28 @@ export const Route = createFileRoute("/")({
 });
 
 const DISPONIBLE: { id: Disponibilidad; label: string }[] = [
-  { id: "todo", label: "Todo" },
-  { id: "stock", label: "📦 Entrega hoy" },
-  { id: "encargo", label: "✨ A pedido" },
-  { id: "remate", label: "🔥 Liquidación" },
+  { id: "todo", label: "Toda la colección" },
+  { id: "stock", label: "Entrega hoy" },
+  { id: "encargo", label: "A pedido" },
+  { id: "remate", label: "Liquidación" },
 ];
-
-const COLECCIONES: { id: Coleccion; label: string }[] = [
-  { id: "todo", label: "Todo" },
-  { id: "mujer", label: "Mujer" },
-  { id: "hombre", label: "Hombre" },
-  { id: "cosmetica", label: "Cosmética" },
-  { id: "accesorios", label: "Accesorios" },
-];
+const COLECCIONES = [
+  { id: "todo", label: "Toda la colección", icon: Layers3 },
+  { id: "mujer", label: "Para ella", icon: Flower2 },
+  { id: "hombre", label: "Para él", icon: Leaf },
+  { id: "juvenil", label: "Juvenil", icon: Sparkles },
+  { id: "cosmetica", label: "Cosmética", icon: Sparkles },
+  { id: "accesorios", label: "Accesorios", icon: ShoppingBag },
+] satisfies { id: Coleccion; label: string; icon: typeof Layers3 }[];
 
 function Boutique() {
   const { data: items } = useSuspenseQuery(catalogoQuery);
   const [col, setCol] = useState<Coleccion>("todo");
   const [disp, setDisp] = useState<Disponibilidad>("todo");
+  const [buscar, setBuscar] = useState("");
+  const [orden, setOrden] = useState("destacados");
+  const [pagina, setPagina] = useState(1);
+  const catalogRef = useRef<HTMLDivElement>(null);
   const [ficha, setFicha] = useState<ItemPublico | null>(null);
   const [bolsa, setBolsa] = useState<Linea[]>([]);
   const [verBolsa, setVerBolsa] = useState(false);
@@ -87,212 +113,422 @@ function Boutique() {
         : b.map((l) => (l === actual ? { ...l, cantidad: n } : l));
     });
   const unidades = bolsa.reduce((a, l) => a + l.cantidad, 0);
+  const q = buscar.trim().toLocaleLowerCase("es");
+  const visibles = items
+    .filter(
+      (i) =>
+        enColeccion(i, col) &&
+        (disp === "todo" || i.estado === disp) &&
+        (!q ||
+          [i.nombre, i.inspiracion, i.codigo, i.categoria, i.version].some((value) =>
+            value?.toLocaleLowerCase("es").includes(q),
+          )),
+    )
+    .sort((a, b) =>
+      orden === "nombre"
+        ? (a.inspiracion || a.nombre).localeCompare(b.inspiracion || b.nombre, "es")
+        : orden === "precio"
+          ? (a.precio ?? Infinity) - (b.precio ?? Infinity)
+          : 0,
+    );
+  const paginas = Math.max(1, Math.ceil(visibles.length / 12));
+  const paginaActual = Math.min(pagina, paginas);
+  const mostrados = visibles.slice((paginaActual - 1) * 12, paginaActual * 12);
+  const cambiarPagina = (n: number) => {
+    setPagina(n);
+    catalogRef.current?.scrollIntoView({ block: "start" });
+  };
+  const limpiar = () => {
+    setCol("todo");
+    setDisp("todo");
+    setBuscar("");
+    setOrden("destacados");
+    setPagina(1);
+  };
 
-  const visibles = items.filter(
-    (i) => enColeccion(i, col) && (disp === "todo" || i.estado === disp),
-  );
   return (
-    <div className={`min-h-screen bg-background ${unidades ? "pb-24" : ""}`}>
-      <header className="flex min-h-[60svh] flex-col items-center justify-center bg-hero px-6 py-12 text-center text-primary-foreground md:min-h-0 md:py-16">
-        <img
-          src={logo}
-          alt="PaMaRa AyN"
-          width={1442}
-          height={1442}
-          fetchPriority="high"
-          decoding="async"
-          className="mx-auto block size-44 object-contain drop-shadow-lg sm:size-52 md:size-56"
-        />
-        <div className="mx-auto mt-6 h-px w-16 bg-accent/60" />
-        <h1 className="mt-6 font-display text-3xl font-light italic leading-tight md:text-4xl">
-          Bienvenida a nuestra vitrina
-        </h1>
-        <p className="mx-auto mt-3 max-w-md text-base leading-relaxed text-primary-foreground/80">
-          Fragancias elegidas con cariño para ti. Mira con calma y, si algo te gusta,
-          escríbenos y lo conversamos.
-        </p>
+    <div className="boutique-page">
+      <div className="announcement">
+        <div className="page-width">
+          <span>Una esencia para cada versión de ti</span>
+          <span>
+            <MapPin size={11} /> La Serena · Coquimbo · Calama
+          </span>
+        </div>
+      </div>
+      <header className="boutique-header">
+        <div className="page-width boutique-header-inner">
+          <a href="#" className="brand-lockup" aria-label="PaMaRa AyN, inicio">
+            <img src={monograma} alt="" width={760} height={760} />
+            <span>
+              <span className="brand-word">PaMaRa</span>
+              <span className="brand-caption">AyN · Perfumes de inspiración</span>
+            </span>
+          </a>
+          <nav className="header-links" aria-label="Navegación principal">
+            <a href="#coleccion">La colección</a>
+            <a href="#entregas">Entregas</a>
+          </nav>
+          <button
+            onClick={() => setVerBolsa(true)}
+            className="bag-trigger"
+            aria-label={"Ver mi lista, " + unidades + (unidades === 1 ? " producto" : " productos")}
+          >
+            <ShoppingBag size={21} strokeWidth={1.4} /> Mi lista
+            {unidades > 0 && <span>{unidades}</span>}
+          </button>
+        </div>
       </header>
 
-      <nav className="sticky top-0 z-20 border-b border-border bg-background/95 backdrop-blur">
-        <ul className="mx-auto flex max-w-5xl gap-2 overflow-x-auto px-4 py-3">
-          {COLECCIONES.map((c) => (
-            <li key={c.id}>
-              <button
-                onClick={() => setCol(c.id)}
-                className={`whitespace-nowrap rounded-full border px-4 py-2 text-sm font-semibold transition ${
-                  col === c.id
-                    ? "border-primary bg-primary text-primary-foreground"
-                    : "border-border text-muted-foreground"
-                }`}
-              >
-                {c.label}
-              </button>
-            </li>
-          ))}
-        </ul>
-        <ul className="mx-auto flex max-w-5xl gap-2 overflow-x-auto px-4 pb-3">
-          {DISPONIBLE.map((c) => (
-            <li key={c.id}>
-              <button
-                onClick={() => setDisp(c.id)}
-                className={`min-h-11 whitespace-nowrap rounded-full px-4 text-sm font-semibold transition ${
-                  disp === c.id
-                    ? "bg-accent text-accent-foreground"
-                    : "bg-secondary text-muted-foreground"
-                }`}
-              >
-                {c.label}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </nav>
-
-      <main className="mx-auto max-w-5xl px-4 pb-12 pt-6">
-        {visibles.length === 0 ? (
-          <p className="py-20 text-center font-display text-xl text-muted-foreground">
-            Pronto nuevas piezas en esta colección.
+      <section className="page-width boutique-hero" aria-labelledby="boutique-title">
+        <div className="hero-copy">
+          <p className="eyebrow">El arte de encontrar tu esencia</p>
+          <h1 id="boutique-title">
+            Tu esencia.<em>Tu sello.</em>
+          </h1>
+          <p className="hero-description">
+            Fragancias que hablan de ti.
+            <br />
+            Descubre tu próxima inspiración con PaMaRa AyN.
           </p>
-        ) : (
-          <ul className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-            {visibles.map((i) => (
-              <li
-                key={i.codigo}
-                className="flex flex-col rounded-2xl border border-border bg-card p-4 shadow-[var(--shadow-soft)] transition hover:-translate-y-0.5"
-              >
-                <button onClick={() => setFicha(i)} className="flex-1 text-left">
-                  {i.foto && (
-                    <img
-                      src={i.foto}
-                      alt={i.nombre}
-                      loading="lazy"
-                      className="mb-3 aspect-square w-full rounded-xl object-cover"
-                    />
-                  )}
-                  <span
-                    className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${i.estado === "remate" ? "bg-primary text-primary-foreground" : i.estado === "encargo" ? "bg-secondary text-muted-foreground" : "bg-accent/30 text-foreground"}`}
-                  >
-                    {badge(i)}
-                  </span>
-                  {i.perfume && (
-                    <p className="mt-3 text-xs tracking-widest text-muted-foreground">{i.codigo}</p>
-                  )}
-                  <h3 className="mt-1 font-display text-xl leading-tight">
-                    {i.inspiracion || i.nombre}
-                  </h3>
-                  {i.version && <p className="text-sm italic text-muted-foreground">{i.version}</p>}
-                  <p className="mt-2 text-xl font-extrabold text-primary">
-                    {i.precio ? clp(i.precio) : "Consultar precio"}
-                  </p>
-                </button>
-                <Agregar n={cantidad(i.codigo)} onCambio={(d) => cambiar(i, d)} />
-                <a
-                  href={linkConsulta(i)}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-2 text-center text-xs font-semibold text-muted-foreground underline"
-                >
-                  Preguntar solo por este
-                </a>
-              </li>
-            ))}
-          </ul>
-        )}
-      </main>
-
-      {ficha && (
-        <Hoja onClose={() => setFicha(null)}>
-          {ficha.foto && (
-            <img src={ficha.foto} alt={ficha.nombre} className="mb-4 w-full rounded-2xl object-cover" />
-          )}
-          <span className="text-xs font-bold uppercase tracking-wider text-primary">
-            {ETIQUETA[ficha.estado]}
-          </span>
-          {ficha.perfume && (
-            <p className="mt-2 text-sm tracking-widest text-muted-foreground">{ficha.codigo}</p>
-          )}
-          <h2 className="font-display text-3xl">{ficha.inspiracion || ficha.nombre}</h2>
-          {ficha.inspiracion && (
-            <p className="text-muted-foreground">Inspiración de {ficha.nombre}</p>
-          )}
-          {ficha.version && (
-            <p className="mt-2">
-              <b>Versión:</b> {ficha.version}
-            </p>
-          )}
-          {ficha.categoria && (
-            <p className="mt-1">
-              <b>{ficha.perfume ? "Notas" : "Tipo"}:</b> {ficha.categoria}
-            </p>
-          )}
-          <p className="mt-4 text-2xl font-bold text-primary">
-            {ficha.precio ? clp(ficha.precio) : "Consultar precio"}
-          </p>
-          <div className="mt-5">
-            <Agregar n={cantidad(ficha.codigo)} onCambio={(d) => cambiar(ficha, d)} grande />
-          </div>
-          <a
-            href={linkConsulta(ficha)}
-            target="_blank"
-            rel="noreferrer"
-            className="mt-3 block w-full rounded-full border-2 border-success py-4 text-center text-lg font-bold text-success"
-          >
-            Consultar solo este por WhatsApp
+          <a href="#coleccion" className="primary-link">
+            Explorar la colección <ArrowUpRight size={16} strokeWidth={1.4} />
           </a>
-          <p className="mt-2 text-center text-xs text-muted-foreground">
-            Se abre WhatsApp con tu consulta lista para conversar.
-          </p>
-        </Hoja>
-      )}
-
-      {unidades > 0 && !verBolsa && (
-        <button
-          onClick={() => setVerBolsa(true)}
-          className="fixed inset-x-4 bottom-4 z-30 mx-auto flex max-w-md items-center justify-between rounded-full bg-primary px-6 py-4 text-primary-foreground shadow-xl"
-        >
-          <span className="flex items-center gap-2 font-semibold">
-            <ShoppingBag className="size-5" /> {unidades} {unidades === 1 ? "producto" : "productos"} · {clp(totalBolsa(bolsa))}
+          <p className="hero-note">Elegidas con cariño. Para acompañarte cada día.</p>
+        </div>
+        <div className="hero-signature">
+          <span className="eyebrow">Una firma personal</span>
+          <img
+            src={logo}
+            alt="PaMaRa AyN, logotipo metálico"
+            width={1442}
+            height={1442}
+            fetchPriority="high"
+            decoding="async"
+          />
+          <Sparkles className="signature-spark" size={30} strokeWidth={0.8} aria-hidden="true" />
+          <span className="eyebrow">Perfumes de inspiración</span>
+        </div>
+      </section>
+      <div className="service-strip">
+        <div className="page-width">
+          <span>
+            <Sparkles /> Una fragancia para cada estilo
           </span>
-          <span className="font-bold">Ver mi lista</span>
-        </button>
-      )}
+          <span>
+            <Truck /> Entregas en 3 ciudades
+          </span>
+          <span>
+            <Heart /> Atención cercana y personal
+          </span>
+        </div>
+      </div>
 
-      {verBolsa && (
-        <Hoja onClose={() => setVerBolsa(false)}>
-          <h2 className="font-display text-3xl">Mi lista</h2>
-          {bolsa.length === 0 ? (
-            <p className="mt-6 text-muted-foreground">Tu lista está vacía.</p>
-          ) : (
-            <>
-              <ul className="mt-4 divide-y divide-border">
-                {bolsa.map((l) => (
-                  <li key={l.item.codigo} className="flex items-center gap-3 py-3">
-                    {l.item.foto && (
-                      <img src={l.item.foto} alt="" className="size-14 rounded-lg object-cover" />
-                    )}
-                    <div className="min-w-0 flex-1">
-                      {l.item.perfume && (
-                        <p className="text-xs tracking-widest text-muted-foreground">{l.item.codigo}</p>
-                      )}
-                      <p className="truncate font-semibold">{l.item.inspiracion || l.item.nombre}</p>
-                      <p className="text-sm text-primary">
-                        {l.item.precio ? clp(l.item.precio * l.cantidad) : "Precio a confirmar"}
+      <main id="coleccion" className="page-width catalog-section">
+        <div className="catalog-heading">
+          <div>
+            <p className="eyebrow">La colección</p>
+            <h2>Encuentra lo que va contigo</h2>
+          </div>
+          <p className="catalog-count">{items.length} piezas por descubrir</p>
+        </div>
+        <div className="catalog-layout">
+          <aside className="collection-filters" aria-label="Filtros de la colección">
+            <p className="filters-title">
+              Explorar <SlidersHorizontal size={16} strokeWidth={1.2} />
+            </p>
+            <div className="collection-options">
+              {COLECCIONES.map(({ id, label, icon: Icon }) => (
+                <button
+                  key={id}
+                  onClick={() => {
+                    setCol(id);
+                    setPagina(1);
+                  }}
+                  aria-pressed={col === id}
+                  className={"collection-filter" + (col === id ? " is-active" : "")}
+                >
+                  <span>
+                    <Icon /> {label}
+                  </span>
+                  <small>{items.filter((i) => enColeccion(i, id)).length}</small>
+                </button>
+              ))}
+            </div>
+            <label className="filter-label" htmlFor="disponibilidad">
+              Disponibilidad
+            </label>
+            <select
+              id="disponibilidad"
+              value={disp}
+              onChange={(e) => {
+                setDisp(e.target.value as Disponibilidad);
+                setPagina(1);
+              }}
+              className="catalog-select"
+            >
+              {DISPONIBLE.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.label}
+                </option>
+              ))}
+            </select>
+            <button className="clear-filters" onClick={limpiar}>
+              Limpiar filtros
+            </button>
+            <p className="filter-note">
+              ¿Cuál será
+              <br />
+              tu próxima esencia?
+              <small>
+                Explora, elige y consulta.
+                <br />
+                Te ayudamos a encontrarla.
+              </small>
+            </p>
+          </aside>
+          <div className="catalog-body" ref={catalogRef}>
+            <div className="catalog-toolbar">
+              <label className="catalog-search">
+                <Search />
+                <input
+                  aria-label="Buscar en la colección"
+                  type="search"
+                  value={buscar}
+                  onChange={(e) => {
+                    setBuscar(e.target.value);
+                    setPagina(1);
+                  }}
+                  placeholder="Busca por nombre, marca o código…"
+                />
+              </label>
+              <select
+                aria-label="Ordenar colección"
+                value={orden}
+                onChange={(e) => {
+                  setOrden(e.target.value);
+                  setPagina(1);
+                }}
+                className="catalog-select"
+              >
+                <option value="destacados">Destacados primero</option>
+                <option value="nombre">Nombre: A a Z</option>
+                <option value="precio">Menor precio</option>
+              </select>
+            </div>
+            <div className="catalog-results">
+              <span role="status">
+                {visibles.length} {visibles.length === 1 ? "resultado" : "resultados"}
+              </span>
+              <span>Elegidos con cariño, para ti</span>
+            </div>
+            {visibles.length === 0 ? (
+              <div className="empty-collection">
+                <Flower2 size={35} strokeWidth={1} />
+                <h3>
+                  {items.length ? "Una nueva búsqueda, otra esencia" : "Pronto, nuevas piezas"}
+                </h3>
+                <p>
+                  {items.length
+                    ? "Prueba otro nombre o cambia los filtros de la colección."
+                    : "Estamos preparando nuestra colección para ti."}
+                </p>
+                {items.length > 0 && (
+                  <button className="clear-filters" onClick={limpiar}>
+                    Ver toda la colección
+                  </button>
+                )}
+              </div>
+            ) : (
+              <ul className="product-grid">
+                {mostrados.map((i) => (
+                  <li key={i.codigo} className="product-card">
+                    <button
+                      onClick={() => setFicha(i)}
+                      className="product-detail-trigger"
+                      aria-label={"Ver " + (i.inspiracion || i.nombre)}
+                    >
+                      <div className="product-media">
+                        <ProductVisual item={i} />
+                        <span
+                          className={"product-badge" + (i.estado === "remate" ? " is-remate" : "")}
+                        >
+                          {badge(i)}
+                        </span>
+                      </div>
+                      <div className="product-meta">
+                        <span>
+                          {i.perfume
+                            ? i.codigo.startsWith("M-")
+                              ? "Para ella"
+                              : i.codigo.startsWith("T-")
+                                ? "Juvenil"
+                                : "Para él"
+                            : i.categoria || "Selección PaMaRa"}
+                        </span>
+                        <span>{i.perfume ? i.codigo : ""}</span>
+                      </div>
+                      <h3>{i.inspiracion || i.nombre}</h3>
+                      <p className="product-description">
+                        {i.inspiracion
+                          ? i.nombre.replace(i.inspiracion, "").replace(/^[·\s]+/, "") ||
+                            "Perfume de inspiración"
+                          : i.version || i.categoria || "Elegido para ti"}
                       </p>
-                    </div>
-                    <Agregar n={l.cantidad} onCambio={(d) => cambiar(l.item, d)} compacto />
+                      <p className="product-price">
+                        {i.precio ? clp(i.precio) : "Consultar precio"}
+                      </p>
+                    </button>
+                    <Agregar
+                      n={cantidad(i.codigo)}
+                      onCambio={(d) => cambiar(i, d)}
+                      nombre={i.inspiracion || i.nombre}
+                    />
+                    <a
+                      href={linkConsulta(i)}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="product-consult"
+                    >
+                      Consultar por WhatsApp <ArrowUpRight size={10} className="inline" />
+                    </a>
                   </li>
                 ))}
               </ul>
-              <p className="mt-4 flex justify-between text-xl font-bold">
-                <span>Total</span> <span>{clp(totalBolsa(bolsa))}</span>
+            )}
+            {paginas > 1 && (
+              <nav className="catalog-pagination" aria-label="Páginas de la colección">
+                <button
+                  aria-label="Página anterior"
+                  disabled={paginaActual === 1}
+                  onClick={() => cambiarPagina(paginaActual - 1)}
+                >
+                  <ChevronLeft size={16} /> Anterior
+                </button>
+                <span>
+                  Página {paginaActual} de {paginas}
+                </span>
+                <button
+                  aria-label="Página siguiente"
+                  disabled={paginaActual === paginas}
+                  onClick={() => cambiarPagina(paginaActual + 1)}
+                >
+                  Siguiente <ChevronRight size={16} />
+                </button>
+              </nav>
+            )}
+          </div>
+        </div>
+      </main>
+      <footer id="entregas" className="boutique-footer">
+        <div className="page-width">
+          <div className="footer-top">
+            <div>
+              <p className="eyebrow mb-3">PaMaRa AyN</p>
+              <h2>
+                Pequeños detalles.
+                <br />
+                Una esencia que se queda.
+              </h2>
+            </div>
+            <p className="footer-delivery">
+              <strong>Con cariño, hasta donde estás.</strong>Coordinamos entregas en La Serena,
+              Coquimbo y Calama. Prepara tu lista y conversemos por WhatsApp para confirmar
+              disponibilidad, pago y entrega.
+            </p>
+          </div>
+          <div className="footer-bottom">
+            <span>PaMaRa AyN · Perfumes, cosmética y accesorios</span>
+            <Link to="/bodega">
+              Acceso a Bodega <ArrowUpRight size={11} className="inline" />
+            </Link>
+          </div>
+        </div>
+      </footer>
+
+      {ficha && (
+        <Hoja onClose={() => setFicha(null)} label="Detalle del producto">
+          <div className="detail-media">
+            <ProductVisual item={ficha} />
+          </div>
+          <p className="eyebrow mb-3">
+            {ficha.codigo} · {ETIQUETA[ficha.estado]}
+          </p>
+          <h2>{ficha.inspiracion || ficha.nombre}</h2>
+          {ficha.inspiracion && <p className="product-description">{ficha.nombre}</p>}
+          {ficha.version && <p className="product-description">Versión: {ficha.version}</p>}
+          {ficha.categoria && (
+            <p className="product-description">
+              {ficha.perfume ? "Notas: " : ""}
+              {ficha.categoria}
+            </p>
+          )}
+          <p className="mt-4 text-xl font-semibold text-primary">
+            {ficha.precio ? clp(ficha.precio) : "Consultar precio"}
+          </p>
+          <Agregar
+            n={cantidad(ficha.codigo)}
+            onCambio={(d) => cambiar(ficha, d)}
+            nombre={ficha.inspiracion || ficha.nombre}
+          />
+          <a href={linkConsulta(ficha)} target="_blank" rel="noreferrer" className="whatsapp-link">
+            <MessageCircle size={18} /> Consultar este producto
+          </a>
+          <p className="sheet-note">Conversemos por WhatsApp para coordinar los detalles.</p>
+        </Hoja>
+      )}
+      {unidades > 0 && !verBolsa && !ficha && (
+        <button onClick={() => setVerBolsa(true)} className="floating-list">
+          <span>
+            <ShoppingBag size={18} strokeWidth={1.4} /> {unidades}{" "}
+            {unidades === 1 ? "producto" : "productos"} · {clp(totalBolsa(bolsa))}
+          </span>
+          <span>
+            Ver mi lista <ArrowUpRight size={15} />
+          </span>
+        </button>
+      )}
+      {verBolsa && (
+        <Hoja onClose={() => setVerBolsa(false)} label="Mi lista">
+          <p className="eyebrow mb-3">Tu selección PaMaRa</p>
+          <h2>Mi lista</h2>
+          {bolsa.length === 0 ? (
+            <p className="login-description">
+              Tu próxima esencia te está esperando. Explora la colección y agrega lo que te guste.
+            </p>
+          ) : (
+            <>
+              <ul className="mt-4">
+                {bolsa.map((l) => (
+                  <li key={l.item.codigo} className="list-line">
+                    <div className="list-line-info">
+                      <p className="eyebrow mb-2">{l.item.perfume ? l.item.codigo : "PaMaRa"}</p>
+                      <strong>{l.item.inspiracion || l.item.nombre}</strong>
+                      <small>
+                        {l.item.precio ? clp(l.item.precio * l.cantidad) : "Precio a confirmar"}
+                      </small>
+                    </div>
+                    <Agregar
+                      n={l.cantidad}
+                      onCambio={(d) => cambiar(l.item, d)}
+                      nombre={l.item.inspiracion || l.item.nombre}
+                      compacto
+                    />
+                  </li>
+                ))}
+              </ul>
+              <p className="list-total">
+                <span>Total de productos</span>
+                <span>{clp(totalBolsa(bolsa))}</span>
               </p>
-              <p className="mt-5 text-sm font-semibold">¿Dónde te lo entregamos?</p>
-              <div className="mt-2 grid grid-cols-2 gap-2">
+              <p className="mt-7 text-xs font-medium">¿Dónde te lo entregamos?</p>
+              <div className="delivery-choices">
                 {COMUNAS.map((c) => (
                   <button
                     key={c}
                     onClick={() => setComuna(c)}
-                    className={`min-h-12 rounded-full border text-sm font-semibold ${comuna === c ? "border-primary bg-primary text-primary-foreground" : "border-border"}`}
+                    aria-pressed={comuna === c}
+                    className={comuna === c ? "is-active" : ""}
                   >
                     {c}
                   </button>
@@ -302,12 +538,14 @@ function Boutique() {
                 href={linkPedido(bolsa, comuna)}
                 target="_blank"
                 rel="noreferrer"
-                className="mt-6 block w-full rounded-full bg-success py-5 text-center text-xl font-bold text-success-foreground shadow-lg"
+                className="whatsapp-link"
               >
-                Enviar mi lista por WhatsApp
+                <MessageCircle size={18} /> Enviar mi lista por WhatsApp <ArrowUpRight size={16} />
               </a>
-              <p className="mt-2 text-center text-xs text-muted-foreground">
-                Se abre WhatsApp con tu lista lista. Ahí coordinamos pago y entrega.
+              <p className="sheet-note">
+                Ahí coordinamos disponibilidad, pago y entrega.
+                <br />
+                El total de productos no incluye el despacho.
               </p>
             </>
           )}
@@ -320,56 +558,80 @@ function Boutique() {
 function Agregar({
   n,
   onCambio,
-  grande,
   compacto,
+  nombre,
 }: {
   n: number;
   onCambio: (d: number) => void;
-  grande?: boolean;
   compacto?: boolean;
+  nombre: string;
 }) {
-  const alto = grande ? "min-h-14 text-lg" : "min-h-12 text-sm";
   if (n === 0 && !compacto)
     return (
       <button
         onClick={() => onCambio(1)}
-        className={`mt-3 flex w-full items-center justify-center gap-1 rounded-full bg-success font-bold text-success-foreground ${alto}`}
+        className="add-to-list"
+        aria-label={"Agregar " + nombre + " a mi lista"}
       >
-        <Plus className="size-4" /> Agregar a mi lista
+        <Plus size={14} strokeWidth={1.4} /> Agregar a mi lista
       </button>
     );
   return (
-    <div className={`${compacto ? "" : "mt-3 w-full"} flex items-center justify-between gap-2 rounded-full bg-secondary p-1`}>
-      <button aria-label="Quitar uno" onClick={() => onCambio(-1)} className="flex size-10 items-center justify-center rounded-full bg-background">
-        <Minus className="size-4" />
+    <div className={"quantity-control" + (compacto ? " is-compact" : "")}>
+      <button aria-label={"Quitar uno de " + nombre} onClick={() => onCambio(-1)}>
+        <Minus />
       </button>
-      <span className="min-w-6 text-center font-bold">{n}</span>
-      <button aria-label="Agregar uno" onClick={() => onCambio(1)} className="flex size-10 items-center justify-center rounded-full bg-success text-success-foreground">
-        <Plus className="size-4" />
+      <span aria-live="polite" aria-label={"Cantidad: " + n}>
+        {n}
+      </span>
+      <button aria-label={"Agregar uno de " + nombre} onClick={() => onCambio(1)}>
+        <Plus />
       </button>
     </div>
   );
 }
 
-function Hoja({ children, onClose }: { children: React.ReactNode; onClose: () => void }) {
+function Hoja({
+  children,
+  onClose,
+  label,
+}: {
+  children: ReactNode;
+  onClose: () => void;
+  label: string;
+}) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    const previousFocus = document.activeElement;
+    dialog?.showModal();
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      dialog?.close();
+      if (previousFocus instanceof HTMLElement && previousFocus.isConnected) previousFocus.focus();
+    };
+  }, []);
   return (
-    <div
-      className="fixed inset-0 z-40 flex items-end justify-center bg-foreground/40"
-      onClick={onClose}
+    <dialog
+      ref={dialogRef}
+      aria-label={label}
+      className="sheet-backdrop"
+      onCancel={(e) => {
+        e.preventDefault();
+        onClose();
+      }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
     >
-      <div
-        className="relative max-h-[85vh] w-full max-w-md overflow-y-auto rounded-t-3xl bg-background p-6"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button
-          aria-label="Cerrar"
-          onClick={onClose}
-          className="absolute right-4 top-4 flex size-9 items-center justify-center rounded-full bg-secondary"
-        >
-          <X className="size-4" />
+      <div className="boutique-sheet">
+        <button aria-label="Cerrar" onClick={onClose} className="sheet-close">
+          <X size={18} />
         </button>
         {children}
       </div>
-    </div>
+    </dialog>
   );
 }
