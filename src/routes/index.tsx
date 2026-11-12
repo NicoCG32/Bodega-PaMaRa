@@ -1,13 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { X } from "lucide-react";
+import { Minus, Plus, ShoppingBag, X } from "lucide-react";
 import logo from "@/assets/pamara-logo.webp";
 import { catalogoPublico } from "@/lib/boutique.functions";
 import {
   badge,
   enColeccion,
   linkConsulta,
+  linkPedido,
+  totalBolsa,
+  COMUNAS,
+  type Linea,
   type Coleccion,
   type Disponibilidad,
   ETIQUETA,
@@ -69,12 +73,26 @@ function Boutique() {
   const [col, setCol] = useState<Coleccion>("todo");
   const [disp, setDisp] = useState<Disponibilidad>("todo");
   const [ficha, setFicha] = useState<ItemPublico | null>(null);
+  const [bolsa, setBolsa] = useState<Linea[]>([]);
+  const [verBolsa, setVerBolsa] = useState(false);
+  const [comuna, setComuna] = useState<string>(COMUNAS[0]);
+  const cantidad = (c: string) => bolsa.find((l) => l.item.codigo === c)?.cantidad ?? 0;
+  const cambiar = (item: ItemPublico, d: number) =>
+    setBolsa((b) => {
+      const actual = b.find((l) => l.item.codigo === item.codigo);
+      if (!actual) return d > 0 ? [...b, { item, cantidad: 1 }] : b;
+      const n = actual.cantidad + d;
+      return n <= 0
+        ? b.filter((l) => l !== actual)
+        : b.map((l) => (l === actual ? { ...l, cantidad: n } : l));
+    });
+  const unidades = bolsa.reduce((a, l) => a + l.cantidad, 0);
 
   const visibles = items.filter(
     (i) => enColeccion(i, col) && (disp === "todo" || i.estado === disp),
   );
   return (
-    <div className="min-h-screen bg-background">
+    <div className={`min-h-screen bg-background ${unidades ? "pb-24" : ""}`}>
       <header className="flex min-h-[60svh] flex-col items-center justify-center bg-hero px-6 py-12 text-center text-primary-foreground md:min-h-0 md:py-16">
         <img
           src={logo}
@@ -167,13 +185,14 @@ function Boutique() {
                     {i.precio ? clp(i.precio) : "Consultar precio"}
                   </p>
                 </button>
+                <Agregar n={cantidad(i.codigo)} onCambio={(d) => cambiar(i, d)} />
                 <a
                   href={linkConsulta(i)}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-3 flex min-h-12 items-center justify-center rounded-full bg-success text-center text-sm font-bold text-success-foreground"
+                  className="mt-2 text-center text-xs font-semibold text-muted-foreground underline"
                 >
-                  Me interesa
+                  Preguntar solo por este
                 </a>
               </li>
             ))}
@@ -209,13 +228,16 @@ function Boutique() {
           <p className="mt-4 text-2xl font-bold text-primary">
             {ficha.precio ? clp(ficha.precio) : "Consultar precio"}
           </p>
+          <div className="mt-5">
+            <Agregar n={cantidad(ficha.codigo)} onCambio={(d) => cambiar(ficha, d)} grande />
+          </div>
           <a
             href={linkConsulta(ficha)}
             target="_blank"
             rel="noreferrer"
-            className="mt-5 block w-full rounded-full bg-success py-5 text-center text-xl font-bold text-success-foreground shadow-lg"
+            className="mt-3 block w-full rounded-full border-2 border-success py-4 text-center text-lg font-bold text-success"
           >
-            Consultar por WhatsApp
+            Consultar solo este por WhatsApp
           </a>
           <p className="mt-2 text-center text-xs text-muted-foreground">
             Se abre WhatsApp con tu consulta lista para conversar.
@@ -223,6 +245,108 @@ function Boutique() {
         </Hoja>
       )}
 
+      {unidades > 0 && !verBolsa && (
+        <button
+          onClick={() => setVerBolsa(true)}
+          className="fixed inset-x-4 bottom-4 z-30 mx-auto flex max-w-md items-center justify-between rounded-full bg-primary px-6 py-4 text-primary-foreground shadow-xl"
+        >
+          <span className="flex items-center gap-2 font-semibold">
+            <ShoppingBag className="size-5" /> {unidades} {unidades === 1 ? "producto" : "productos"} · {clp(totalBolsa(bolsa))}
+          </span>
+          <span className="font-bold">Ver mi lista</span>
+        </button>
+      )}
+
+      {verBolsa && (
+        <Hoja onClose={() => setVerBolsa(false)}>
+          <h2 className="font-display text-3xl">Mi lista</h2>
+          {bolsa.length === 0 ? (
+            <p className="mt-6 text-muted-foreground">Tu lista está vacía.</p>
+          ) : (
+            <>
+              <ul className="mt-4 divide-y divide-border">
+                {bolsa.map((l) => (
+                  <li key={l.item.codigo} className="flex items-center gap-3 py-3">
+                    {l.item.foto && (
+                      <img src={l.item.foto} alt="" className="size-14 rounded-lg object-cover" />
+                    )}
+                    <div className="min-w-0 flex-1">
+                      {l.item.perfume && (
+                        <p className="text-xs tracking-widest text-muted-foreground">{l.item.codigo}</p>
+                      )}
+                      <p className="truncate font-semibold">{l.item.inspiracion || l.item.nombre}</p>
+                      <p className="text-sm text-primary">
+                        {l.item.precio ? clp(l.item.precio * l.cantidad) : "Precio a confirmar"}
+                      </p>
+                    </div>
+                    <Agregar n={l.cantidad} onCambio={(d) => cambiar(l.item, d)} compacto />
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-4 flex justify-between text-xl font-bold">
+                <span>Total</span> <span>{clp(totalBolsa(bolsa))}</span>
+              </p>
+              <p className="mt-5 text-sm font-semibold">¿Dónde te lo entregamos?</p>
+              <div className="mt-2 grid grid-cols-2 gap-2">
+                {COMUNAS.map((c) => (
+                  <button
+                    key={c}
+                    onClick={() => setComuna(c)}
+                    className={`min-h-12 rounded-full border text-sm font-semibold ${comuna === c ? "border-primary bg-primary text-primary-foreground" : "border-border"}`}
+                  >
+                    {c}
+                  </button>
+                ))}
+              </div>
+              <a
+                href={linkPedido(bolsa, comuna)}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-6 block w-full rounded-full bg-success py-5 text-center text-xl font-bold text-success-foreground shadow-lg"
+              >
+                Enviar mi lista por WhatsApp
+              </a>
+              <p className="mt-2 text-center text-xs text-muted-foreground">
+                Se abre WhatsApp con tu lista lista. Ahí coordinamos pago y entrega.
+              </p>
+            </>
+          )}
+        </Hoja>
+      )}
+    </div>
+  );
+}
+
+function Agregar({
+  n,
+  onCambio,
+  grande,
+  compacto,
+}: {
+  n: number;
+  onCambio: (d: number) => void;
+  grande?: boolean;
+  compacto?: boolean;
+}) {
+  const alto = grande ? "min-h-14 text-lg" : "min-h-12 text-sm";
+  if (n === 0 && !compacto)
+    return (
+      <button
+        onClick={() => onCambio(1)}
+        className={`mt-3 flex w-full items-center justify-center gap-1 rounded-full bg-success font-bold text-success-foreground ${alto}`}
+      >
+        <Plus className="size-4" /> Agregar a mi lista
+      </button>
+    );
+  return (
+    <div className={`${compacto ? "" : "mt-3 w-full"} flex items-center justify-between gap-2 rounded-full bg-secondary p-1`}>
+      <button aria-label="Quitar uno" onClick={() => onCambio(-1)} className="flex size-10 items-center justify-center rounded-full bg-background">
+        <Minus className="size-4" />
+      </button>
+      <span className="min-w-6 text-center font-bold">{n}</span>
+      <button aria-label="Agregar uno" onClick={() => onCambio(1)} className="flex size-10 items-center justify-center rounded-full bg-success text-success-foreground">
+        <Plus className="size-4" />
+      </button>
     </div>
   );
 }

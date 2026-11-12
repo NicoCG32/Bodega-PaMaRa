@@ -99,12 +99,14 @@ export function mensajePedido(b: Linea[], comuna: string) {
     return `• ${t} x${l.cantidad}${modo}${precio}`;
   });
   return [
-    "¡Hola PaMaRa! 🌸 Quiero hacer este pedido:",
+    "¡Hola PaMaRa! 🌸 Me interesan estos productos:",
     "",
     ...lineas,
     "",
     `Total: ${clp(totalBolsa(b))}`,
     `Comuna de entrega: ${comuna}`,
+    "",
+    "¿Podemos coordinar?",
   ].join("\n");
 }
 
