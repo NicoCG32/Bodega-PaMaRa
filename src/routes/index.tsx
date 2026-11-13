@@ -74,7 +74,7 @@ export const Route = createFileRoute("/")({
     ],
   }),
   validateSearch: (s: Record<string, unknown>): { p?: string } =>
-    typeof s.p === "string" && s.p ? { p: s.p } : {},
+    typeof s["p"] === "string" && s["p"] ? { p: s["p"] } : {},
   loader: ({ context }) => context.queryClient.ensureQueryData(catalogoQuery),
   component: Boutique,
 });
