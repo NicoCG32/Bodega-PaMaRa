@@ -29,6 +29,20 @@
       "when": 1794443621596,
       "tag": "0003_fotos_productos_policies",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1794533298507,
+      "tag": "0004_tighten_public_reads",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1794533334414,
+      "tag": "0005_has_role_self_only",
+      "breakpoints": true
     }
   ]
 }

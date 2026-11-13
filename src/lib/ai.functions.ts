@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { requireAdmin } from "./admin-middleware";
 
 import { z } from "zod";
 
@@ -139,6 +140,7 @@ const bodegaValidada = z.object({
 });
 
 export const transcribir = createServerFn({ method: "POST" })
+  .middleware([requireAdmin])
   .inputValidator((d: { audio: string; mime: string }) => {
     if (!d?.audio || d.audio.length > 15_000_000) throw new Error("Audio inválido o muy largo");
     return d;
@@ -175,6 +177,7 @@ export const transcribir = createServerFn({ method: "POST" })
   });
 
 export const interpretar = createServerFn({ method: "POST" })
+  .middleware([requireAdmin])
   .inputValidator((d: { texto: string; hoy: string; nativo?: string; groq?: string }) => {
     if (!d?.texto || [d.texto, d.nativo ?? "", d.groq ?? ""].some((t) => t.length > 4000))
       throw new Error("Texto inválido");
@@ -217,6 +220,7 @@ export type ItemBodega = {
 
 /** Inventory count from a dictation chunk or a shelf photo. Items keep the order they were said/seen. */
 export const interpretarBodega = createServerFn({ method: "POST" })
+  .middleware([requireAdmin])
   .inputValidator(
     (d: { texto?: string; imagen?: string; otros: string[]; nativo?: string; groq?: string }) => {
       if (!d?.texto && !d?.imagen) throw new Error("Nada que revisar");
@@ -264,6 +268,7 @@ En una foto: lee los códigos visibles en las etiquetas y devuelve un ítem por 
 
 /** Turns a spoken meme/trend idea into a ready-to-paste ChatGPT prompt (image + caption). */
 export const crearPromptTrend = createServerFn({ method: "POST" })
+  .middleware([requireAdmin])
   .inputValidator((d: { idea: string; productos: string; nativo?: string; groq?: string }) => {
     if (!d?.idea || d.idea.length > 2000) throw new Error("Cuéntame la idea primero");
     return {

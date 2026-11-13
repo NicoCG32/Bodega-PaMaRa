@@ -2,12 +2,15 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@tanstack/react-start", () => ({
   createServerFn: () => ({
-    inputValidator: (validate: (d: unknown) => unknown) => ({
-      handler: (fn: (input: { data: unknown }) => unknown) => (input: { data: unknown }) =>
-        fn({ data: validate(input.data) }),
+    middleware: () => ({
+      inputValidator: (validate: (d: unknown) => unknown) => ({
+        handler: (fn: (input: { data: unknown }) => unknown) => (input: { data: unknown }) =>
+          fn({ data: validate(input.data) }),
+      }),
     }),
   }),
 }));
+vi.mock("@/lib/admin-middleware", () => ({ requireAdmin: {} }));
 import { interpretar, interpretarBodega, crearPromptTrend, transcribir } from "@/lib/ai.functions";
 
 afterEach(() => {
