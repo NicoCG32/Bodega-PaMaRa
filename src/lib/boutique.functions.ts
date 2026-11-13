@@ -24,12 +24,19 @@ export const catalogoPublico = createServerFn({ method: "GET" }).handler(
       sb.from("productos").select("data").eq("en_boutique", true),
       sb.from("ajustes_tienda").select("precios").maybeSingle(),
     ]);
+    // Códigos "Solo privado": solo se leen los códigos, nunca sus datos.
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: priv } = await supabaseAdmin
+      .from("productos")
+      .select("codigo")
+      .eq("en_boutique", false);
+    const privados = new Set((priv ?? []).map((r) => r.codigo));
     // Siempre los perfumes oficiales (a pedido) + lo que la bodega tenga en la nube.
     const productos = conCatalogo(
       (error || !data ? [] : data)
         .map((f) => f.data as unknown as Producto)
         .filter((p) => p && typeof p.codigo === "string"),
-    );
+    ).filter((p) => !privados.has(p.codigo));
     const items = aPublico(productos, (aj?.precios as unknown as Precios) ?? undefined);
     const rutas = items.map((i) => i.foto).filter((r): r is string => !!r);
     if (rutas.length) {

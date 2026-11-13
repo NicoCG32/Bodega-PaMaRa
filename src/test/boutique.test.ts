@@ -21,6 +21,10 @@ describe("Boutique", () => {
   it("oculta los marcados solo privado; agotados quedan a pedido al final", () => {
     expect(aPublico(ps).map((i) => i.codigo)).toEqual(["M-12", "H-05", "O-ab", "H-09"]);
   });
+  it("perfume del catálogo marcado solo privado no aparece ni a pedido", () => {
+    const pub = aPublico([{ codigo: "M-04", nombre: "La Vie", stock: 0, enBoutique: false }]);
+    expect(pub).toEqual([]);
+  });
   it("2 o menos unidades = Últimas unidades", () => {
     const [m, h] = aPublico(ps);
     expect(badge(m!)).toBe("Entrega hoy");
