@@ -14,6 +14,8 @@ import {
   Minus,
   Plus,
   Search,
+  ShieldCheck,
+  Link2,
   ShoppingBag,
   SlidersHorizontal,
   Sparkles,
@@ -71,6 +73,8 @@ export const Route = createFileRoute("/")({
       { name: "twitter:card", content: "summary" },
     ],
   }),
+  validateSearch: (s: Record<string, unknown>): { p?: string } =>
+    typeof s.p === "string" && s.p ? { p: s.p } : {},
   loader: ({ context }) => context.queryClient.ensureQueryData(catalogoQuery),
   component: Boutique,
 });
@@ -98,7 +102,25 @@ function Boutique() {
   const [orden, setOrden] = useState("destacados");
   const [pagina, setPagina] = useState(1);
   const catalogRef = useRef<HTMLDivElement>(null);
-  const [ficha, setFicha] = useState<ItemPublico | null>(null);
+  const { p: fichaCodigo } = Route.useSearch();
+  const navigate = Route.useNavigate();
+  const ficha = fichaCodigo ? (items.find((x) => x.codigo === fichaCodigo) ?? null) : null;
+  const setFicha = (i: ItemPublico | null) =>
+    navigate({ search: i ? { p: i.codigo } : {}, replace: !i, resetScroll: false });
+  const [copiado, setCopiado] = useState(false);
+  const copiarEnlace = async (codigo: string) => {
+    const url = `${window.location.origin}/?p=${encodeURIComponent(codigo)}`;
+    try {
+      if (navigator.share) await navigator.share({ title: "PaMaRa AyN", url });
+      else {
+        await navigator.clipboard.writeText(url);
+        setCopiado(true);
+        setTimeout(() => setCopiado(false), 2000);
+      }
+    } catch {
+      /* cancelado */
+    }
+  };
   const [bolsa, setBolsa] = useState<Linea[]>([]);
   const [verBolsa, setVerBolsa] = useState(false);
   const [comuna, setComuna] = useState<string>(COMUNAS[0]);
@@ -475,6 +497,21 @@ function Boutique() {
             <MessageCircle size={18} /> Consultar este producto
           </a>
           <p className="sheet-note">Conversemos por WhatsApp para coordinar los detalles.</p>
+          {ficha.perfume && (
+            <div className="cert-seal">
+              <ShieldCheck size={22} strokeWidth={1.4} />
+              <div>
+                <p className="cert-title">Réplica certificada Parfum d'Parfums</p>
+                <p className="cert-text">
+                  Fórmula segura y no nociva, elaborada bajo los controles regulatorios
+                  vigentes. Cuidamos tu piel tanto como tu esencia.
+                </p>
+              </div>
+            </div>
+          )}
+          <button type="button" className="share-link" onClick={() => copiarEnlace(ficha.codigo)}>
+            <Link2 size={15} /> {copiado ? "Enlace copiado" : "Compartir esta ficha"}
+          </button>
         </Hoja>
       )}
       {unidades > 0 && !verBolsa && !ficha && (
