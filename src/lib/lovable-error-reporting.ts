@@ -11,7 +11,6 @@ type LovableEvents = {
     context?: Record<string, unknown>,
     options?: LovableErrorOptions,
   ) => void;
-  track?: (event: string, properties?: Record<string, unknown>) => string | null;
 };
 
 declare global {

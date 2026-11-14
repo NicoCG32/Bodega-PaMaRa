@@ -54,3 +54,19 @@ describe("Boutique", () => {
     expect(decodeURIComponent(url)).toContain("Comuna de entrega: Coquimbo");
   });
 });
+
+import { aPublico as aPub2 } from "@/lib/boutique";
+describe("orden por stock y vistas", () => {
+  it("primero con stock, luego más vistos", () => {
+    const r = aPub2(
+      [
+        { codigo: "H-01", nombre: "a", inspiracion: "A", stock: 0 },
+        { codigo: "H-02", nombre: "b", inspiracion: "B", stock: 0 },
+        { codigo: "H-03", nombre: "c", inspiracion: "C", stock: 2 },
+      ],
+      undefined,
+      new Map([["H-02", 9], ["H-01", 1]]),
+    );
+    expect(r.map((i) => i.codigo)).toEqual(["H-03", "H-02", "H-01"]);
+  });
+});
