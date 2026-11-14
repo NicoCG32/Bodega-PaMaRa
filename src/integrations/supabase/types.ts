@@ -62,6 +62,27 @@ export type Database = {
         }
         Relationships: []
       }
+      ficha_stats: {
+        Row: {
+          codigo: string
+          compartidos: number
+          updated_at: string
+          vistas: number
+        }
+        Insert: {
+          codigo: string
+          compartidos?: number
+          updated_at?: string
+          vistas?: number
+        }
+        Update: {
+          codigo?: string
+          compartidos?: number
+          updated_at?: string
+          vistas?: number
+        }
+        Relationships: []
+      }
       productos: {
         Row: {
           codigo: string
@@ -133,6 +154,10 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      registrar_ficha: {
+        Args: { _codigo: string; _tipo: string }
+        Returns: undefined
       }
     }
     Enums: {
