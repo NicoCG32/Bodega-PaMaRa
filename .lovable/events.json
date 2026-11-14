@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "events": {
+    "project.ficha_compartida": {
+      "event_schema_version": 1,
+      "description": "Se tocó «Compartir esta ficha» en un producto.",
+      "privacy": {
+        "contains_pii": false,
+        "purpose": "product_analytics"
+      },
+      "properties_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "codigo"
+        ],
+        "properties": {
+          "codigo": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "project.ficha_vista": {
+      "event_schema_version": 1,
+      "description": "Una clienta abrió la ficha de un producto en la vitrina.",
+      "privacy": {
+        "contains_pii": false,
+        "purpose": "product_analytics"
+      },
+      "properties_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "codigo"
+        ],
+        "properties": {
+          "codigo": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

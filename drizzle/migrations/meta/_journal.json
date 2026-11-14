@@ -43,6 +43,13 @@
       "when": 1794533334414,
       "tag": "0005_has_role_self_only",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1794621561156,
+      "tag": "0006_ficha_stats",
+      "breakpoints": true
     }
   ]
 }

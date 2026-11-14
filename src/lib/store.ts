@@ -35,6 +35,10 @@ export type Producto = {
   precio?: number | undefined;
   /** Ruta de la foto en la nube (ropa/cosmética). */
   foto?: string | undefined;
+  /** Texto libre para la ficha pública. */
+  descripcion?: string | undefined;
+  /** Notas olfativas (perfumes). */
+  notas?: string | undefined;
   fechaIngreso?: string | undefined;
   ultimaVenta?: string | undefined;
   /** Shown in the future public Boutique. Default true. */

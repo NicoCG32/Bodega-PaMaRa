@@ -25,7 +25,7 @@ import {
 import logo from "@/assets/pamara-logo.webp";
 import monograma from "@/assets/pamara-monograma.webp";
 import { ProductVisual } from "@/components/ProductVisual";
-import { catalogoPublico } from "@/lib/boutique.functions";
+import { catalogoPublico, registrarFicha } from "@/lib/boutique.functions";
 import {
   badge,
   enColeccion,
@@ -107,8 +107,15 @@ function Boutique() {
   const ficha = fichaCodigo ? (items.find((x) => x.codigo === fichaCodigo) ?? null) : null;
   const setFicha = (i: ItemPublico | null) =>
     navigate({ search: i ? { p: i.codigo } : {}, replace: !i, resetScroll: false });
+  useEffect(() => {
+    if (!ficha) return;
+    void registrarFicha({ data: { codigo: ficha.codigo, tipo: "vista" } }).catch(() => {});
+    window.__lovableEvents?.track?.("project.ficha_vista", { codigo: ficha.codigo });
+  }, [ficha?.codigo]);
   const [copiado, setCopiado] = useState(false);
   const copiarEnlace = async (codigo: string) => {
+    void registrarFicha({ data: { codigo, tipo: "compartir" } }).catch(() => {});
+    window.__lovableEvents?.track?.("project.ficha_compartida", { codigo });
     const url = `${window.location.origin}/?p=${encodeURIComponent(codigo)}`;
     try {
       if (navigator.share) await navigator.share({ title: "PaMaRa AyN", url });
@@ -479,10 +486,15 @@ function Boutique() {
           <h2>{ficha.inspiracion || ficha.nombre}</h2>
           {ficha.inspiracion && <p className="product-description">{ficha.nombre}</p>}
           {ficha.version && <p className="product-description">Versión: {ficha.version}</p>}
-          {ficha.categoria && (
+          {ficha.categoria && !ficha.perfume && (
+            <p className="product-description">{ficha.categoria}</p>
+          )}
+          {ficha.descripcion && (
+            <p className="product-description whitespace-pre-line">{ficha.descripcion}</p>
+          )}
+          {ficha.notas && (
             <p className="product-description">
-              {ficha.perfume ? "Notas: " : ""}
-              {ficha.categoria}
+              <strong>Notas:</strong> {ficha.notas}
             </p>
           )}
           <p className="mt-4 text-xl font-semibold text-primary">
