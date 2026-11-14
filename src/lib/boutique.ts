@@ -19,12 +19,19 @@ export type ItemPublico = {
   estado: EstadoVenta;
   /** Ruta de la foto; el servidor la cambia por un enlace para ver. */
   foto: string | null;
+  descripcion: string | null;
+  notas: string | null;
+  vistas: number;
 };
 
 export type Disponibilidad = "todo" | EstadoVenta;
 
 /** Lo visible al público (no "Solo privado"): perfumes siempre (sin stock = a pedido); ropa y cosmética solo con stock. */
-export function aPublico(productos: Producto[], cfg?: Precios): ItemPublico[] {
+export function aPublico(
+  productos: Producto[],
+  cfg?: Precios,
+  vistas?: Map<string, number>,
+): ItemPublico[] {
   return productos
     .filter(
       (p) =>
@@ -44,9 +51,17 @@ export function aPublico(productos: Producto[], cfg?: Precios): ItemPublico[] {
         perfume: !esOtro(p),
         estado: v.estado,
         foto: p.foto ?? null,
+        descripcion: p.descripcion?.trim() || null,
+        notas: p.notas?.trim() || null,
+        vistas: vistas?.get(p.codigo) ?? 0,
       };
     })
-    .sort((a, b) => orden[a.estado] - orden[b.estado]);
+    .sort(
+      (a, b) =>
+        Number(b.stock > 0) - Number(a.stock > 0) ||
+        orden[a.estado] - orden[b.estado] ||
+        b.vistas - a.vistas,
+    );
 }
 const orden: Record<EstadoVenta, number> = { remate: 0, stock: 1, encargo: 2 };
 

@@ -355,6 +355,8 @@ function Editor({
   const [precio, setPrecio] = useState(p?.precio ? String(p.precio) : "");
   const [stock, setStock] = useState(p ? String(p.stock) : "0");
   const [foto, setFoto] = useState(p?.foto);
+  const [descripcion, setDescripcion] = useState(p?.descripcion ?? "");
+  const [notas, setNotas] = useState(p?.notas ?? "");
   const [vista, setVista] = useState<string | null>(null);
   const [subiendo, setSubiendo] = useState(false);
   useEffect(() => {
@@ -373,6 +375,30 @@ function Editor({
       setSubiendo(false);
     }
   }
+  const fotoCampo = (
+          <label className="flex min-h-40 cursor-pointer flex-col items-center justify-center gap-2 overflow-hidden rounded-3xl border-2 border-dashed border-primary/40 bg-secondary text-center">
+              {vista ? (
+                <img src={vista} alt="Foto del producto" className="max-h-64 w-full object-cover" />
+              ) : (
+                <>
+                  <Camera className="size-10 text-primary" />
+                  <span className="text-lg font-bold">Sacar o elegir foto</span>
+                </>
+              )}
+              {subiendo && (
+                <span className="pb-2 text-sm font-bold text-muted-foreground">Subiendo foto…</span>
+              )}
+              {vista && !subiendo && (
+                <span className="pb-2 text-sm font-bold text-primary">Toca para cambiar la foto</span>
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => void elegirFoto(e.target.files?.[0])}
+              />
+            </label>
+  );
   const campo = "h-12 w-full rounded-2xl border-2 border-input bg-background px-4 text-lg";
 
   function guardar() {
@@ -399,6 +425,8 @@ function Editor({
       categoria: categoria.trim() || undefined,
       precio: pr,
       foto,
+      descripcion: descripcion.trim() || undefined,
+      notas: tipo === "perfume" ? notas.trim() || undefined : undefined,
       stock: st,
       fechaIngreso: st > 0 ? (p?.stock ? (p.fechaIngreso ?? hoyStr) : hoyStr) : p?.fechaIngreso,
       ultimaVenta: p?.ultimaVenta,
@@ -432,31 +460,18 @@ function Editor({
             placeholder="Versión, ej: GOAT"
             className={campo}
           />
+          {fotoCampo}
+          <textarea
+            value={notas}
+            onChange={(e) => setNotas(e.target.value)}
+            placeholder="Notas (opcional), ej: cítricos, lavanda, madera"
+            rows={2}
+            className={campo + " h-auto py-3"}
+          />
         </>
       ) : (
         <>
-          <label className="flex min-h-40 cursor-pointer flex-col items-center justify-center gap-2 overflow-hidden rounded-3xl border-2 border-dashed border-primary/40 bg-secondary text-center">
-            {vista ? (
-              <img src={vista} alt="Foto del producto" className="max-h-64 w-full object-cover" />
-            ) : (
-              <>
-                <Camera className="size-10 text-primary" />
-                <span className="text-lg font-bold">Sacar o elegir foto</span>
-              </>
-            )}
-            {subiendo && (
-              <span className="pb-2 text-sm font-bold text-muted-foreground">Subiendo foto…</span>
-            )}
-            {vista && !subiendo && (
-              <span className="pb-2 text-sm font-bold text-primary">Toca para cambiar la foto</span>
-            )}
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => void elegirFoto(e.target.files?.[0])}
-            />
-          </label>
+          {fotoCampo}
           <input
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
@@ -472,6 +487,13 @@ function Editor({
           />
         </>
       )}
+      <textarea
+        value={descripcion}
+        onChange={(e) => setDescripcion(e.target.value)}
+        placeholder="Descripción (opcional): cómo es, para qué ocasión…"
+        rows={3}
+        className={campo + " h-auto py-3"}
+      />
       <div className="grid grid-cols-2 gap-2">
         <label className="text-sm font-bold text-muted-foreground">
           Precio propio (vacío = general)
