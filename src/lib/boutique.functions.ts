@@ -20,18 +20,19 @@ export const catalogoPublico = createServerFn({ method: "GET" }).handler(
         },
       },
     });
-    const [{ data, error }, { data: aj }, { data: stats }] = await Promise.all([
+    const [{ data, error }, { data: aj }] = await Promise.all([
       sb.from("productos").select("data").eq("en_boutique", true),
       sb.from("ajustes_tienda").select("precios").maybeSingle(),
-      sb.from("ficha_stats").select("codigo, vistas"),
     ]);
-    const vistas = new Map((stats ?? []).map((s) => [s.codigo, s.vistas]));
     // Códigos "Solo privado": solo se leen los códigos, nunca sus datos.
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: priv } = await supabaseAdmin
       .from("productos")
       .select("codigo")
       .eq("en_boutique", false);
+    // Vistas: solo para ordenar; se leen en el servidor y no se envían al público.
+    const { data: stats } = await supabaseAdmin.from("ficha_stats").select("codigo, vistas");
+    const vistas = new Map((stats ?? []).map((s) => [s.codigo, s.vistas]));
     const privados = new Set((priv ?? []).map((r) => r.codigo));
     // Siempre los perfumes oficiales (a pedido) + lo que la bodega tenga en la nube.
     const productos = conCatalogo(
@@ -49,6 +50,7 @@ export const catalogoPublico = createServerFn({ method: "GET" }).handler(
       const mapa = new Map((urls ?? []).map((u) => [u.path, u.signedUrl]));
       for (const i of items) i.foto = i.foto ? (mapa.get(i.foto) ?? null) : null;
     }
+    for (const i of items) i.vistas = 0;
     return items;
   },
 );
