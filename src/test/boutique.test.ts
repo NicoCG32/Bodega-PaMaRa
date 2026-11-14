@@ -65,7 +65,10 @@ describe("orden por stock y vistas", () => {
         { codigo: "H-03", nombre: "c", inspiracion: "C", stock: 2 },
       ],
       undefined,
-      new Map([["H-02", 9], ["H-01", 1]]),
+      new Map([
+        ["H-02", 9],
+        ["H-01", 1],
+      ]),
     );
     expect(r.map((i) => i.codigo)).toEqual(["H-03", "H-02", "H-01"]);
   });
