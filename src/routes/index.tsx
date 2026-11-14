@@ -379,11 +379,6 @@ function Boutique() {
                     >
                       <div className="product-media">
                         <ProductVisual item={i} />
-                        <span
-                          className={"product-badge" + (i.estado === "remate" ? " is-remate" : "")}
-                        >
-                          {badge(i)}
-                        </span>
                       </div>
                       <div className="product-meta">
                         <span>
@@ -405,7 +400,12 @@ function Boutique() {
                           : i.version || i.categoria || "Elegido para ti"}
                       </p>
                       <p className="product-price">
-                        {i.precio ? clp(i.precio) : "Consultar precio"}
+                        <span>{i.precio ? clp(i.precio) : "Consultar precio"}</span>
+                        <span
+                          className={"product-badge" + (i.estado === "remate" ? " is-remate" : "")}
+                        >
+                          {badge(i)}
+                        </span>
                       </p>
                     </button>
                     <Agregar
@@ -478,7 +478,7 @@ function Boutique() {
       {ficha && (
         <Hoja onClose={() => setFicha(null)} label="Detalle del producto">
           <div className="detail-media">
-            <ProductVisual item={ficha} />
+            <ProductVisual item={ficha} ampliada />
           </div>
           <p className="eyebrow mb-3">
             {ficha.codigo} · {ETIQUETA[ficha.estado]}
@@ -515,8 +515,8 @@ function Boutique() {
               <div>
                 <p className="cert-title">Réplica certificada Parfum d'Parfums</p>
                 <p className="cert-text">
-                  Fórmula segura y no nociva, elaborada bajo los controles regulatorios
-                  vigentes. Cuidamos tu piel tanto como tu esencia.
+                  Fórmula segura y no nociva, elaborada bajo los controles regulatorios vigentes.
+                  Cuidamos tu piel tanto como tu esencia.
                 </p>
               </div>
             </div>

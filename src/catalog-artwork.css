@@ -1,0 +1,99 @@
+.catalog-artwork {
+  position: relative;
+  isolation: isolate;
+  container-type: inline-size;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #302a2a;
+  color: #fff8ed;
+}
+.catalog-artwork::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgb(0 0 0 / 0.4),
+    transparent 30%,
+    transparent 45%,
+    rgb(0 0 0 / 0.18) 58%,
+    rgb(0 0 0 / 0.88)
+  );
+  pointer-events: none;
+}
+.catalog-artwork-scene {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.catalog-artwork-brand {
+  position: absolute;
+  z-index: 1;
+  inset: 5% 6% auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  pointer-events: none;
+}
+.catalog-artwork-brand img {
+  width: 25%;
+  height: auto;
+  filter: drop-shadow(0 1px 3px rgb(0 0 0 / 0.65));
+}
+.catalog-artwork-brand > span {
+  padding-top: 4%;
+  font: 500 clamp(12px, 6cqi, 24px) / 1 var(--font-display);
+  letter-spacing: 0.02em;
+  text-shadow: 0 1px 4px #000;
+}
+.catalog-artwork-copy {
+  position: absolute;
+  z-index: 1;
+  inset: auto 6% 6%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  text-align: center;
+  text-shadow: 0 1px 4px rgb(0 0 0 / 0.65);
+  pointer-events: none;
+}
+.catalog-artwork-title {
+  font: 500 clamp(16px, 7.2cqi, 31px) / 1 var(--font-display);
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.catalog-artwork-maker {
+  font: 500 clamp(10px, 4.2cqi, 17px) / 1.15 var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.catalog-artwork-reference {
+  margin-top: 3px;
+  padding-top: 8px;
+  border-top: 1px solid rgb(231 212 171 / 0.65);
+  font: 400 clamp(9px, 3cqi, 12px) / 1.3 var(--font-sans);
+}
+.catalog-artwork-description {
+  max-width: 90%;
+  font: 400 clamp(12px, 3.5cqi, 15px) / 1.3 var(--font-display);
+  text-wrap: balance;
+}
+.product-price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+.product-price .product-badge {
+  position: static;
+  max-width: none;
+  flex-shrink: 0;
+}
+.boutique-sheet .detail-media:has(.catalog-artwork) {
+  height: auto;
+  aspect-ratio: 1;
+}

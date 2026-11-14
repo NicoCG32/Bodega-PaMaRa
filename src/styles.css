@@ -1,6 +1,7 @@
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
+@import "./catalog-artwork.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -585,7 +586,7 @@
 .product-media {
   position: relative;
   overflow: hidden;
-  aspect-ratio: 0.93;
+  aspect-ratio: 1;
   background: var(--muted);
   border: 1px solid var(--border);
   border-radius: 5px;
@@ -1607,7 +1608,7 @@ dialog.sheet-backdrop:not([open]) {
     gap: 26px 13px;
   }
   .product-media {
-    aspect-ratio: 0.87;
+    aspect-ratio: 1;
   }
   .product-badge {
     top: 9px;
