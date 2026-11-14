@@ -42,7 +42,8 @@ export const catalogoPublico = createServerFn({ method: "GET" }).handler(
     const items = aPublico(productos, (aj?.precios as unknown as Precios) ?? undefined, vistas);
     const rutas = items.map((i) => i.foto).filter((r): r is string => !!r);
     if (rutas.length) {
-      const { data: urls } = await sb.storage
+      // Solo se firman fotos de productos ya visibles en la vitrina (items filtrados arriba).
+      const { data: urls } = await supabaseAdmin.storage
         .from("fotos-productos")
         .createSignedUrls(rutas, 60 * 60 * 24);
       const mapa = new Map((urls ?? []).map((u) => [u.path, u.signedUrl]));
