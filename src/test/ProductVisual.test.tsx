@@ -2,11 +2,19 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import { ProductVisual } from "@/components/ProductVisual";
 import { aPublico } from "@/lib/boutique";
+import { IMAGENES_CATALOGO } from "@/lib/catalogo-imagenes";
+import { PERFUMES } from "@/lib/perfumes";
 
 const [eden] = aPublico([{ codigo: "M-31", nombre: "Eden", stock: 0 }]);
 afterEach(cleanup);
 
 describe("Imágenes del catálogo", () => {
+  it("incluye los tres tamaños para cada perfume del catálogo oficial", () => {
+    expect(Object.keys(IMAGENES_CATALOGO).sort()).toEqual(
+      PERFUMES.map(([codigo]) => codigo).sort(),
+    );
+  });
+
   it("asocia la escena al código oficial y conserva los textos fuera de la imagen", () => {
     render(<ProductVisual item={eden!} />);
     const scene = screen.getByRole("img", { name: /referencial.*Eden de Cacharel/ });
