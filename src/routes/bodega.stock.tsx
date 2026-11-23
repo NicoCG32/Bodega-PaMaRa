@@ -1,4 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import "@/collage.css";
 import { useEffect, useState } from "react";
 import { Camera, Minus, Pencil, Plus, Trash2 } from "lucide-react";
 import { subirFoto, verFoto } from "@/lib/fotos";
@@ -133,6 +134,13 @@ function Catalogo() {
 
       {seccion === "promo" && (
         <>
+          <Link to="/bodega/promociones" className="collage-entry">
+            <span>
+              <strong>Crear un collage</strong>
+              <small>Prepara una publicación cuadrada y un estado vertical con tus perfumes.</small>
+            </span>
+            <Plus aria-hidden="true" />
+          </Link>
           <PublicarStock />
           <CrearTrend />
           <button

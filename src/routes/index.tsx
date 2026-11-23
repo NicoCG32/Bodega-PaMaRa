@@ -25,6 +25,7 @@ import {
 import logo from "@/assets/pamara-logo.webp";
 import monograma from "@/assets/pamara-monograma.webp";
 import { ProductVisual } from "@/components/ProductVisual";
+import { Presentaciones, PresentacionProducto } from "@/components/Presentaciones";
 import { catalogoPublico, registrarFicha } from "@/lib/boutique.functions";
 import {
   badge,
@@ -196,6 +197,7 @@ function Boutique() {
           </a>
           <nav className="header-links" aria-label="Navegación principal">
             <a href="#coleccion">La colección</a>
+            <a href="#presentaciones">Presentaciones</a>
             <a href="#entregas">Entregas</a>
           </nav>
           <button
@@ -449,6 +451,7 @@ function Boutique() {
           </div>
         </div>
       </main>
+      <Presentaciones />
       <footer id="entregas" className="boutique-footer">
         <div className="page-width">
           <div className="footer-top">
@@ -497,6 +500,7 @@ function Boutique() {
               <strong>Notas:</strong> {ficha.notas}
             </p>
           )}
+          {ficha.perfume && <PresentacionProducto codigo={ficha.codigo} />}
           <p className="mt-4 text-xl font-semibold text-primary">
             {ficha.precio ? clp(ficha.precio) : "Consultar precio"}
           </p>

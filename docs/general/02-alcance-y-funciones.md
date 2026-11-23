@@ -9,7 +9,7 @@ La aplicación se divide en **Boutique**, **pública sin registro para clientes*
 | Bodega    | Productos, stock, precios, recuento por voz/foto y sugerencias de reposición | La captura por IA exige revisión; stock y precios se sincronizan además con tablas compartidas.                 |
 | Precios   | Precio base, recargo por encargo y descuento por liquidación                 | Montos fijos configurables, sin cálculo de impuestos o costos reales de entrega.                                |
 | Boutique  | Filtrar catálogo, preparar bolsa y abrir WhatsApp                            | Consulta productos visibles en `productos` y precios en `ajustes_tienda`; no procesa pagos ni reserva unidades. |
-| Promoción | Copiar anuncios y generar prompts de tendencias                              | No publica en Facebook ni genera automáticamente una imagen.                                                    |
+| Promoción | Crear collages, copiar anuncios y generar prompts de tendencias             | Los collages se descargan o comparten desde el teléfono; la aplicación no publica por sí sola en redes.          |
 | Nube      | Inicio con Google, copia del estado y recuperación                           | El snapshot JSON completo no resuelve conflictos; productos y precios usan un flujo compartido distinto.        |
 | Avisos    | Aviso local con la aplicación abierta; registro web push y trabajo de cron   | La entrega con app cerrada requiere configuración FCM y pruebas externas.                                       |
 | Android   | APK beta TWA                                                                 | Carga la web; necesita internet, dominio disponible y navegador compatible.                                     |
@@ -47,6 +47,14 @@ flowchart LR
 ```
 
 La bolsa calcula el total de los productos. La comuna se incluye en el mensaje y el costo de despacho se acuerda por WhatsApp. Las etiquetas de disponibilidad orientan la consulta; la tienda confirma el plazo de entrega.
+
+## Collages y presentaciones
+
+La Boutique muestra cuatro presentaciones de frasco y estuche, y cada ficha de perfume incluye la correspondiente. Las imágenes de inspiración del catálogo se mantienen separadas de estas fotografías.
+
+En Bodega, **Crear un collage** permite elegir de uno a seis perfumes publicados y preparar dos imágenes: una cuadrada para publicaciones (1080 × 1080) y otra vertical para estados (1080 × 1920). El título y el mensaje son editables; el mensaje inicial es «A pedido · Consulta por WhatsApp». Los precios están ocultos al comenzar y, al activarlos, se aplica la misma regla de precios que en la Boutique. Los frascos y estuches correspondientes también se pueden incluir u ocultar.
+
+Tras generar las imágenes, se puede revisar cada formato y guardarlo como JPEG. En teléfonos con uso compartido de archivos aparece también **Compartir imagen**. La composición se hace en el navegador con las referencias existentes del catálogo, sin subir imágenes ni cambiar el inventario. Los productos marcados como privados quedan fuera de la selección.
 
 ## Alcance actual
 
