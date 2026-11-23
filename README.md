@@ -35,6 +35,7 @@ Por eso separé dos experiencias: **Bodega**, donde la administradora registra y
 | Registrar fiados, abonos, cuotas y encargos                           | Explorar perfumes y otros productos publicados       |
 | Contar y ajustar existencias, por formulario o captura asistida       | Revisar precio calculado, stock y disponibilidad     |
 | Definir precios y decidir qué producto se muestra                     | Preparar una bolsa con productos y cantidades        |
+| Crear collages cuadrados y verticales con hasta seis perfumes          | Conocer los frascos y estuches de cada presentación  |
 | Utilizar una sesión autorizada para sincronizar productos y respaldos | Abrir WhatsApp con un mensaje de pedido ya redactado |
 
 La **Boutique no procesa pagos ni confirma ventas**. La comuna se incluye en la consulta, pero el costo de entrega se acuerda fuera de la aplicación: **no existe un cotizador de despacho implementado**.

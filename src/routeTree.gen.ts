@@ -19,6 +19,7 @@ import { Route as BodegaIndexRouteImport } from './routes/bodega.index'
 import { Route as BodegaAjustesRouteImport } from './routes/bodega.ajustes'
 import { Route as BodegaCobrosRouteImport } from './routes/bodega.cobros'
 import { Route as BodegaEncargosRouteImport } from './routes/bodega.encargos'
+import { Route as BodegaPromocionesRouteImport } from './routes/bodega.promociones'
 import { Route as BodegaStockRouteImport } from './routes/bodega.stock'
 import { Route as ApiPublicJobsRecordatoriosRouteImport } from './routes/api/public/jobs/recordatorios'
 
@@ -72,6 +73,11 @@ const BodegaEncargosRoute = BodegaEncargosRouteImport.update({
   path: '/bodega/encargos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BodegaPromocionesRoute = BodegaPromocionesRouteImport.update({
+  id: '/bodega/promociones',
+  path: '/bodega/promociones',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BodegaStockRoute = BodegaStockRouteImport.update({
   id: '/bodega/stock',
   path: '/bodega/stock',
@@ -94,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/bodega/ajustes': typeof BodegaAjustesRoute
   '/bodega/cobros': typeof BodegaCobrosRoute
   '/bodega/encargos': typeof BodegaEncargosRoute
+  '/bodega/promociones': typeof BodegaPromocionesRoute
   '/bodega/stock': typeof BodegaStockRoute
   '/bodega/': typeof BodegaIndexRoute
   '/api/public/jobs/recordatorios': typeof ApiPublicJobsRecordatoriosRoute
@@ -108,6 +115,7 @@ export interface FileRoutesByTo {
   '/bodega/ajustes': typeof BodegaAjustesRoute
   '/bodega/cobros': typeof BodegaCobrosRoute
   '/bodega/encargos': typeof BodegaEncargosRoute
+  '/bodega/promociones': typeof BodegaPromocionesRoute
   '/bodega/stock': typeof BodegaStockRoute
   '/bodega': typeof BodegaIndexRoute
   '/api/public/jobs/recordatorios': typeof ApiPublicJobsRecordatoriosRoute
@@ -123,6 +131,7 @@ export interface FileRoutesById {
   '/bodega/ajustes': typeof BodegaAjustesRoute
   '/bodega/cobros': typeof BodegaCobrosRoute
   '/bodega/encargos': typeof BodegaEncargosRoute
+  '/bodega/promociones': typeof BodegaPromocionesRoute
   '/bodega/stock': typeof BodegaStockRoute
   '/bodega/': typeof BodegaIndexRoute
   '/api/public/jobs/recordatorios': typeof ApiPublicJobsRecordatoriosRoute
@@ -139,6 +148,7 @@ export interface FileRouteTypes {
     | '/bodega/ajustes'
     | '/bodega/cobros'
     | '/bodega/encargos'
+    | '/bodega/promociones'
     | '/bodega/stock'
     | '/bodega/'
     | '/api/public/jobs/recordatorios'
@@ -153,6 +163,7 @@ export interface FileRouteTypes {
     | '/bodega/ajustes'
     | '/bodega/cobros'
     | '/bodega/encargos'
+    | '/bodega/promociones'
     | '/bodega/stock'
     | '/bodega'
     | '/api/public/jobs/recordatorios'
@@ -167,6 +178,7 @@ export interface FileRouteTypes {
     | '/bodega/ajustes'
     | '/bodega/cobros'
     | '/bodega/encargos'
+    | '/bodega/promociones'
     | '/bodega/stock'
     | '/bodega/'
     | '/api/public/jobs/recordatorios'
@@ -182,6 +194,7 @@ export interface RootRouteChildren {
   BodegaAjustesRoute: typeof BodegaAjustesRoute
   BodegaCobrosRoute: typeof BodegaCobrosRoute
   BodegaEncargosRoute: typeof BodegaEncargosRoute
+  BodegaPromocionesRoute: typeof BodegaPromocionesRoute
   BodegaStockRoute: typeof BodegaStockRoute
   BodegaIndexRoute: typeof BodegaIndexRoute
   ApiPublicJobsRecordatoriosRoute: typeof ApiPublicJobsRecordatoriosRoute
@@ -259,6 +272,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BodegaEncargosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bodega/promociones': {
+      id: '/bodega/promociones'
+      path: '/bodega/promociones'
+      fullPath: '/bodega/promociones'
+      preLoaderRoute: typeof BodegaPromocionesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/bodega/stock': {
       id: '/bodega/stock'
       path: '/bodega/stock'
@@ -286,6 +306,7 @@ const rootRouteChildren: RootRouteChildren = {
   BodegaAjustesRoute: BodegaAjustesRoute,
   BodegaCobrosRoute: BodegaCobrosRoute,
   BodegaEncargosRoute: BodegaEncargosRoute,
+  BodegaPromocionesRoute: BodegaPromocionesRoute,
   BodegaStockRoute: BodegaStockRoute,
   BodegaIndexRoute: BodegaIndexRoute,
   ApiPublicJobsRecordatoriosRoute: ApiPublicJobsRecordatoriosRoute,

@@ -1,6 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowLeft, ArrowUpRight, HandCoins, PackagePlus, ShoppingBag, Wallet } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  HandCoins,
+  ImagePlus,
+  PackagePlus,
+  ShoppingBag,
+  Wallet,
+} from "lucide-react";
+import "@/collage.css";
 import { VoiceCapture } from "@/components/VoiceCapture";
 import { BodegaCapture } from "@/components/BodegaCapture";
 import { clp, diasHasta, proximaCuota, saldo, useStore } from "@/lib/store";
@@ -103,6 +112,14 @@ function Index() {
           </span>
         </span>
         <strong>{clp(pend.reduce((s, d) => s + saldo(d), 0))}</strong>
+      </Link>
+      <Link to="/bodega/promociones" className="collage-entry">
+        <ImagePlus size={30} aria-hidden="true" />
+        <span>
+          <strong>Crear un collage</strong>
+          <small>Elige perfumes y prepara imágenes para tus redes.</small>
+        </span>
+        <ArrowUpRight size={22} aria-hidden="true" />
       </Link>
     </div>
   );

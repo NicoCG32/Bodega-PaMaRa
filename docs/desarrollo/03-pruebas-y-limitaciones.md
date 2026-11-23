@@ -22,6 +22,8 @@ bun run build
 | [`ai.functions.test.ts`](../../src/test/ai.functions.test.ts)        | Contratos de Groq y Whisper con respuestas simuladas. |
 | [`vozNativa.test.ts`](../../src/test/vozNativa.test.ts)              | Transcripciones alternativas y esperas del dictado.   |
 | [`app-routing.test.tsx`](../../src/test/app-routing.test.tsx)        | Composición de rutas.                                 |
+| [`collage.test.ts`](../../src/test/collage.test.ts) | Correspondencia de presentaciones, selección pública, precios y composición de uno a seis perfumes. |
+| [`CollageEditor.test.tsx`](../../src/test/CollageEditor.test.tsx) | Valores iniciales, límite de selección, formatos, descarga, renovación de imágenes y errores. |
 | [`android-release.test.mjs`](../../scripts/android-release.test.mjs) | Validación del empaquetador Android.                  |
 
 ## Recorridos manuales
@@ -37,6 +39,7 @@ Usa una cuenta de prueba y datos ficticios.
 | Edición de producto           | Conservación de stock, precio y visibilidad en Boutique; comprobar Realtime desde otro teléfono. |
 | Respaldo                      | Recuperación en otro perfil, cierre de sesión, pérdida de red y cambios desde dos dispositivos.  |
 | Boutique                      | Lectura pública de `productos` y `ajustes_tienda`, visibilidad y mensaje de WhatsApp.            |
+| Collages | Generar y guardar ambos JPEG con uno y seis perfumes, con y sin precios y presentaciones; compartir desde el teléfono. |
 | Notificaciones                | Permisos, recepción con la aplicación cerrada y fecha de cobro en Chile.                         |
 | Android TWA                   | Instalación, asociación del dominio, reapertura y actualización conservando los datos.           |
 | Accesibilidad                 | Teclado, foco, lector de pantalla, zoom y contraste.                                             |
@@ -50,7 +53,7 @@ Para Android, utiliza también la [lista de aceptación en dispositivo](../andro
 - El fiado por voz descuenta una unidad de stock; comprueba las existencias cuando una operación incluya varias unidades.
 - El pedido por WhatsApp se registra por separado en Vault. La bolsa calcula productos, sin tarifa de despacho.
 - La recepción de avisos depende de Firebase, el programador externo, el navegador y los permisos del teléfono.
-- La migración de roles asigna `admin` automáticamente al primer usuario creado cuando no existe un administrador; conviene controlar ese primer registro en el despliegue.
+- El acceso de administrador exige una cuenta de Google verificada incluida en la lista autorizada y el rol `admin`.
 - Los productos y precios se sincronizan mediante Realtime, pero **no existe una garantía comprobada de resolución de conflictos** entre dispositivos.
 - Las funciones de Groq validan entradas, pero requieren revisar autenticación, límites y consumo de terceros antes de habilitar un uso público amplio.
 
