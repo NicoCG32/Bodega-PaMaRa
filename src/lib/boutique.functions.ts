@@ -6,11 +6,11 @@ import { conCatalogo, type Precios, type Producto } from "./store";
 
 /** Público: lee la vitrina compartida (solo productos marcados para la Boutique). */
 export const catalogoPublico = createServerFn({ method: "GET" }).handler(
-  async (): Promise<ItemPublico[]> => {
+  async ({ serverFnMeta }): Promise<ItemPublico[]> => {
     const { origenBackendParalelo, catalogoDesdeBackend } =
       await import("./backend-paralelo.server");
     const origin = origenBackendParalelo();
-    if (origin) return catalogoDesdeBackend(origin);
+    if (origin) return catalogoDesdeBackend(origin, serverFnMeta.id);
     const key = process.env["SUPABASE_PUBLISHABLE_KEY"]!;
     const sb = createClient<Database>(process.env["SUPABASE_URL"]!, key, {
       auth: { persistSession: false, autoRefreshToken: false, storage: undefined },

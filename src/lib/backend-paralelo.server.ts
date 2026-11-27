@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { createClientRpc } from "@tanstack/react-start/client-rpc";
 import type { ItemPublico } from "./boutique";
 
 const ORIGEN_BACKEND = "https://pamara-bodega.lovable.app";
@@ -28,19 +29,38 @@ const itemPublico = z.object({
   vistas: z.literal(0),
 });
 
-export async function catalogoDesdeBackend(origin: string): Promise<ItemPublico[]> {
-  if (origin !== ORIGEN_BACKEND) throw new Error("Backend no permitido.");
-  const response = await fetch(`${origin}/api/public/catalogo`, {
-    headers: { accept: "application/json" },
-    cache: "no-store",
-    redirect: "error",
-    signal: AbortSignal.timeout(15_000),
-  });
-  if (!response.ok) throw new Error("No se pudo consultar el catálogo de la tienda.");
-  return z
-    .array(itemPublico)
-    .max(5000)
-    .parse(await response.json());
+export async function catalogoDesdeBackend(
+  origin: string,
+  functionId: string,
+): Promise<ItemPublico[]> {
+  if (origin !== ORIGEN_BACKEND || !/^[a-f0-9]{64}$/.test(functionId))
+    throw new Error("Backend o función no permitidos.");
+  let reply: unknown;
+  try {
+    reply = await createClientRpc(functionId)({
+      method: "GET",
+      fetch: (_input: RequestInfo | URL, init?: RequestInit) => {
+        const headers = new Headers(init?.headers);
+        headers.set("origin", origin);
+        headers.set("sec-fetch-site", "same-origin");
+        return fetch(`${origin}/_serverFn/${functionId}`, {
+          ...init,
+          headers,
+          cache: "no-store",
+          redirect: "error",
+          signal: AbortSignal.timeout(15_000),
+        });
+      },
+    });
+  } catch {
+    throw new Error("No se pudo consultar el catálogo de la tienda.");
+  }
+  const parsed = z
+    .object({ result: z.array(itemPublico).max(5000), error: z.unknown().optional() })
+    .safeParse(reply);
+  if (!parsed.success || parsed.data.error)
+    throw new Error("No se pudo consultar el catálogo de la tienda.");
+  return parsed.data.result;
 }
 
 /** Called only for a resolved server function, after Start's same-origin CSRF check. */

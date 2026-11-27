@@ -23,7 +23,7 @@ Vercel puede ejecutar el mismo proyecto con Nitro y Node.js 24. El repositorio c
 
 Para compartir el backend actual, configurar en Vercel las variables públicas `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY` y `VITE_SUPABASE_PROJECT_ID`, y sus equivalentes de servidor. La URL de servidor debe ser accesible desde el host externo. La plantilla [`.env.example`](../../.env.example) enumera las opciones sin incluir credenciales.
 
-Con `PAMARA_BACKEND_ORIGIN=https://pamara-bodega.lovable.app`, la página se renderiza en Vercel y consulta el catálogo a través de `/api/public/catalogo` en Lovable. Esa API entrega la misma proyección de la Boutique: productos visibles, precios y enlaces de fotos correspondientes. El despliegue externo valida la respuesta y descarta campos ajenos a ese contrato.
+Con `PAMARA_BACKEND_ORIGIN=https://pamara-bodega.lovable.app`, la página se renderiza en Vercel y consulta `catalogoPublico` por la llamada RPC que ya utiliza la Boutique en Lovable. TanStack decodifica su respuesta; el despliegue externo valida la proyección pública y descarta campos ajenos a ese contrato. Se mantienen productos visibles, precios y enlaces de fotos correspondientes.
 
 Las llamadas a funciones de servidor pasan primero la comprobación de mismo origen de TanStack Start. Después se reenvían al backend fijo con el token de sesión y el cuerpo original. Lovable conserva las validaciones de cada función y el rol administrador; no se reenvían cookies ni se almacenan respuestas privadas en caché. No es un proxy a destinos arbitrarios.
 

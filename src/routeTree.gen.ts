@@ -21,7 +21,6 @@ import { Route as BodegaCobrosRouteImport } from './routes/bodega.cobros'
 import { Route as BodegaEncargosRouteImport } from './routes/bodega.encargos'
 import { Route as BodegaPromocionesRouteImport } from './routes/bodega.promociones'
 import { Route as BodegaStockRouteImport } from './routes/bodega.stock'
-import { Route as ApiPublicCatalogoRouteImport } from './routes/api/public/catalogo'
 import { Route as ApiPublicJobsRecordatoriosRouteImport } from './routes/api/public/jobs/recordatorios'
 
 const IndexRoute = IndexRouteImport.update({
@@ -84,11 +83,6 @@ const BodegaStockRoute = BodegaStockRouteImport.update({
   path: '/bodega/stock',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicCatalogoRoute = ApiPublicCatalogoRouteImport.update({
-  id: '/api/public/catalogo',
-  path: '/api/public/catalogo',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiPublicJobsRecordatoriosRoute =
   ApiPublicJobsRecordatoriosRouteImport.update({
     id: '/api/public/jobs/recordatorios',
@@ -109,7 +103,6 @@ export interface FileRoutesByFullPath {
   '/bodega/promociones': typeof BodegaPromocionesRoute
   '/bodega/stock': typeof BodegaStockRoute
   '/bodega/': typeof BodegaIndexRoute
-  '/api/public/catalogo': typeof ApiPublicCatalogoRoute
   '/api/public/jobs/recordatorios': typeof ApiPublicJobsRecordatoriosRoute
 }
 export interface FileRoutesByTo {
@@ -125,7 +118,6 @@ export interface FileRoutesByTo {
   '/bodega/promociones': typeof BodegaPromocionesRoute
   '/bodega/stock': typeof BodegaStockRoute
   '/bodega': typeof BodegaIndexRoute
-  '/api/public/catalogo': typeof ApiPublicCatalogoRoute
   '/api/public/jobs/recordatorios': typeof ApiPublicJobsRecordatoriosRoute
 }
 export interface FileRoutesById {
@@ -142,7 +134,6 @@ export interface FileRoutesById {
   '/bodega/promociones': typeof BodegaPromocionesRoute
   '/bodega/stock': typeof BodegaStockRoute
   '/bodega/': typeof BodegaIndexRoute
-  '/api/public/catalogo': typeof ApiPublicCatalogoRoute
   '/api/public/jobs/recordatorios': typeof ApiPublicJobsRecordatoriosRoute
 }
 export interface FileRouteTypes {
@@ -160,7 +151,6 @@ export interface FileRouteTypes {
     | '/bodega/promociones'
     | '/bodega/stock'
     | '/bodega/'
-    | '/api/public/catalogo'
     | '/api/public/jobs/recordatorios'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -176,7 +166,6 @@ export interface FileRouteTypes {
     | '/bodega/promociones'
     | '/bodega/stock'
     | '/bodega'
-    | '/api/public/catalogo'
     | '/api/public/jobs/recordatorios'
   id:
     | '__root__'
@@ -192,7 +181,6 @@ export interface FileRouteTypes {
     | '/bodega/promociones'
     | '/bodega/stock'
     | '/bodega/'
-    | '/api/public/catalogo'
     | '/api/public/jobs/recordatorios'
   fileRoutesById: FileRoutesById
 }
@@ -209,7 +197,6 @@ export interface RootRouteChildren {
   BodegaPromocionesRoute: typeof BodegaPromocionesRoute
   BodegaStockRoute: typeof BodegaStockRoute
   BodegaIndexRoute: typeof BodegaIndexRoute
-  ApiPublicCatalogoRoute: typeof ApiPublicCatalogoRoute
   ApiPublicJobsRecordatoriosRoute: typeof ApiPublicJobsRecordatoriosRoute
 }
 
@@ -299,13 +286,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BodegaStockRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/catalogo': {
-      id: '/api/public/catalogo'
-      path: '/api/public/catalogo'
-      fullPath: '/api/public/catalogo'
-      preLoaderRoute: typeof ApiPublicCatalogoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/public/jobs/recordatorios': {
       id: '/api/public/jobs/recordatorios'
       path: '/api/public/jobs/recordatorios'
@@ -329,7 +309,6 @@ const rootRouteChildren: RootRouteChildren = {
   BodegaPromocionesRoute: BodegaPromocionesRoute,
   BodegaStockRoute: BodegaStockRoute,
   BodegaIndexRoute: BodegaIndexRoute,
-  ApiPublicCatalogoRoute: ApiPublicCatalogoRoute,
   ApiPublicJobsRecordatoriosRoute: ApiPublicJobsRecordatoriosRoute,
 }
 export const routeTree = rootRouteImport

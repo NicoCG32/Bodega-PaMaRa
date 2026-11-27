@@ -12,7 +12,6 @@ TanStack Start genera las rutas a partir de los archivos de esta carpeta.
 | `bodega.promociones.tsx`           | `/bodega/promociones`            | Creador privado de collages.                   |
 | `bodega.ajustes.tsx`               | `/bodega/ajustes`                | Precios, respaldo y avisos.                    |
 | `api/public/jobs/recordatorios.ts` | `/api/public/jobs/recordatorios` | Endpoint de recordatorios con secreto de cron. |
-| `api/public/catalogo.ts`           | `/api/public/catalogo`           | Proyección pública del catálogo, sin caché.    |
 
 `__root.tsx` define la estructura común. Las pantallas de gestión se envuelven con `AppShell` y `AdminGate`, que comprueba la sesión y el rol administrador. La Boutique usa su propia presentación.
 
