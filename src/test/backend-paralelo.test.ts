@@ -5,9 +5,27 @@ import {
   reenviarFuncion,
 } from "@/lib/backend-paralelo.server";
 import { aPublico } from "@/lib/boutique";
+import { toCrossJSONAsync } from "seroval";
+import { runWithStartContext } from "@tanstack/start-storage-context";
 
 const backend = "https://pamara-bodega.lovable.app";
 const site = "https://pamara-bodega-paralelo.vercel.app";
+const catalogId = "a".repeat(64);
+function leerCatalogo() {
+  return runWithStartContext(
+    {
+      getRouter: () => {
+        throw new Error("El catálogo no necesita cargar el router.");
+      },
+      request: new Request(site),
+      startOptions: {},
+      contextAfterGlobalMiddlewares: {},
+      executedRequestMiddlewares: new Set(),
+      handlerType: "serverFn",
+    },
+    () => catalogoDesdeBackend(backend, catalogId),
+  );
+}
 afterEach(() => {
   vi.unstubAllEnvs();
   vi.unstubAllGlobals();
@@ -34,17 +52,21 @@ describe("Backend del despliegue paralelo", () => {
   });
   it("lee la misma proyección pública y descarta campos ajenos al catálogo", async () => {
     const p = aPublico([{ codigo: "M-01", nombre: "Publicado", stock: 2 }])[0]!;
-    const f = vi
-      .fn()
-      .mockResolvedValue(
-        Response.json([
-          { ...p, telefonos: { cliente: "privado" }, deudas: [1], user_id: "no-publicar" },
-        ]),
-      );
+    const f = vi.fn().mockResolvedValue(
+      Response.json(
+        await toCrossJSONAsync({
+          result: [
+            { ...p, telefonos: { cliente: "privado" }, deudas: [1], user_id: "no-publicar" },
+          ],
+          context: {},
+        }),
+        { headers: { "x-tss-serialized": "true" } },
+      ),
+    );
     vi.stubGlobal("fetch", f);
-    expect(await catalogoDesdeBackend(backend)).toEqual([p]);
+    expect(await leerCatalogo()).toEqual([p]);
     expect(f).toHaveBeenCalledWith(
-      `${backend}/api/public/catalogo`,
+      `${backend}/_serverFn/${catalogId}`,
       expect.objectContaining({ cache: "no-store", redirect: "error" }),
     );
   });
@@ -53,14 +75,14 @@ describe("Backend del despliegue paralelo", () => {
       "fetch",
       vi.fn().mockResolvedValue(Response.json([{ codigo: "M-01", vistas: 15 }])),
     );
-    await expect(catalogoDesdeBackend(backend)).rejects.toThrow();
+    await expect(leerCatalogo()).rejects.toThrow();
   });
   it("informa cuando el backend no entrega el catálogo", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue(new Response("No disponible", { status: 503 })),
     );
-    await expect(catalogoDesdeBackend(backend)).rejects.toThrow("catálogo");
+    await expect(leerCatalogo()).rejects.toThrow("catálogo");
   });
   it("conserva cuerpo y token de sesión sin reenviar cookies ni cabeceras de infraestructura", async () => {
     const f = vi.fn().mockResolvedValue(
