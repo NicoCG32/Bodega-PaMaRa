@@ -29,6 +29,8 @@ Las llamadas a funciones de servidor pasan primero la comprobación de mismo ori
 
 En este modo, las claves de servicio, Groq y cron permanecen en Lovable. **No definir `PAMARA_BACKEND_ORIGIN` en Lovable**, ni crear otro programador de recordatorios para la copia. Publicar primero el backend compatible y mantener ambos hosts con el mismo commit para conservar el contrato de las funciones.
 
+El inicio de sesión gestionado por Lovable también necesita su intermediario original. En Vercel, definir `VITE_LOVABLE_AUTH_BROKER_URL=https://pamara-bodega.lovable.app/~oauth/initiate`. En Lovable, abrir **More → Users → Settings → Advanced → Redirect URLs** y añadir `https://pamara-bodega-paralelo.vercel.app/bodega`, conservando las direcciones existentes. Sin esa autorización, el proveedor rechaza el retorno al dominio externo. No cambiar la Site URL del alojamiento original. El acceso sigue sujeto al rol administrador, y cada dominio conserva su propia sesión.
+
 Antes de usar el paralelo, comprobar el catálogo completo, los rechazos de funciones privadas sin sesión, el inicio con Google y el rol, la sincronización y los collages. Los datos de `localStorage` pertenecen a cada dominio: no aparecen automáticamente en una dirección nueva. Verificar el respaldo de la cuenta antes de registrar movimientos allí. Las cargas que pasan por Vercel están sujetas al límite de cuerpo de sus funciones.
 
 El APK y el programador de avisos continúan apuntando al alojamiento original hasta que se cambien expresamente. Este despliegue comparte los servicios de Lovable; no constituye una migración independiente del backend.
