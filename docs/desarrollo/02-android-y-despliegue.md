@@ -17,6 +17,22 @@ flowchart LR
 
 La web debe desplegarse para cambiar el comportamiento de una instalación existente; el APK empaqueta el acceso y la identidad Android. Si la web no responde, la TWA tampoco puede operar normalmente.
 
+## Despliegue paralelo en Vercel
+
+Vercel puede ejecutar el mismo proyecto con Nitro y Node.js 24. El repositorio conserva la configuración de Lovable; `NITRO_PRESET=vercel` se configura solo en el proyecto de Vercel. La instalación usa `bun install --frozen-lockfile` y la compilación `bun run build`, sin sobrescribir el directorio de salida que genera Nitro.
+
+Para compartir el backend actual, configurar en Vercel las variables públicas `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY` y `VITE_SUPABASE_PROJECT_ID`, y sus equivalentes de servidor. La URL de servidor debe ser accesible desde el host externo. La plantilla [`.env.example`](../../.env.example) enumera las opciones sin incluir credenciales.
+
+Con `PAMARA_BACKEND_ORIGIN=https://pamara-bodega.lovable.app`, la página se renderiza en Vercel y consulta el catálogo a través de `/api/public/catalogo` en Lovable. Esa API entrega la misma proyección de la Boutique: productos visibles, precios y enlaces de fotos correspondientes. El despliegue externo valida la respuesta y descarta campos ajenos a ese contrato.
+
+Las llamadas a funciones de servidor pasan primero la comprobación de mismo origen de TanStack Start. Después se reenvían al backend fijo con el token de sesión y el cuerpo original. Lovable conserva las validaciones de cada función y el rol administrador; no se reenvían cookies ni se almacenan respuestas privadas en caché. No es un proxy a destinos arbitrarios.
+
+En este modo, las claves de servicio, Groq y cron permanecen en Lovable. **No definir `PAMARA_BACKEND_ORIGIN` en Lovable**, ni crear otro programador de recordatorios para la copia. Publicar primero el backend compatible y mantener ambos hosts con el mismo commit para conservar el contrato de las funciones.
+
+Antes de usar el paralelo, comprobar el catálogo completo, los rechazos de funciones privadas sin sesión, el inicio con Google y el rol, la sincronización y los collages. Los datos de `localStorage` pertenecen a cada dominio: no aparecen automáticamente en una dirección nueva. Verificar el respaldo de la cuenta antes de registrar movimientos allí. Las cargas que pasan por Vercel están sujetas al límite de cuerpo de sus funciones.
+
+El APK y el programador de avisos continúan apuntando al alojamiento original hasta que se cambien expresamente. Este despliegue comparte los servicios de Lovable; no constituye una migración independiente del backend.
+
 ## Configuración existente
 
 Según `android/release.properties` y archivos Gradle:
