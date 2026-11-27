@@ -25,7 +25,14 @@ const csrfMiddleware = createCsrfMiddleware({
   filter: (ctx) => ctx.handlerType === "serverFn",
 });
 
+const backendParalelo = createMiddleware().server(async ({ request, handlerType, next }) => {
+  if (handlerType !== "serverFn") return next();
+  const { origenBackendParalelo, reenviarFuncion } = await import("./lib/backend-paralelo.server");
+  const origin = origenBackendParalelo();
+  return origin ? reenviarFuncion(request, origin) : next();
+});
+
 export const startInstance = createStart(() => ({
   functionMiddleware: [attachSupabaseAuth],
-  requestMiddleware: [errorMiddleware, csrfMiddleware],
+  requestMiddleware: [errorMiddleware, csrfMiddleware, backendParalelo],
 }));

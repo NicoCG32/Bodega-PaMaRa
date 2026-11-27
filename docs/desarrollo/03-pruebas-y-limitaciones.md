@@ -24,6 +24,7 @@ bun run build
 | [`app-routing.test.tsx`](../../src/test/app-routing.test.tsx)        | Composición de rutas.                                 |
 | [`collage.test.ts`](../../src/test/collage.test.ts) | Correspondencia de presentaciones, selección pública, precios y composición de uno a seis perfumes. |
 | [`CollageEditor.test.tsx`](../../src/test/CollageEditor.test.tsx) | Valores iniciales, límite de selección, formatos, descarga, renovación de imágenes y errores. |
+| [`backend-paralelo.test.ts`](../../src/test/backend-paralelo.test.ts) | Destino fijo, contrato público, reenvío de sesión, rechazo de autenticación, errores y prevención de bucles. |
 | [`android-release.test.mjs`](../../scripts/android-release.test.mjs) | Validación del empaquetador Android.                  |
 
 ## Recorridos manuales
